@@ -10,7 +10,7 @@ export const verifyOtp = async (data: any) => {
   return response.data;
 };
 
-export const logoutUser = async (data: any) => {
+export const logoutUser = async (_data: any) => {
   const response = await api.post("/auth/logout");
   return response.data;
 };
