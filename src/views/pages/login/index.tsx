@@ -20,6 +20,7 @@ const Login = () => {
 
   const [state, setState] = useState({
     showOtpView: false,
+    otp: null as string | null,
   });
 
   const [storedEmail, setStoredEmail] = useState<string>("");
