@@ -1,0 +1,28 @@
+$display-properties: (
+    "block": block,
+    "inline": inline,
+    "inline-block": inline-block,
+    "flex": flex,
+    "inline-flex": inline-flex,
+    "grid": grid,
+    "inline-grid": inline-grid,
+    "table": table,
+    "table-cell": table-cell,
+    "none": none
+);
+
+.dfc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin display-utilities {
+    @each $key, $value in $display-properties {
+        .d-#{$key} {
+            display: $value ;
+        }
+    }
+}
+
+@include display-utilities;

@@ -1,0 +1,8 @@
+@use "../../../styles/variables" as *;
+
+.loader {
+    min-height: 100%;
+    min-width: 100%;
+    display: grid;
+    place-items: center;
+}

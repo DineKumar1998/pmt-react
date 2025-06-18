@@ -1,0 +1,77 @@
+$black: #000000 !default;
+
+$gray-900: #1e2938 !default;
+$gray-800: #353e4c !default;
+$gray-700: #4b5460 !default;
+$gray-600: #626974 !default;
+$gray-500: #787f88 !default;
+$gray-400: #8f949c !default;
+$gray-300: #a5a9af !default;
+$gray-200: #bcbfc3 !default;
+$gray-100: #d2d4d7 !default;
+$gray-50: #e9eaeb !default;
+$gray: #b2b2b2 !default;
+$white: #ffffff !default;
+
+$purple: #2f93fd !default; //$primary
+$blue: #77c7d7 !default; //$info
+$green: #049a26 !default; //$success
+// $green: #40b181 !default; //$success
+$orange: #ebcb43 !default; //$warning
+$red: #ff0026 !default; //$danger
+
+$primary: #68788d !default; // $purple: #2F93FD !default;
+$secondary: #c3cfe0 !default; // $blue: #77C7D7 !default;
+$success: #079a5a !default; // $green: #049A26 !default;
+$danger: #e46363 !default; // $red: #D50020 !default;
+$info: #77c7d7 !default; // $info: $blue !default;
+$warning: #ebcb43 !default; // $orange: #ebcb43 !default;
+$light: #f5f7fa !default;
+$light-primary: #f8fafc !default;
+$light-secondary: #f6f8fa !default;
+$dark: #3f484f !default;
+$dark-primary: #475569 !default;
+$dark-secondary: #64748b !default;
+$gray-primary: #94a3b8 !default;
+$gray-secondary: #6b7c93 !default;
+
+// Additional Theme Colors
+$purple-dark: #1a1a39 !default;
+$blue-dark: #075985 !default;
+$green-dark: #024d14 !default;
+$orange-dark: #7d6700 !default;
+$red-dark: #b91c1c !default;
+
+// Light Variants
+$purple-light: #ffebf1 !default;
+$blue-light: #0284c7 !default;
+$green-light: #e8f4e6 !default;
+$orange-light: #fff9e6 !default;
+$red-light: #ffe7e9 !default;
+$primary-light: #fbac84 !default;
+$secondary-light: #77ff97 !default;
+$secondary-dark: #30a448 !default;
+$danger-light: #d5002060 !default; //
+
+$light-opacity: #ffffff47 !default;
+
+$gradient-secondary: linear-gradient(180deg, #30a448 0%, #123e1b 100%);
+
+// Typography
+$font-family-sans-serif: "Noto Sans", sans-serif !default;
+$font-size-base: 0.85rem !default;
+
+// Borders
+$border-radius: 0.7rem !default;
+$border-color: #ebebed;
+
+// Other
+$active-color: #f3f5f6;
+
+// Border color
+$border-color-light: #e6ebf5 !default;
+$bg-color: #f4f7fe !default;
+
+//New theme colors
+$input-border-color: #abb9cc;
+$placeholder-color: #abb9cc;

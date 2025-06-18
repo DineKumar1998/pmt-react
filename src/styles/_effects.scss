@@ -1,0 +1,29 @@
+@mixin hover-effect {
+    &:hover {
+        @content;
+    }
+}
+
+@mixin sm-screen {
+    @media (max-width: 576px) {
+        @content;
+    }
+}
+
+@mixin md-screen {
+    @media (min-width:577px) and (max-width: 768px) {
+        @content;
+    }
+}
+
+@mixin lg-screen {
+    @media (min-width:769px) and (max-width: 1200px) {
+        @content;
+    }
+}
+
+@mixin xl-screen {
+    @media (min-width: 1201px) and (max-width: 1700px) {
+        @content;
+    }
+}

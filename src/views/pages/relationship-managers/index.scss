@@ -1,0 +1,87 @@
+@use "../../../styles/variables" as *;
+
+.relationship-manager-page {
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        button {
+            margin-top: 0;
+            box-shadow: none;
+        }
+    }
+}
+
+/* ADD RM FORM */
+.add-rm-form {
+    background-color: $white;
+    padding: clamp(1rem, 4vw, 2rem) clamp(1rem, 5vw, 1.5rem);
+
+    form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1rem;
+
+        margin-block: 1rem;
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            color: $gray-600;
+            font-weight: 300;
+            text-wrap: nowrap;
+        }
+
+        div {
+            width: 100%;
+
+            .input-field {
+                padding: 0.75rem;
+                border-radius: 5px;
+                font-size: inherit;
+                outline: none;
+                width: 100%;
+                box-sizing: border-box;
+                background-color: #fafafa;
+                border: 1px solid #f0f0f0;
+
+                &:disabled {
+                    color: $gray-400;
+                }
+            }
+        }
+    }
+
+    .actions {
+        button {
+            .text {
+                font-weight: 400;
+            }
+        }
+
+        .generate-password {
+            box-shadow: none;
+            border-radius: 5px;
+
+            margin-bottom: 1rem;
+        }
+
+        .save-cancel-btn {
+            button:first-child {
+                box-shadow: none;
+            }
+
+            display: flex;
+            gap: 1rem;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .add-rm-form form {
+        grid-template-columns: 1fr !important;
+    }
+}

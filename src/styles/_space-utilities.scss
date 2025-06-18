@@ -1,0 +1,332 @@
+@use './effects' as *;
+
+// Mixin for padding
+@mixin padding($top: null,
+  $right: null,
+  $bottom: null,
+  $left: null,
+  $important: null) {
+  padding-top: $top $important;
+  padding-right: $right $important;
+  padding-bottom: $bottom $important;
+  padding-left: $left $important;
+}
+
+// Mixin for margin
+@mixin margin($top: null,
+  $right: null,
+  $bottom: null,
+  $left: null,
+  $important: null) {
+  margin-top: $top $important;
+  margin-right: $right $important;
+  margin-bottom: $bottom $important;
+  margin-left: $left $important;
+}
+
+$spaces: (
+  0: 0,
+  25: 0.25,
+  50: 0.5,
+  75: 0.75,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+  8: 8,
+  9: 9,
+  10: 10,
+); // Mixin for padding and margin variations
+
+@mixin spacing-utilities {
+  @each $key, $value in $spaces {
+    .p-#{$key} {
+      @include padding($value * 1rem,
+        $value * 1rem,
+        $value * 1rem,
+        $value * 1rem);
+    }
+
+    .sm\:p-#{$key} {
+      @include sm-screen {
+        @include padding($value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          !important);
+      }
+    }
+
+    .md\:p-#{$key} {
+      @include md-screen {
+        @include padding($value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          !important);
+      }
+    }
+
+    .lg\:p-#{$key} {
+      @include lg-screen {
+        @include padding($value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          $value * 1rem);
+      }
+    }
+
+    .xl\:p-#{$key} {
+      @include xl-screen {
+        @include padding($value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          $value * 1rem);
+      }
+    }
+
+    .i\:p-#{$key} {
+      @include padding($value * 1rem,
+        $value * 1rem,
+        $value * 1rem,
+        $value * 1rem,
+        !important);
+    }
+
+    .px-#{$key} {
+      @include padding(null, $value * 1rem, null, $value * 1rem);
+    }
+
+    .sm\:px-#{$key} {
+      @include sm-screen {
+        @include padding(null, $value * 1rem, null, $value * 1rem, !important);
+      }
+    }
+
+    .md\:px-#{$key} {
+      @include md-screen {
+        @include padding(null, $value * 1rem, null, $value * 1rem, !important);
+
+      }
+    }
+
+    .lg\:px-#{$key} {
+      @include lg-screen {
+        @include padding(null, $value * 1rem, null, $value * 1rem, !important);
+      }
+    }
+
+    .xl\:px-#{$key} {
+      @include xl-screen {
+        @include padding(null, $value * 1rem, null, $value * 1rem, !important);
+
+      }
+    }
+
+    .i\:px-#{$key} {
+      @include padding(null, $value * 1rem, null, $value * 1rem, !important);
+    }
+
+
+
+
+
+    .py-#{$key} {
+      @include padding($value * 1rem, null, $value * 1rem, null);
+    }
+
+    .sm\:py-#{$key} {
+      @include sm-screen {
+        @include padding($value * 1rem, null, $value * 1rem, null, !important);
+      }
+    }
+
+    .md\:py-#{$key} {
+      @include md-screen {
+        @include padding($value * 1rem, null, $value * 1rem, null, !important);
+      }
+    }
+
+    .lg\:py-#{$key} {
+      @include lg-screen {
+        @include padding($value * 1rem, null, $value * 1rem, null, !important);
+      }
+    }
+
+    .xl\:py-#{$key} {
+      @include xl-screen {
+        @include padding($value * 1rem, null, $value * 1rem, null, !important);
+      }
+    }
+
+    .i\:py-#{$key} {
+      @include padding($value * 1rem, null, $value * 1rem, null, !important);
+    }
+
+
+
+    .m-#{$key} {
+      @include margin($value * 1rem,
+        $value * 1rem,
+        $value * 1rem,
+        $value * 1rem);
+    }
+
+    .sm\:m-#{$key} {
+      @include sm-screen {
+        @include margin($value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          !important);
+      }
+    }
+
+    .md\:m-#{$key} {
+      @include md-screen {
+        @include margin($value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          !important);
+      }
+    }
+
+    .lg\:m-#{$key} {
+      @include lg-screen {
+        @include margin($value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          $value * 1rem);
+      }
+    }
+
+    .xl\:m-#{$key} {
+      @include xl-screen {
+        @include margin($value * 1rem,
+          $value * 1rem,
+          $value * 1rem,
+          $value * 1rem);
+      }
+    }
+
+    .i\:m-#{$key} {
+      @include margin($value * 1rem,
+        $value * 1rem,
+        $value * 1rem,
+        $value * 1rem,
+        !important);
+    }
+
+    .mx-#{$key} {
+      @include margin(null, $value * 1rem, null, $value * 1rem);
+    }
+
+    .sm\:mx-#{$key} {
+      @include sm-screen {
+        @include margin(null, $value * 1rem, null, $value * 1rem, !important);
+      }
+    }
+
+    .md\:mx-#{$key} {
+      @include md-screen {
+        @include margin(null, $value * 1rem, null, $value * 1rem, !important);
+      }
+    }
+
+    .lg\:mx-#{$key} {
+      @include lg-screen {
+        @include margin(null, $value * 1rem, null, $value * 1rem, !important);
+      }
+    }
+
+    .xl\:mx-#{$key} {
+      @include xl-screen {
+        @include margin(null, $value * 1rem, null, $value * 1rem, !important);
+      }
+    }
+
+    .i\:mx-#{$key} {
+      @include margin(null, $value * 1rem, null, $value * 1rem, !important);
+    }
+
+
+    .my-#{$key} {
+      @include margin($value * 1rem, null, $value * 1rem, null);
+    }
+
+
+    .pt-#{$key} {
+      @include padding($value * 1rem, null, null, null);
+    }
+
+
+    .pr-#{$key} {
+      @include padding(null, $value * 1rem, null, null);
+    }
+
+    .i\:pr-#{$key} {
+      @include padding(null, $value * 1rem, null, null, !important);
+    }
+
+
+    .pb-#{$key} {
+      @include padding(null, null, $value * 1rem, null);
+    }
+
+
+    .pl-#{$key} {
+      @include padding(null, null, null, $value * 1rem);
+    }
+
+
+    .mt-#{$key} {
+      @include margin($value * 1rem, null, null, null);
+    }
+
+    .mr-#{$key} {
+      @include margin(null, $value * 1rem, null, null);
+    }
+
+
+
+    .mb-#{$key} {
+      @include margin(null, null, $value * 1rem, null);
+    }
+
+    .i\:mb-#{$key} {
+      @include margin(null, null, $value * 1rem, null, !important);
+    }
+
+    .ml-#{$key} {
+      @include margin(null, null, null, $value * 1rem);
+    }
+
+    .gap-#{$key} {
+      gap: $value * 1rem;
+    }
+
+    .sm\:gap-#{$key} {
+      @include sm-screen {
+        gap: $value * 1rem !important;
+      }
+    }
+
+    .md\:gap-#{$key} {
+      @include md-screen {
+        gap: $value * 1rem !important;
+      }
+    }
+
+    .lg\:gap-#{$key} {
+      @include lg-screen {
+        gap: $value * 1rem !important;
+      }
+    }
+  }
+}
+
+@include spacing-utilities();

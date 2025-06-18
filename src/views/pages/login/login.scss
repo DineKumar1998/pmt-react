@@ -1,0 +1,82 @@
+@use "../../../styles/variables" as *;
+
+.login-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.login-welcome-section {
+    flex: 1;
+    background-image: url("@/assets/background-images/login_background.png");
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    /* For background elements */
+    overflow: hidden;
+    width: 100%;
+}
+
+.login-form-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 80px;
+}
+
+.login-form-section h1,
+.login-form-section h3,
+.login-form-section p {
+    text-align: left;
+}
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 350px;
+    margin-top: 25px;
+    align-items: flex-start;
+}
+
+.forgot-password {
+    text-align: left;
+    margin-top: 10px;
+    text-decoration: none;
+    align-self: flex-start;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .login-form-section {
+        flex: none;
+        /* Remove flex basis */
+        width: 100%;
+        /* Take full width */
+        padding: 20px;
+        /* Adjust padding */
+    }
+
+    .login-welcome-section {
+        min-height: 200px;
+        margin-bottom: 20px;
+        /* Give welcome section some height on small screens */
+        justify-content: flex-start;
+        /* Align welcome text to top */
+    }
+}

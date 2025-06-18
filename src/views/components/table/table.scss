@@ -1,0 +1,108 @@
+@use "../../../styles/variables" as *;
+
+.table-container {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    overflow: hidden;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        background-color: $white;
+        color: $black;
+        table-layout: fixed;
+
+        thead {
+            background-color: $primary;
+            color: $white;
+            th {
+                padding: 0.5rem 1rem;
+                text-align: left;
+                /* width: 1%; */
+            }
+
+            .sorted {
+                display: flex;
+                align-items: center;
+            }
+        }
+
+        tbody {
+            tr {
+                td.table-cell {
+                    padding: 0.5rem 1rem;
+                    border-bottom: 1px solid $border-color-light;
+                    width: 1%;
+
+                    a {
+                        text-decoration: none;
+                        color: inherit;
+                    }
+                }
+            }
+        }
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+
+        .pagination {
+            background-color: $white;
+            display: flex;
+            align-items: center;
+            padding: 0.2rem;
+            border-radius: 2rem;
+
+            .pagination-pages {
+                display: flex;
+                gap: 0.25rem;
+            }
+
+            .pagination-button:last-child {
+                transform: rotate(180deg);
+            }
+        }
+
+        button {
+            line-height: 24px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease-in-out;
+
+            &.active {
+                background-color: $primary;
+                color: $white;
+            }
+
+            padding: 0;
+            margin: 0;
+            height: 24px;
+            width: 24px;
+            border: none;
+            outline: none;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                height: 20px;
+                width: 16px;
+                margin-top: 4px;
+                object-fit: contain;
+                fill: currentColor;
+            }
+
+            cursor: pointer;
+
+            &:hover:not([disabled]) {
+                background-color: $primary;
+                color: $white;
+            }
+        }
+    }
+}

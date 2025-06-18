@@ -1,0 +1,392 @@
+@use "../../../styles/variables" as *;
+
+.manage-parameters-page {
+    .tabs {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: $white;
+
+        border-radius: 1.5rem 1.5rem 0 0;
+
+        overflow: hidden;
+
+        .tab-button {
+            padding: clamp(0.5rem, 2vw, 0.8rem) clamp(0.8rem, 5vw, 1.8rem);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            outline: none;
+            color: $primary;
+            background-color: transparent;
+
+            &.active {
+                background-color: $primary;
+                color: $white;
+            }
+        }
+
+        .actions {
+            display: inherit;
+            gap: 1rem;
+            margin-right: 2rem;
+        }
+
+        .button-container {
+            .button-primary {
+                margin-top: 0;
+                box-shadow: none;
+            }
+        }
+
+        .export-button {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            outline: none;
+            cursor: pointer;
+        }
+    }
+
+    .parameters-list {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        background-color: $white;
+        border-radius: 0 0 1.5rem 1.5rem;
+
+        .parameter-item {
+            padding: 0.5rem clamp(1rem, 5vw, 2rem);
+            list-style-type: none;
+
+            .parameter-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+
+                .parameter-title {
+                    display: flex;
+                    align-items: center;
+
+                    p {
+                        font-size: 1.5rem;
+                    }
+
+                    .edit-icon {
+                        width: 18px;
+                        height: 18px;
+                        cursor: pointer;
+                        flex-shrink: 0;
+                        margin-left: 10px;
+                        margin-right: 10px;
+
+                        svg {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    }
+                }
+            }
+
+            .expand-icon {
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+
+                transition: transform 0.3s ease;
+
+                &.expanded {
+                    transform: rotate(45deg);
+                }
+
+                svg {
+                    object-fit: cover;
+                    vertical-align: middle;
+                }
+            }
+        }
+
+        .parameter-details {
+            color: $primary;
+            margin-top: 0.2rem;
+            margin-left: 0.2rem;
+
+            .parameter-option {
+                margin-top: 1rem;
+
+            }
+        }
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+
+        .pagination {
+            background-color: $white;
+            display: flex;
+            align-items: center;
+            padding: 0.2rem;
+            border-radius: 2rem;
+
+            .pagination-pages {
+                display: flex;
+                gap: 0.25rem;
+            }
+
+            .pagination-button:last-child {
+                transform: rotate(180deg);
+            }
+        }
+
+        button {
+            line-height: 24px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease-in-out;
+
+            &.active {
+                background-color: $primary;
+                color: $white;
+            }
+
+            padding: 0;
+            margin: 0;
+            height: 24px;
+            width: 24px;
+            border: none;
+            outline: none;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                height: 20px;
+                width: 16px;
+                margin-top: 4px;
+                object-fit: contain;
+                fill: currentColor;
+            }
+
+            cursor: pointer;
+
+            &:hover:not([disabled]) {
+                background-color: $primary;
+                color: $white;
+            }
+        }
+    }
+}
+
+/* Add Parameter Form */
+.add-parameter-form {
+    background-color: $white;
+    border-radius: 0.5rem;
+    min-height: 400px;
+
+    h2 {
+        color: $primary;
+    }
+
+    .parent-section {
+        display: flex;
+        align-items: flex-start;
+
+        .language-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+
+            .button-primary {
+                border-radius: 0.5rem;
+            }
+        }
+
+        .option-container {
+            margin-top: 1rem;
+
+            .options {
+                flex: 1;
+
+                .outer-label {
+                    color: $black;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    .options-label {
+                        display: inline-flex;
+                        align-items: center;
+                        vertical-align: middle;
+                        line-height: 1; // Ensures icon and text are vertically centered
+
+                        .add-option-button {
+                            width: 28px;
+                            height: 28px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            vertical-align: middle; // Aligns button with text
+                            margin-top: 0.2rem;
+
+                            svg {
+                                height: 1.5em; // Match icon height to text
+                                width: 1.5em;
+                                object-fit: cover;
+                                display: block;
+                            }
+                        }
+                    }
+
+                    .rating-label {
+                        margin-right: 3.2rem;
+                    }
+                }
+
+                .option-row {
+                    margin-top: 1rem;
+                    display: flex;
+                    gap: 1rem;
+
+                    .parameter-field {
+                        flex: 1;
+                    }
+                }
+            }
+
+            .ratings,
+            .options {
+                h4 {
+                    font-weight: 400;
+                }
+            }
+
+            .ratings {
+                input[type="number"] {
+                    min-width: 100px;
+                    box-sizing: border-box;
+
+                    padding: 0.7rem 1rem;
+                    font-size: 1rem;
+                    line-height: 1.4;
+                    border-radius: 0.5rem;
+                    border: none;
+                    outline: 1px solid $gray-200;
+                    color: $gray-600;
+
+                    &:focus-within {
+                        outline-color: 1px solid $gray-200;
+                    }
+                }
+            }
+        }
+
+        .left-section {
+            padding: clamp(1rem, 5vw, 1.5rem) clamp(0.75rem, 5vw, 1.5rem);
+            flex: 1;
+            box-sizing: border-box;
+
+            .actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 0.5rem;
+                margin-top: 2rem;
+            }
+        }
+
+        .parameters-list {
+            padding: 0.5rem 1rem 1rem 1rem;
+            margin: 1.5rem 1.5rem 1.5rem 0.5rem;
+            border-radius: 1rem;
+            background-color: $bg-color;
+            flex: 1;
+            max-width: 30%;
+            overflow-y: auto;
+
+            ul {
+                color: $primary;
+                list-style: none;
+
+                .selected-param {
+                    font-weight: 700;
+                }
+
+                li {
+                    margin-top: 0.5rem;
+                }
+
+                li:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .industry-mapping-view {
+        padding: 2rem;
+        color: $primary;
+
+        .industry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .industry-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+
+            input[type="checkbox"] {
+                appearance: none;
+                -webkit-appearance: none;
+                width: 17px;
+                height: 17px;
+                border: 1px solid $primary;
+                border-radius: 4px;
+                display: inline-block;
+                position: relative;
+                cursor: pointer;
+            }
+
+            input[type="checkbox"]::before {
+                content: "\2713"; // Unicode tick
+                color: $primary;
+                position: absolute;
+                left: 3px;
+                top: 0;
+                font-size: 12px;
+                display: none;
+            }
+
+            input[type="checkbox"]:checked::before {
+                display: block;
+            }
+        }
+    }
+
+    .industry-list-view {
+        border: 1px solid $secondary;
+        border-radius: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 8px 15px;
+        margin-top: 5px;
+
+        .industry-item {
+            color: $primary;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            margin-right: 10px;
+        }
+    }
+
+}
