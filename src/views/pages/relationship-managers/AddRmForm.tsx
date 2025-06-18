@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Button from "@/views/components/Button";
+import Button from "@/views/components/button";
 
 // scss
 import "./index.scss";
@@ -9,11 +9,11 @@ import { toast } from 'react-toastify'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { createRM, getRMById, editRM } from '@/apis/rm';
 import { useLang } from "@/context/LangContext";
-import { translations } from "@/utils/translations";
+// import { translations } from "@/utils/translations";
 
 const AddUserForm = () => {
-  const { selectedLang, setSelectedLang } = useLang();
-  const t = translations[selectedLang];
+  const { selectedLang } = useLang();
+  // const t = translations[selectedLang];
 
   const { rmId } = useParams();
   const isEditMode = !!rmId;
@@ -32,10 +32,20 @@ const AddUserForm = () => {
     user_type: "RM"
   });
 
-  const [errors, setErrors] = React.useState({});
+  type FormErrors = {
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    country_code?: string;
+    phone?: string;
+    password?: string;
+    [key: string]: string | undefined;
+  };
+
+  const [errors, setErrors] = React.useState<FormErrors>({});
 
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     console.log("field name=", name)
@@ -43,10 +53,10 @@ const AddUserForm = () => {
     setErrors({ ...errors, [name]: null }); // clear error on change
   };
 
-  const handleGeneratePassword = () => {
-    //OTP will be sent to the RM's email for confirmation. 
-    //Only after OTP validation, admin can set the password
-  };
+  // const handleGeneratePassword = () => {
+  //   //OTP will be sent to the RM's email for confirmation. 
+  //   //Only after OTP validation, admin can set the password
+  // };
 
   const handleResetPassword = () => {
     //OTP will be sent to the RM's email for confirmation. 
@@ -60,7 +70,7 @@ const AddUserForm = () => {
     if (!parsed.success) {
       const fieldErrors = parsed.error.flatten().fieldErrors;
       console.log("fieldErrors=", fieldErrors)
-      setErrors(fieldErrors);
+      setErrors(fieldErrors as any);
       return;
     }
     console.log("Validated data:", parsed.data);
@@ -74,7 +84,7 @@ const AddUserForm = () => {
     if (!parsed.success) {
       const fieldErrors = parsed.error.flatten().fieldErrors;
       console.log("fieldErrors=", fieldErrors)
-      setErrors(fieldErrors);
+      setErrors(fieldErrors as any);
       return;
     }
     console.log("Validated data:", parsed.data);
@@ -85,7 +95,7 @@ const AddUserForm = () => {
     navigate(-1);
   };
 
-  const { mutate: createRmMutate, isPending: createRmPending } = useMutation({
+  const { mutate: createRmMutate } = useMutation({
     mutationFn: (body: any) => createRM(body),
     onSuccess: (data) => {
       console.log("createRM success data=", data)
@@ -103,8 +113,8 @@ const AddUserForm = () => {
     },
   })
 
-  const { mutate: editRmMutate, isPending: editRmPending } = useMutation({
-    mutationFn: (body: any) => editRM(rmId, body),
+  const { mutate: editRmMutate } = useMutation({
+    mutationFn: (body: any) => editRM(rmId || "", body),
     onSuccess: (data) => {
       console.log("editRM success data=", data)
       toast.success(data?.message)
@@ -121,10 +131,10 @@ const AddUserForm = () => {
     },
   })
 
-  const { data: rmData, refetch: rmDataRefetch } = useQuery({
+  const { data: rmData } = useQuery({
     queryKey: ['rmData', rmId, selectedLang],
     queryFn: () =>
-      getRMById(rmId, selectedLang),
+      getRMById(rmId || "", selectedLang),
     enabled: isEditMode,
   });
 

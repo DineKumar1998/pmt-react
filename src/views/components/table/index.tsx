@@ -12,8 +12,13 @@ import { SortIcon } from "../icons";
 import BackArrow from "../icons/BackArrow";
 import { useNavigate } from "react-router-dom";
 
+// Define a base type that requires an 'id' property
+interface WithId {
+  id: string | number;
+}
+
 // Define props for the CommonTable component
-interface CommonTableProps<T extends object> {
+interface CommonTableProps<T extends WithId> {
   columns: ColumnDef<T>[];
   data: T[];
   itemsPerPage?: number;
@@ -21,17 +26,18 @@ interface CommonTableProps<T extends object> {
   onPageChange?: (pageIndex: number) => void;
 }
 
-function Table<T extends object>({
+function Table<T extends WithId>({
   columns,
   data,
   itemsPerPage,
   total_rms,
   onPageChange,
 }: CommonTableProps<T>) {
-  const [sorting, setSorting] = React.useState([]);
+  const [sorting, setSorting] = React.useState<import("@tanstack/react-table").SortingState>([]);
+
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
-    pageSize: itemsPerPage,
+    pageSize: itemsPerPage || 10,
   });
   const navigate = useNavigate();
 
@@ -40,7 +46,7 @@ function Table<T extends object>({
     columns,
     state: {
       sorting,
-      pagination,
+      pagination
     },
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
@@ -136,7 +142,7 @@ function Table<T extends object>({
       </div>
 
       {/* Pagination Controls */}
-      {total_rms > itemsPerPage && (
+      {total_rms > (itemsPerPage ?? 10) && (
         <div className="pagination-container">
           <div className="pagination">
             <button

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { BellIcon, CalendarIcon } from "../icons";
-import { useLocation } from "react-router-dom";
+import { CalendarIcon } from "../icons";
+// import { useLocation } from "react-router-dom";
 import AvatarDropdown from "./UserAvatar";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
@@ -8,14 +8,14 @@ import { translations } from "@/utils/translations";
 const Header = () => {
   const { selectedLang, setSelectedLang } = useLang();
   const t = translations[selectedLang];
-  const location = useLocation();
+  // const location = useLocation();
 
   // console.log(location.pathname.replace(/^\//, "").replace(/-/g, " "));
 
   // Handler to update selectedLang based on input value
-  const handleLangChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedLang(e.target.value);
-  };
+  // const handleLangChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSelectedLang(e.target.value);
+  // };
 
   // State for current date and time
   const [currentDateTime, setCurrentDateTime] = useState(new Date());

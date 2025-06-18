@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ParameterField from "@/views/components/ParameterField";
 
-import Button from "@/views/components/Button";
+import Button from "@/views/components/button";
 
 // scss
 import "./index.scss";
@@ -15,7 +15,7 @@ import {
   Controller,
   type SubmitHandler,
 } from "react-hook-form";
-import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createParameter,
   mapParameterToIndustries,
@@ -27,7 +27,7 @@ import {
 import { getIndustryList } from "@/apis/industry";
 import { toast } from "react-toastify";
 import { useLang } from "@/context/LangContext";
-import { translations } from "@/utils/translations";
+// import { translations } from "@/utils/translations";
 import FilterIcon from "@assets/icons/Filter.svg";
 import CrossIcon from "@assets/icons/Cross.svg";
 
@@ -57,24 +57,30 @@ type FormValues = {
 
 const AddParameter = ({ label }: { label: string }) => {
   const navigate = useNavigate();
-  const { selectedLang, setSelectedLang } = useLang();
-  const t = translations[selectedLang];
+  const { selectedLang } = useLang();
+  // const t = translations[selectedLang];
   const { editParamId } = useParams();
   const isEditMode = !!editParamId;
 
   const [language, setLanguage] = React.useState<"en" | "jp">("en");
   const [showIndustryMappingView, setShowIndustryMappingView] = useState(false);
-  const [selectedIndustryList, setSelectedIndustryList] = useState([]);
+  type Industry = { id: number; name: string };
+  const [selectedIndustryList, setSelectedIndustryList] = useState<Industry[]>([]);
   const [disableIndustryMapping, setDisableIndustryMapping] = useState(true);
   const [disableParamEditing, setDisableParamEditing] = useState(false);
   const [parameterId, setParameterId] = useState(0);
   const itemsPerPage = 10;
-  const [queryParams, setQueryParams] = useState({
+  const [queryParams, _setQueryParams] = useState({
     page: 1,
     pageSize: itemsPerPage,
     isPrimary: false,
   });
-  const [parameterList, setParameterList] = useState([]);
+  type Parameter = {
+    id: number;
+    question: string;
+    // Add other fields if needed
+  };
+  const [parameterList, setParameterList] = useState<Parameter[]>([]);
   const leftRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement | null>(null);
 
@@ -83,9 +89,9 @@ const AddParameter = ({ label }: { label: string }) => {
     setLanguage(lang);
   };
 
-  const handleGeneratePassword = () => {
-    alert("Generate Password clicked!");
-  };
+  // const _handleGeneratePassword = () => {
+  //   alert("Generate Password clicked!");
+  // };
 
   // useForm hook
   const {
@@ -116,7 +122,7 @@ const AddParameter = ({ label }: { label: string }) => {
     }),
   );
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: any) => {
     const { active, over } = event;
     if (active.id !== over.id) {
       const oldIndex = fields.findIndex((f) => f.id === active.id);
@@ -166,7 +172,7 @@ const AddParameter = ({ label }: { label: string }) => {
     mapParameterToIndustriesMutate(formattedData);
   }
 
-  const { mutate: createParameterMutate, isPending: createParameterPending } =
+  const { mutate: createParameterMutate } =
     useMutation({
       mutationFn: (body: any) => createParameter(body),
       onSuccess: (data) => {
@@ -186,9 +192,9 @@ const AddParameter = ({ label }: { label: string }) => {
       },
     });
 
-  const { mutate: editParameterMutate, isPending: editParameterPending } =
+  const { mutate: editParameterMutate } =
     useMutation({
-      mutationFn: (body: any) => editParameter(editParamId, body),
+      mutationFn: (body: any) => editParameter(editParamId || "", body),
       onSuccess: (data) => {
         console.log("editParameter success data=", data);
         toast.success(data?.message);
@@ -230,13 +236,13 @@ const AddParameter = ({ label }: { label: string }) => {
     enabled: false,
   });
 
-  const { data: paramData, refetch: paramDataRefetch } = useQuery({
+  const { data: paramData } = useQuery({
     queryKey: ["paramData", editParamId, selectedLang],
-    queryFn: () => getParameterById(editParamId, selectedLang),
+    queryFn: () => getParameterById(editParamId || "", selectedLang),
     enabled: isEditMode,
   });
 
-  const { data: paramList, refetch: paramListRefetch } = useQuery({
+  const { data: paramList } = useQuery({
     queryKey: ["paramList", queryParams, selectedLang],
     queryFn: () => getParameterQuestions({ ...queryParams, language: selectedLang }),
     enabled: isEditMode,
@@ -244,7 +250,7 @@ const AddParameter = ({ label }: { label: string }) => {
 
   const { mutate: deleteParameterIndustryMappingMutate } =
     useMutation({
-      mutationFn: (industryId: number) => deleteParameterIndustryMapping(editParamId, industryId),
+      mutationFn: (industryId: number) => deleteParameterIndustryMapping(editParamId || "", industryId),
       onSuccess: (data, industryId) => {
         console.log("deleteParameterIndustryMapping success data=", data);
         const newSelected = selectedIndustryList.filter(
@@ -273,7 +279,7 @@ const AddParameter = ({ label }: { label: string }) => {
       }
 
       // Prepare options for reset
-      const formattedOptions = paramData.options?.map((opt, index) => ({
+      const formattedOptions = paramData.options?.map((opt: any, index: number) => ({
         id: opt.id,
         option_text: opt.option_text,
         self_rating: Number(opt.self_rating ?? 0),
@@ -370,6 +376,7 @@ const AddParameter = ({ label }: { label: string }) => {
                         className={errors.parameter ? "border-danger" : ""}
                         disabled={disableParamEditing}
                         showDeleteIcon={false}
+                        
                       />
                     )}
                   />
@@ -444,6 +451,7 @@ const AddParameter = ({ label }: { label: string }) => {
                   text="Save"
                   type="submit"
                   disabled={disableParamEditing}
+                  onClick={() => null}
                 />
               </div>
             </form>
@@ -459,7 +467,7 @@ const AddParameter = ({ label }: { label: string }) => {
                         replace: true,
                       })
                     }}
-                    className={parameter.id == editParamId ? "selected-param" : ""}
+                    className={parameter.id === Number(editParamId) ? "selected-param" : ""}
                   >
                     {index + 1}. {parameter?.question}
                   </li>

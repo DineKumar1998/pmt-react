@@ -1,4 +1,4 @@
-import React, { type ChangeEventHandler } from "react";
+import React from "react";
 import { SearchIcon } from "../icons";
 
 import "./index.scss";

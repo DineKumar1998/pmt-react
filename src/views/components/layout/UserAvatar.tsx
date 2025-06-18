@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, type FormEvent } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import Avatar from "@assets/Avatar.png";
 import BackArrow from "../icons/BackArrow";

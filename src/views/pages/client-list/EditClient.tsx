@@ -2,7 +2,7 @@ import React from "react";
 
 // ** SCSS
 import "./index.scss";
-import Button from "@/views/components/Button";
+import Button from "@/views/components/button";
 import { useNavigate } from "react-router-dom";
 
 const EditClient = ({ label }: { label: string }) => {

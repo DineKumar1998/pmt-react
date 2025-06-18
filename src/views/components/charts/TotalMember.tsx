@@ -15,7 +15,7 @@ const data = {
   ],
 };
 
-const options = {
+const options: any = {
   // layout: {
   //   padding: {
   //     top: 20,

@@ -1,4 +1,4 @@
-import { ColorType } from "./types";
+import type { ColorType } from "./types";
 
 export const colorMap: Record<ColorType, string> = {
     purple: "#2F93FD",

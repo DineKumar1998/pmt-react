@@ -21,7 +21,7 @@ const labels = [
 const primaryData = [78, 70, 70, 80, 80];
 const secondaryData = [70, 53, 59, 62, 70];
 
-export const options = {
+export const options: any = {
   layout: {
     padding: {
       top: 20,

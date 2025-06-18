@@ -1,11 +1,11 @@
 import { useState } from "react";
 import TextBox from "@/views/components/TextBox";
-import Button from "@/views/components/Button";
+import Button from "@/views/components/button";
 
 import type { FieldValues, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { dynamicLoginSchema } from "@/validations/authValidator";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TOKEN_KEY } from "@/utils";
 
 import { useForm } from "react-hook-form";
@@ -29,7 +29,7 @@ const Login = () => {
     formState: { errors },
     control,
   } = useForm<{ email?: string; password?: string; otp?: string }>({
-    resolver: zodResolver(dynamicLoginSchema(state.showOtpView)),
+    resolver: zodResolver(dynamicLoginSchema(state.showOtpView) as any),
     defaultValues: state.showOtpView
       ? { otp: "" }
       : { email: "", password: "" },

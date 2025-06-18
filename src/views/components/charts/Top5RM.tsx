@@ -22,7 +22,7 @@ const data = {
   ],
 };
 
-const options = {
+const options: any = {
   layout: {
     padding: {
       top: 40,
@@ -49,7 +49,7 @@ const options = {
         weight: "bold",
         size: 12,
       },
-      formatter: (value, context) => {
+      formatter: (_value: any, context: any) => {
         const label = context.chart.data.labels[context.dataIndex];
         return label.split(" ")[0]; // Stack label and value
       },

@@ -8,7 +8,9 @@ type ParameterFieldType = {
   removeParameter?: () => void;
   isEditable?: boolean;
   className?: string;
-  dragHandleProps: any;
+  dragHandleProps?: any;
+  disabled?: boolean;
+  showDeleteIcon?: boolean;
 };
 
 const ParameterField = ({

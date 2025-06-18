@@ -37,7 +37,7 @@ const RecentClient: React.FC = () => {
   return (
     <div className="relationship-manager-page">
       <h2 className="section-title">Recent Activity</h2>
-      <Table<Client> columns={columns} data={data} />
+      <Table<Client> columns={columns} data={data} total_rms={data.length} />
     </div>
   );
 };

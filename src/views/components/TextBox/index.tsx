@@ -1,4 +1,4 @@
-import { Control, Controller, FieldErrors, FieldValues } from "react-hook-form";
+import { type Control, Controller, type FieldErrors, type FieldValues } from "react-hook-form";
 
 interface FormFieldProps {
     label?: string;
@@ -31,7 +31,6 @@ const TextBox: React.FC<FormFieldProps> = ({
     handleChange = () => { },
     placeholder,
     margin = "my-75",
-    required = true,
     width,
     className,
     showErrorMessage = true,

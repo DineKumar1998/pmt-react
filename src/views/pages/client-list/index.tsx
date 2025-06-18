@@ -49,7 +49,7 @@ const ClientListPage: React.FC = () => {
       <div className="buttons">
         <SearchComponent placeholder="Search..." />
       </div>
-      <Table<Client> columns={columns} data={data} />
+      <Table<Client> columns={columns} data={data} total_rms={data.length} />
     </div>
   );
 };

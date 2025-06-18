@@ -5,7 +5,18 @@ import {
 } from "react-hook-form";
 import ParameterField from "@/views/components/ParameterField";
 
-export const ParameterSortableItem = ({ id, index, control, register, errors, remove, disabled, enableDrag }) => {
+type ParameterSortableItemProps = {
+    id: string;
+    index: number;
+    control: any;  
+    register: any;
+    errors: any;
+    remove: (index: number) => void;
+    disabled?: boolean;
+    enableDrag?: boolean;
+};
+
+export const ParameterSortableItem = ({ id, index, control, register, errors, remove, disabled, enableDrag }: ParameterSortableItemProps) => {
     const {
         attributes,
         listeners,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import "./index.scss";
-import Button from "@/views/components/Button";
+import Button from "@/views/components/button";
 import {
   AddCircleIcon,
   DownloadIcon,
@@ -11,7 +11,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getParameterList } from "@/apis/parameter";
 import { useLang } from "@/context/LangContext";
-import { translations } from "@/utils/translations";
+// import { translations } from "@/utils/translations";
 import BackArrow from "@/views/components/icons/BackArrow";
 import { EditIcon } from "@/views/components/icons";
 
@@ -27,36 +27,9 @@ const TABS = [
 ];
 
 // Dummy data for parameters
-const PARAMETERS = {
-  primary: [
-    {
-      id: 1,
-      name: "Primary Parameter 1",
-      description: "Description for primary parameter 1",
-    },
-    {
-      id: 2,
-      name: "Primary Parameter 2",
-      description: "Description for primary parameter 2",
-    },
-  ],
-  secondary: [
-    {
-      id: 3,
-      name: "Secondary Parameter 1",
-      description: "Description for secondary parameter 1",
-    },
-    {
-      id: 4,
-      name: "Secondary Parameter 2",
-      description: "Description for secondary parameter 2",
-    },
-  ],
-};
-
 const ManageParametersPage: React.FC = () => {
   const { selectedLang } = useLang();
-  const t = translations[selectedLang];
+  // const t = translations[selectedLang];
   const itemsPerPage = 10;
   const [expandedIds, setExpandedIds] = useState<number[]>([]);
   const location = useLocation();
@@ -101,7 +74,7 @@ const ManageParametersPage: React.FC = () => {
     );
   };
 
-  const { data: parameterList, refetch: parameterListRefetch } = useQuery({
+  const { data: parameterList } = useQuery({
     queryKey: ["parameterList", queryParams, selectedLang],
     queryFn: () => getParameterList({ ...queryParams, language: selectedLang }),
   });
@@ -148,7 +121,7 @@ const ManageParametersPage: React.FC = () => {
         ) : (
           <>
             <ul>
-              {parameterList?.parameters?.map((param, index) => (
+              {parameterList?.parameters?.map((param: any, index: number) => (
                 <li
                   key={param.id}
                   className={`parameter-item${expandedIds.includes(param.id) ? " expanded" : ""}`}
@@ -182,7 +155,7 @@ const ManageParametersPage: React.FC = () => {
                     <section className="parameter-details">
                       {!param?.options?.length ?
                         <div className="empty-state">No options found.</div>
-                        : param?.options?.map((option, index) => (
+                        : param?.options?.map((option: any, index: number) => (
                           <p key={option.id} className="parameter-option">
                             {String.fromCharCode(65 + index)}. {option.option_text}
                           </p>

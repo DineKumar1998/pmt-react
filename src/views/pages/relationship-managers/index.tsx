@@ -3,7 +3,7 @@ import ClockIcon from "@/views/components/icons/table/Clock";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
 import type { ColumnDef } from "@tanstack/react-table";
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./index.scss";
 import AddCircle from "@/views/components/icons/AddCircle";
 import BackArrow from "@/views/components/icons/BackArrow";
@@ -23,7 +23,7 @@ type RM = {
 };
 
 const RelationshipManagerPage: React.FC = () => {
-  const { selectedLang, setSelectedLang } = useLang();
+  const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const itemsPerPage = 10;
   const [queryParams, setQueryParams] = useState({
@@ -83,7 +83,7 @@ const RelationshipManagerPage: React.FC = () => {
   };
 
 
-  const { data: rmList, refetch: rmListRefetch } = useQuery({
+  const { data: rmList } = useQuery({
     queryKey: ['rmList', queryParams, selectedLang],
     queryFn: () =>
       getRMList({ ...queryParams, language: selectedLang }),
@@ -93,21 +93,37 @@ const RelationshipManagerPage: React.FC = () => {
 
   let updatedRmList: RM[] = [];
   if (rmList?.rms?.length) {
-    updatedRmList = rmList.rms.map(({ first_name, last_name, last_login, country_code, phone, ...rest }) => ({
-      ...rest,
-      name: `${first_name} ${(last_name ?? '').trim()}`.trim(),
-      last_login: last_login
-        ? new Date(last_login).toLocaleString('en-GB', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true,
-        })
-        : null,
-      phone: country_code?.trim() && phone?.trim() ? `${country_code}${phone}` : ""
-    }));
+    updatedRmList = rmList.rms.map(
+      ({
+        first_name,
+        last_name,
+        last_login,
+        country_code,
+        phone,
+        ...rest
+      }: {
+        first_name: string;
+        last_name?: string | null;
+        last_login: string | null;
+        country_code?: string | null;
+        phone?: string | null;
+        [key: string]: any;
+      }) => ({
+        ...rest,
+        name: `${first_name} ${(last_name ?? '').trim()}`.trim(),
+        last_login: last_login
+          ? new Date(last_login).toLocaleString('en-GB', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true,
+            })
+          : null,
+        phone: country_code?.trim() && phone?.trim() ? `${country_code}${phone}` : ""
+      })
+    );
   }
 
   return (
@@ -126,7 +142,7 @@ const RelationshipManagerPage: React.FC = () => {
             setQueryParams((prev) => ({
               ...prev,
               page: 1,
-              search: value,
+              search: value ?? "",
             }));
           }}
         />
