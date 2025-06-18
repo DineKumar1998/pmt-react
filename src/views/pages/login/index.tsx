@@ -38,7 +38,7 @@ const Login = () => {
 
   const { mutateAsync: loginMutate, isPending } = useMutation({
     mutationFn: (body: { email: string; password: string }) => loginUser(body),
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       if (data?.error) {
         return toast.error(data.error, {
           hideProgressBar: true,
@@ -48,6 +48,7 @@ const Login = () => {
       setState((prev) => ({
         ...prev,
         showOtpView: true,
+        otp: data.otp, 
       }));
     },
   });
@@ -136,6 +137,12 @@ const Login = () => {
                 errors={errors}
                 control={control}
               />
+
+                            {state.otp && (
+                <p>
+                  OTP (Testing purpose only): <strong>{state.otp}</strong>
+                </p>
+              )}
 
               <div style={{ marginTop: 10 }}>
                 <Button
