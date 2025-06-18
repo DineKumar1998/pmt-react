@@ -1,10 +1,10 @@
 import { TOKEN_KEY } from "@/utils";
 import axios, { AxiosError } from "axios";
 
-// const API_URL = import.meta.env.VITE_API_BASE_URL;
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const api = axios.create({
-  baseURL: "http://pmt-api.whdev.in/api",
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
