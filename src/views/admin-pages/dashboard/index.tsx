@@ -1,4 +1,7 @@
 import { lazy, Suspense } from "react";
+import { useLang } from "@/context/LangContext";
+import { useQuery } from '@tanstack/react-query';
+import { getDashboardStats } from "@/apis/dashboard"
 
 const Top5RMCardChart = lazy(() => import("@/views/components/charts/Top5RM"));
 const TotalMemberChart = lazy(
@@ -16,6 +19,14 @@ import RecentClient from "./RecentClient";
 import RecentRM from "./RecentRM";
 
 const Dashboard = () => {
+  const { selectedLang } = useLang();
+
+  const { data: dashboardStats } = useQuery({
+    queryKey: ['dashboardStats', selectedLang],
+    queryFn: () =>
+      getDashboardStats({ language: selectedLang }),
+  });
+
   return (
     <div className="dashboard-page">
       <section className="cards">
@@ -26,10 +37,10 @@ const Dashboard = () => {
           <Top5RMCardChart />
         </Suspense>
         <Suspense fallback={null}>
-          <TotalMemberChart />
+          <TotalMemberChart membersData={dashboardStats?.membersData} />
         </Suspense>
       </section>
-      <CompletionStatusChart />
+      <CompletionStatusChart industriesStats={dashboardStats?.industriesStats} />
 
       <section className="recent-activity">
         <Suspense fallback={<div>Loading...</div>}>

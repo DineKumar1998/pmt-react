@@ -8,7 +8,7 @@ import ParameterField from "@/views/components/ParameterField";
 type ParameterSortableItemProps = {
     id: string;
     index: number;
-    control: any;  
+    control: any;
     register: any;
     errors: any;
     remove: (index: number) => void;

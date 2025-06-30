@@ -7,7 +7,7 @@ import "./layout.scss";
 import Header from "./Header";
 import { LangProvider } from "@/context/LangContext";
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, route }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -29,7 +29,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {/* Main Content */}
         <main className="main-container">
           {/* Header */}
-          <Header />
+          <Header breakcrumbPath={route} />
 
           <div className="main-content">{children}</div>
         </main>

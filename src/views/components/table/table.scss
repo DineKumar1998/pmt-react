@@ -16,9 +16,11 @@
         thead {
             background-color: $primary;
             color: $white;
+
             th {
                 padding: 0.5rem 1rem;
                 text-align: left;
+                font-weight: normal;
                 /* width: 1%; */
             }
 

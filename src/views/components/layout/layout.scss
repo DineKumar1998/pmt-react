@@ -1,7 +1,7 @@
 @use "../../../styles/variables" as *;
 
 .main-layout {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
 
     /* Sidebar */
@@ -88,6 +88,12 @@
             border-bottom: 1px solid $border-color-light;
             height: 90px;
             box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: $bg-color;
+
 
             .header-nav {
                 display: flex;
@@ -171,7 +177,7 @@
                             padding: 0;
                             margin: 0;
                             border-radius: 50%;
-                            /* overflow: hidden; */
+                            overflow: hidden;
                             width: 100%;
                             height: 100%;
 
@@ -280,6 +286,31 @@
                             }
                         }
                     }
+                }
+            }
+
+            .breadcrumbs {
+                font-size: 14px;
+                color: $primary;
+                font-weight: 500;
+
+                .heading {
+                    font-size: 28px;
+                    font-weight: 700;
+                }
+
+                .breadcrumb-link {
+                    color: $primary;
+                    text-decoration: none;
+                }
+
+                .breadcrumb-link:hover {
+                    text-decoration: underline;
+                }
+
+                .breadcrumb-current-tab {
+                    font-weight: 900;
+                    color: $black;
                 }
             }
         }

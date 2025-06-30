@@ -10,7 +10,6 @@ import {
 import "./table.scss";
 import { SortIcon } from "../icons";
 import BackArrow from "../icons/BackArrow";
-import { useNavigate } from "react-router-dom";
 
 // Define a base type that requires an 'id' property
 interface WithId {
@@ -22,8 +21,10 @@ interface CommonTableProps<T extends WithId> {
   columns: ColumnDef<T>[];
   data: T[];
   itemsPerPage?: number;
-  total_rms: number;
+  total_rms?: number;
+  hasNextPage?: boolean;
   onPageChange?: (pageIndex: number) => void;
+  onRowClick?: (id: number) => void;
 }
 
 function Table<T extends WithId>({
@@ -31,7 +32,9 @@ function Table<T extends WithId>({
   data,
   itemsPerPage,
   total_rms,
+  hasNextPage,
   onPageChange,
+  onRowClick
 }: CommonTableProps<T>) {
   const [sorting, setSorting] = React.useState<import("@tanstack/react-table").SortingState>([]);
 
@@ -39,7 +42,6 @@ function Table<T extends WithId>({
     pageIndex: 0,
     pageSize: itemsPerPage || 10,
   });
-  const navigate = useNavigate();
 
   const table = useReactTable<T>({
     data,
@@ -55,7 +57,7 @@ function Table<T extends WithId>({
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
     manualSorting: false,
-    pageCount: Math.ceil(total_rms / pagination.pageSize),
+    pageCount: Math.ceil((total_rms ?? 0) / pagination.pageSize),
   });
 
   React.useEffect(() => {
@@ -107,11 +109,11 @@ function Table<T extends WithId>({
                 return (
                   <tr
                     key={row.id}
-                    onClick={() =>
-                      navigate(
-                        `/relationship-managers/edit-rm/${row.original.id}`,
-                      )
-                    }
+                    onClick={() => {
+                      if (onRowClick) {
+                        onRowClick(row.original.id as number);
+                      }
+                    }}
                     style={{ cursor: "pointer" }}
                   >
                     {row.getVisibleCells().map((cell) => {
@@ -124,8 +126,8 @@ function Table<T extends WithId>({
                       return (
                         <td key={cell.id} className="table-cell">
                           {renderedCell !== null &&
-                          renderedCell !== undefined &&
-                          renderedCell !== "" ? (
+                            renderedCell !== undefined &&
+                            renderedCell !== "" ? (
                             renderedCell
                           ) : (
                             <span className="empty-cell">—</span>
@@ -142,7 +144,7 @@ function Table<T extends WithId>({
       </div>
 
       {/* Pagination Controls */}
-      {total_rms > (itemsPerPage ?? 10) && (
+      {total_rms && (total_rms > (itemsPerPage ?? 10)) && (
         <div className="pagination-container">
           <div className="pagination">
             <button
@@ -172,7 +174,7 @@ function Table<T extends WithId>({
               onClick={() => {
                 table.nextPage();
               }}
-              disabled={!table.getCanNextPage()}
+              disabled={!hasNextPage}
               className="pagination-button"
             >
               <BackArrow />

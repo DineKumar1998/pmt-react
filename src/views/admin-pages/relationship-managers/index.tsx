@@ -1,5 +1,9 @@
 import Button from "@/views/components/button";
+import ProfileWithOptionsIcon from "@/views/components/icons/table/ProfileWithOptions";
+import UserIcon from "@/views/components/icons/table/User";
 import ClockIcon from "@/views/components/icons/table/Clock";
+import LocationIcon from "@/views/components/icons/table/Locatiion";
+import UserGroupIcon from "@/views/components/icons/table/UserGroup";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -35,19 +39,36 @@ const RelationshipManagerPage: React.FC = () => {
   const columns: ColumnDef<RM>[] = [
     {
       accessorKey: "id",
-      header: t.table.rmId,
+      header: () => (
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <ProfileWithOptionsIcon /> {t.table.rmId}
+        </div>
+      ),
     },
     {
       accessorKey: "name",
-      header: t.table.name,
+      header: () => (
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <UserIcon /> {t.table.name}
+        </div>
+      ),
+
     },
     {
       accessorKey: "email",
-      header: t.table.email,
+      header: () => (
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <LocationIcon /> {t.table.email}
+        </div>
+      ),
     },
     {
       accessorKey: "phone",
-      header: t.table.phone,
+      header: () => (
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <UserIcon /> {t.table.phone}
+        </div>
+      ),
     },
     {
       accessorKey: "last_login",
@@ -59,7 +80,11 @@ const RelationshipManagerPage: React.FC = () => {
     },
     {
       accessorKey: "clients_assigned_count",
-      header: t.table.clientAssigned,
+      header: () => (
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <UserGroupIcon /> {t.table.clientAssigned}
+        </div>
+      ),
     },
   ];
 
@@ -83,17 +108,25 @@ const RelationshipManagerPage: React.FC = () => {
   };
 
 
+  const handleRowClick = (id: number) => {
+    console.log("handleRowClick:", id);
+    navigate(
+      `/relationship-managers/edit-rm/${id}`,
+    )
+  };
+
+
   const { data: rmList } = useQuery({
     queryKey: ['rmList', queryParams, selectedLang],
     queryFn: () =>
       getRMList({ ...queryParams, language: selectedLang }),
   });
 
-  const total_rms = rmList?.total_rms ?? 0;
+  const total_rms = rmList?.totalCount ?? 0;
 
   let updatedRmList: RM[] = [];
-  if (rmList?.rms?.length) {
-    updatedRmList = rmList.rms.map(
+  if (rmList?.data?.length) {
+    updatedRmList = rmList.data.map(
       ({
         first_name,
         last_name,
@@ -113,13 +146,13 @@ const RelationshipManagerPage: React.FC = () => {
         name: `${first_name} ${(last_name ?? '').trim()}`.trim(),
         last_login: last_login
           ? new Date(last_login).toLocaleString('en-GB', {
-              day: '2-digit',
-              month: 'short',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: true,
-            })
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          })
           : null,
         phone: country_code?.trim() && phone?.trim() ? `${country_code}${phone}` : ""
       })
@@ -153,7 +186,9 @@ const RelationshipManagerPage: React.FC = () => {
         data={updatedRmList}
         itemsPerPage={itemsPerPage}
         total_rms={total_rms}
+        hasNextPage={rmList?.hasNextPage ?? false}
         onPageChange={handlePageChange}
+        onRowClick={handleRowClick}
       />
     </div>
   );

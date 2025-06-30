@@ -1,10 +1,9 @@
-import { TOKEN_KEY } from "@/utils";
+import { AUTH } from "@/utils/constants";
 import axios, { AxiosError } from "axios";
-
-// const API_URL = import.meta.env.VITE_API_BASE_URL;
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const api = axios.create({
-  baseURL: "https://pmt-api.whdev.in/api",
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -25,7 +24,7 @@ api.interceptors.response.use(
       const axiosError = error as AxiosError;
 
       if (axiosError.status === 403) {
-        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(AUTH.TOKEN_KEY);
         window.location.href = "/login";
       }
       return {

@@ -7,10 +7,12 @@ import { LogoutIcon, UserCircleIcon, UserRoundedFillIcon } from "../icons";
 import { useMutation } from "@tanstack/react-query";
 import { logoutUser } from "../../../apis/auth";
 import { toast } from "react-toastify";
+import { ASSETS_FOLDERS, AUTH } from "@/utils/constants";
 
-const AvatarDropdown = ({ username = "Dinesh Kumar" }) => {
+const AvatarDropdown = () => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+
 
   const navigate = useNavigate();
 
@@ -32,9 +34,12 @@ const AvatarDropdown = ({ username = "Dinesh Kumar" }) => {
 
   const { mutate: logoutMutate } = useMutation({
     mutationFn: (body: any) => logoutUser(body),
-    onSuccess: (data) => {
-      console.log("logout success data=", data);
-      localStorage.removeItem("token");
+    onSuccess: (_data) => {
+      localStorage.removeItem(AUTH.PROFILE_IMG);
+      localStorage.removeItem(AUTH.TOKEN_KEY);
+      localStorage.removeItem(AUTH.USER_ID);
+      localStorage.removeItem(AUTH.USER_NAME);
+      localStorage.removeItem(AUTH.USER_TYPE);
       setOpen(false);
       navigate("/login");
     },
@@ -48,10 +53,20 @@ const AvatarDropdown = ({ username = "Dinesh Kumar" }) => {
     },
   });
 
+  const renderrAvatar = () => {
+    const profile = localStorage.getItem(AUTH.PROFILE_IMG);
+
+    if (profile && /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(profile)) {
+      return <img src={ASSETS_FOLDERS.PROFILE + "/" + profile} alt="User Avatar" />
+    }
+
+    return <img src={Avatar} alt="User Avatar" />
+  }
+
   return (
     <div className="avatar" ref={dropdownRef}>
       <button onClick={toggleDropdown} className="profile-img">
-        <img src={Avatar} alt="User Avatar" />
+        {renderrAvatar()}
         <span className="icon">
           <BackArrow />
         </span>
@@ -66,8 +81,8 @@ const AvatarDropdown = ({ username = "Dinesh Kumar" }) => {
                   <UserCircleIcon />
                 </span>
                 <div>
-                  <h4>{username}</h4>
-                  <small>Admin</small>
+                  <h4>{localStorage.getItem(AUTH.USER_NAME)}</h4>
+                  <small>{localStorage.getItem(AUTH.USER_TYPE)}</small>
                 </div>
               </p>
             </li>

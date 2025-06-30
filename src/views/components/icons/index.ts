@@ -12,6 +12,7 @@ import UserCircleIcon from "./UserCricle";
 import UserRoundedFillIcon from "./UserRoundedFill";
 import DeleteIcon from "./Delete";
 import ShuffleIcon from "./Shuffle";
+import Justice from "./Justice"
 
 export * as DashboardIcon from "./Dashboard";
 export * as RelationshipManagerIcon from "./RelationshipManager";
@@ -34,4 +35,5 @@ export {
   UserRoundedFillIcon,
   DeleteIcon,
   ShuffleIcon,
+  Justice
 };

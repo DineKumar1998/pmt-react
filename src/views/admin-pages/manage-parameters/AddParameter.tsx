@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ParameterField from "@/views/components/ParameterField";
+import ConfirmationModal from "@/views/components/ConfirmationModel";
+
 
 import Button from "@/views/components/button";
 
@@ -15,7 +17,7 @@ import {
   Controller,
   type SubmitHandler,
 } from "react-hook-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
   createParameter,
   mapParameterToIndustries,
@@ -27,7 +29,7 @@ import {
 import { getIndustryList } from "@/apis/industry";
 import { toast } from "react-toastify";
 import { useLang } from "@/context/LangContext";
-// import { translations } from "@/utils/translations";
+import { translations } from "@/utils/translations";
 import FilterIcon from "@assets/icons/Filter.svg";
 import CrossIcon from "@assets/icons/Cross.svg";
 
@@ -43,6 +45,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { ParameterSortableItem } from "@/views/components/ParameterSortableItem";
+import BackArrow from "@/views/components/icons/BackArrow";
 
 type FormValues = {
   parameter: string;
@@ -55,34 +58,40 @@ type FormValues = {
   rating: number | "";
 };
 
-const AddParameter = ({ label }: { label: string }) => {
+const AddParameter = () => {
   const navigate = useNavigate();
   const { selectedLang } = useLang();
-  // const t = translations[selectedLang];
+  const [language, setLanguage] = React.useState<"en" | "jp" | null>("en");
+
+  const t = translations[language || selectedLang];
   const { editParamId } = useParams();
   const isEditMode = !!editParamId;
 
-  const [language, setLanguage] = React.useState<"en" | "jp">("en");
   const [showIndustryMappingView, setShowIndustryMappingView] = useState(false);
   type Industry = { id: number; name: string };
   const [selectedIndustryList, setSelectedIndustryList] = useState<Industry[]>([]);
   const [disableIndustryMapping, setDisableIndustryMapping] = useState(true);
   const [disableParamEditing, setDisableParamEditing] = useState(false);
   const [parameterId, setParameterId] = useState(0);
+  const [selectedIndustryToDelete, setSelectedIndustryToDelete] = useState<any>(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
   const itemsPerPage = 10;
-  const [queryParams, _setQueryParams] = useState({
-    page: 1,
-    pageSize: itemsPerPage,
-    isPrimary: false,
-  });
-  type Parameter = {
-    id: number;
-    question: string;
-    // Add other fields if needed
-  };
-  const [parameterList, setParameterList] = useState<Parameter[]>([]);
+  // const [queryParams, _setQueryParams] = useState({
+  //   page: 1,
+  //   pageSize: itemsPerPage,
+  //   isPrimary: false,
+  // });
+  // type Parameter = {
+  //   id: number;
+  //   question: string;
+  //   // Add other fields if needed
+  // };
+  // const [parameterList, setParameterList] = useState<Parameter[]>([]);
   const leftRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement | null>(null);
+  const loadMoreRef = useRef(null);
+  const itemRefs = useRef<{ [key: number]: HTMLLIElement | null }>({});
 
 
   const handleLanguageChange = (lang: "en" | "jp") => {
@@ -230,10 +239,9 @@ const AddParameter = ({ label }: { label: string }) => {
       },
     });
 
-  const { data: industryList, refetch: industryListRefetch } = useQuery({
+  const { data: industryList } = useQuery({
     queryKey: ["industryList", selectedLang],
     queryFn: () => getIndustryList(selectedLang),
-    enabled: false,
   });
 
   const { data: paramData } = useQuery({
@@ -242,11 +250,35 @@ const AddParameter = ({ label }: { label: string }) => {
     enabled: isEditMode,
   });
 
-  const { data: paramList } = useQuery({
-    queryKey: ["paramList", queryParams, selectedLang],
-    queryFn: () => getParameterQuestions({ ...queryParams, language: selectedLang }),
+  // const { data: paramList } = useQuery({
+  //   queryKey: ["paramList", queryParams, selectedLang],
+  //   queryFn: () => getParameterQuestions({ ...queryParams, language: selectedLang }),
+  //   enabled: isEditMode,
+  // });
+  const {
+    data: paramList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["paramList", selectedLang],
+    queryFn: ({ pageParam = 1 }) =>
+      getParameterQuestions({
+        page: pageParam,
+        pageSize: itemsPerPage,
+        isPrimary: false,
+        language: selectedLang,
+      }),
+    getNextPageParam: (lastPage: any) => {
+      return lastPage.hasNextPage ? lastPage.page + 1 : undefined;
+    },
+    initialPageParam: 1,
     enabled: isEditMode,
   });
+  const parameterList = paramList?.pages.flatMap((page: any) => page.data) || [];
+  const selectedIndex = parameterList.findIndex(
+    (param) => param.id === Number(editParamId)
+  );
 
   const { mutate: deleteParameterIndustryMappingMutate } =
     useMutation({
@@ -274,6 +306,7 @@ const AddParameter = ({ label }: { label: string }) => {
       console.log("paramData loaded:", paramData);
 
       // Set industries for display
+      setSelectedIndustryList([]);
       if (paramData.industries?.length) {
         setSelectedIndustryList(paramData.industries)
       }
@@ -296,29 +329,98 @@ const AddParameter = ({ label }: { label: string }) => {
     }
   }, [paramData, reset]);
 
-  useEffect(() => {
-    if (paramList?.parameters?.length) {
-      setParameterList((prev) =>
-        queryParams.page === 1
-          ? [...paramList.parameters] // reset
-          : [...prev, ...paramList.parameters] // append
-      );
-    }
-  }, [paramList, queryParams.page]);
+  const hasScrolledRef = useRef(false);
+  const triedFetchingRef = useRef(false);
 
   useEffect(() => {
+    // Match height of parameter listing view to form view
     if (leftRef.current && rightRef.current) {
       const height = leftRef.current.offsetHeight;
       rightRef.current.style.height = `${height}px`;
     }
-  }, [parameterList]);
+
+    if (!editParamId || hasScrolledRef.current) return;
+
+    const paramId = Number(editParamId);
+
+    const tryScrollToItem = async () => {
+      const exists = parameterList.some((param) => param.id === paramId);
+      console.log("exists =", exists);
+
+      if (exists && itemRefs.current[paramId]) {
+        itemRefs.current[paramId]?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+        hasScrolledRef.current = true;
+        return;
+      }
+
+      if (hasNextPage && !triedFetchingRef.current) {
+        triedFetchingRef.current = true;
+        console.log("fetchNextPage 1");
+        await fetchNextPage();
+        triedFetchingRef.current = false;
+      }
+    };
+
+    tryScrollToItem();
+  }, [parameterList, editParamId]);
+
+
+
+
+  useEffect(() => {
+    //Call pagination api on scroll
+    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          console.log("fetchNextPage 2")
+          fetchNextPage();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [loadMoreRef.current, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const handleNavigateParam = (direction: "prev" | "next") => {
+    if (selectedIndex === -1) return;
+
+    const newIndex = direction === "prev" ? selectedIndex - 1 : selectedIndex + 1;
+
+    if (newIndex >= parameterList.length && hasNextPage && !isFetchingNextPage) {
+      console.log("fetchNextPage 3")
+      fetchNextPage();
+      return;
+    }
+
+    // Prevent out-of-bounds
+    if (newIndex < 0 || newIndex >= parameterList.length) return;
+
+    const nextParam = parameterList[newIndex];
+    navigate(`/manage-parameters/edit-parameter/${nextParam.id}`, {
+      replace: true,
+    });
+
+    // Scroll into view
+    itemRefs.current[nextParam.id]?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  };
+
 
   return (
     <div className="add-parameter-form">
       {!showIndustryMappingView ? (
         <div className="parent-section">
           <section className="left-section" ref={leftRef}>
-            <h2>{label}</h2>
+            <h2>{isEditMode ? t.heading.editParameter : t.heading.addParameter}</h2>
 
             <div className="language-buttons">
               <Button
@@ -335,7 +437,7 @@ const AddParameter = ({ label }: { label: string }) => {
 
             {isEditMode && selectedIndustryList?.length ? (
               <div className="mt-1">
-                <p>Industry</p>
+                <p>{t.heading.industry}</p>
                 <div className="industry-list-view">
                   <img
                     src={FilterIcon}
@@ -350,7 +452,8 @@ const AddParameter = ({ label }: { label: string }) => {
                         alt="Cross Icon"
                         style={{ marginLeft: "5px" }}
                         onClick={() => {
-                          deleteParameterIndustryMappingMutate(industry.id)
+                          setSelectedIndustryToDelete(industry);
+                          setShowConfirmationModal(true);
                         }}
                       />
                     </div>
@@ -362,7 +465,7 @@ const AddParameter = ({ label }: { label: string }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="form-container">
                 <div className="mt-1">
-                  <p>Parameter</p>
+                  <p>{t.heading.parameter}</p>
                   <Controller
                     control={control}
                     name="parameter"
@@ -376,7 +479,6 @@ const AddParameter = ({ label }: { label: string }) => {
                         className={errors.parameter ? "border-danger" : ""}
                         disabled={disableParamEditing}
                         showDeleteIcon={false}
-                        
                       />
                     )}
                   />
@@ -386,7 +488,7 @@ const AddParameter = ({ label }: { label: string }) => {
                   <div className="options">
                     <div className="outer-label">
                       <div className="options-label">
-                        <h4>Options</h4>
+                        <h4>{t.heading.options}</h4>
                         {!disableParamEditing ?
                           <span
                             className="add-option-button"
@@ -402,7 +504,7 @@ const AddParameter = ({ label }: { label: string }) => {
                             <AddCircle />
                           </span> : null}
                       </div>
-                      <h4 className="rating-label">Rating</h4>
+                      <h4 className="rating-label">{t.heading.rating}</h4>
                     </div>
 
                     <DndContext
@@ -435,33 +537,56 @@ const AddParameter = ({ label }: { label: string }) => {
                 </div>
               </div>
 
-              <div className="actions">
-                <Button
-                  className="generate-password"
-                  onClick={() => {
-                    industryListRefetch()
-                    setShowIndustryMappingView(true)
-                  }
-                  }
-                  text="Manage Industry Mapping"
-                  type="button"
-                  disabled={disableIndustryMapping}
-                />
-                <Button
-                  text="Save"
-                  type="submit"
-                  disabled={disableParamEditing}
-                  onClick={() => null}
-                />
+              <div className={`parent-actions ${isEditMode && parameterList.length ? 'has-actions-left' : ''}`}>
+                {isEditMode && parameterList.length ?
+                  <div className="actions-left">
+                    <button
+                      onClick={() => handleNavigateParam("prev")}
+                      disabled={selectedIndex <= 0}
+                      className="pagination-button"
+                      type="button"
+                    >
+                      <BackArrow />
+                    </button>
+                    <button
+                      onClick={() => handleNavigateParam("next")}
+                      disabled={selectedIndex >= parameterList.length - 1 && !hasNextPage}
+                      className="pagination-button"
+                      type="button"
+                    >
+                      <BackArrow />
+                    </button>
+                  </div> : null}
+                <div className="actions-right">
+                  <Button
+                    className="generate-password"
+                    onClick={() => {
+                      setShowIndustryMappingView(true)
+                    }
+                    }
+                    text={t.buttons.manageIndustryMapping}
+                    type="button"
+                    disabled={disableIndustryMapping}
+                  />
+                  <Button
+                    text={t.buttons.save}
+                    type="submit"
+                    disabled={disableParamEditing}
+                    onClick={() => null}
+                  />
+                </div>
               </div>
             </form>
           </section>
           {isEditMode && parameterList.length ?
             <section className="parameters-list" ref={rightRef}>
               <ul>
-                {parameterList.map((parameter, index) =>
+                {parameterList.map((parameter) =>
                   <li
                     key={parameter.id}
+                    ref={(el) => {
+                      itemRefs.current[parameter.id] = el;
+                    }}
                     onClick={() => {
                       navigate(`/manage-parameters/edit-parameter/${parameter.id}`, {
                         replace: true,
@@ -469,15 +594,31 @@ const AddParameter = ({ label }: { label: string }) => {
                     }}
                     className={parameter.id === Number(editParamId) ? "selected-param" : ""}
                   >
-                    {index + 1}. {parameter?.question}
+                    {parameter.id}. {parameter?.question}
                   </li>
                 )}
               </ul>
+              <div ref={loadMoreRef}></div>
             </section> : null}
+
+          {showConfirmationModal && selectedIndustryToDelete && (
+            <ConfirmationModal
+              message={`Are you sure you want to delete "${selectedIndustryToDelete.name}"?`}
+              onConfirm={() => {
+                deleteParameterIndustryMappingMutate(selectedIndustryToDelete.id);
+                setShowConfirmationModal(false);
+                setSelectedIndustryToDelete(null);
+              }}
+              onCancel={() => {
+                setShowConfirmationModal(false);
+                setSelectedIndustryToDelete(null);
+              }}
+            />
+          )}
         </div>
       ) : (
         <div className="industry-mapping-view">
-          <p>Please choose your Industry</p>
+          <p>{t.text.chooseIndustry}</p>
           <div className="industry-grid">
             {industryList?.length
               ?
@@ -498,13 +639,13 @@ const AddParameter = ({ label }: { label: string }) => {
                   {industry.name}
                 </label>
               ))
-              : <p>No industry found</p>
+              : <p>{t.text.noIndustryFound}</p>
             }
           </div>
 
           <div className="actions">
             <Button
-              text="Save"
+              text={t.buttons.save}
               onClick={() => handleIndustryMapping()}
               type="button"
             />

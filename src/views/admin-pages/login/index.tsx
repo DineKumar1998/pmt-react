@@ -6,7 +6,6 @@ import type { FieldValues, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { dynamicLoginSchema } from "@/validations/authValidator";
 import { Link, useNavigate } from "react-router-dom";
-import { TOKEN_KEY } from "@/utils";
 
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
@@ -14,6 +13,7 @@ import { loginUser, verifyOtp } from "@/apis/auth";
 import { ToastContainer, toast } from "react-toastify";
 
 import "./login.scss"; // Assuming a CSS file for styling
+import { AUTH } from "@/utils/constants";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ const Login = () => {
       setState((prev) => ({
         ...prev,
         showOtpView: true,
-        otp: data.otp, 
+        otp: data.otp,
       }));
     },
   });
@@ -64,7 +64,18 @@ const Login = () => {
         });
       }
 
-      localStorage.setItem(TOKEN_KEY, data.authToken);
+      localStorage.setItem(AUTH.TOKEN_KEY, data.authToken);
+      localStorage.setItem(AUTH.USER_ID, data.user?.id);
+      localStorage.setItem(
+        AUTH.USER_NAME,
+        [data.user?.first_name, data.user?.last_name].filter(Boolean).join(" ")
+      );
+      localStorage.setItem(AUTH.USER_TYPE, data.user?.user_type);
+
+      if (data.user?.profile_img) {
+        localStorage.setItem(AUTH.PROFILE_IMG, data.user.profile_img);
+      }
+
       navigate("/dashboard");
     },
     onError: (error: any) => {
@@ -138,7 +149,7 @@ const Login = () => {
                 control={control}
               />
 
-                            {state.otp && (
+              {state.otp && (
                 <p>
                   OTP (Testing purpose only): <strong>{state.otp}</strong>
                 </p>
@@ -146,7 +157,7 @@ const Login = () => {
 
               <div style={{ marginTop: 10 }}>
                 <Button
-                  text={otpPending ? "Verifying" : "Verify"}
+                  text={otpPending ? "Verifying" : "Login"}
                   type="submit"
                   onClick={() => null}
                   disabled={otpPending}
@@ -175,7 +186,7 @@ const Login = () => {
               />
               <div style={{ marginTop: 10 }}>
                 <Button
-                  text={isPending ? "Logining..." : "Login"}
+                  text={isPending ? "Verifying" : "Submit"}
                   type="submit"
                   onClick={() => null}
                   disabled={isPending}

@@ -3,9 +3,16 @@ import React from "react";
 // ** SCSS
 import "./index.scss";
 import Button from "@/views/components/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from '@tanstack/react-query'
+import { useLang } from "@/context/LangContext";
+import { getClientById } from "@/apis/client";
+import { translations } from "@/utils/translations";
 
-const EditClient = ({ label }: { label: string }) => {
+const EditClient = () => {
+  const { selectedLang } = useLang();
+  const t = translations[selectedLang];
+  const { clientId } = useParams();
   let navigate = useNavigate();
 
   const [formData, setFormData] = React.useState({
@@ -38,11 +45,19 @@ const EditClient = ({ label }: { label: string }) => {
     navigate(-1);
   };
 
+  const { data: clientData } = useQuery({
+    queryKey: ['clientData', clientId, selectedLang],
+    queryFn: () =>
+      getClientById(clientId || "", selectedLang),
+  });
+
+  console.log("clientData=", clientData)
+
   return (
     <div className="edit-client">
-      <h2 className="mb-1">{label}</h2>
+      <h2 className="mb-1">{t.heading.editParameter}</h2>
       <div className="details">
-        <label className="label">Company Name:</label>
+        <label className="label">Company Name</label>
         <span className="text-value">{formData.companyName}</span>
 
         <label className="label">Industry</label>

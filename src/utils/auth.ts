@@ -1,8 +1,9 @@
-export const TOKEN_KEY = "token";
+import { AUTH } from "./constants";
+
 
 export const isLoggedIn = (): boolean => {
   try {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = localStorage.getItem(AUTH.TOKEN_KEY);
     if (!token) return false;
 
     // const payload = JSON.parse(atob(token.split(".")[1]));
@@ -15,7 +16,7 @@ export const isLoggedIn = (): boolean => {
     return true;
   } catch (error) {
     console.error("Error validating auth token:", error);
-    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(AUTH.TOKEN_KEY);
     return false;
   }
 };

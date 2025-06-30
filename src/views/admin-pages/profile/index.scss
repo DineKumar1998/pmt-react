@@ -1,0 +1,134 @@
+@use "../../../styles/variables" as *;
+
+.profile-form {
+    background-color: $white;
+    border-radius: 10px;
+    padding: 1rem;
+
+    .profile-heading {
+        color: $primary;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    hr {
+        border: none;
+        background-color: $input-border-color;
+        height: 1px;
+    }
+
+    .parent-section {
+        display: flex;
+        align-items: flex-start;
+        gap: 5rem;
+        margin-top: 1.5rem;
+
+        .left-section {
+            flex: 1;
+
+            .field-section {
+                display: flex;
+                align-items: flex-start;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+
+                label {
+                    font-size: 14px;
+                    color: $primary;
+                    font-weight: 500;
+                    flex: 3;
+
+                    .required-star {
+                        color: $red;
+                    }
+                }
+
+                .input-section {
+                    flex: 7;
+
+                    .password-wrapper {
+                        position: relative;
+
+                        .change-password-text {
+                            position: absolute;
+                            top: 50%;
+                            right: 16px;
+                            transform: translateY(-50%);
+                            font-size: 14px;
+                            color: $blue;
+                            cursor: pointer;
+                            user-select: none;
+                        }
+                    }
+
+                    .country-select {
+                        padding: 0.65rem 0.4rem;
+                        border-radius: 8px 0 0 8px;
+                        font-size: 14px;
+                        border: 1px solid $input-border-color;
+                        border-right: none;
+                        color: $gray-primary;
+                        outline: none;
+                    }
+
+                    .input-field {
+                        padding: 0.7rem;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        width: 100%;
+                        border: 1px solid $input-border-color;
+                        color: $gray-primary;
+                        outline: none;
+                        box-sizing: border-box;
+
+                        &::placeholder {
+                            color: $placeholder-color
+                        }
+                    }
+
+                    .image-preview-wrapper {
+                        margin-top: 0.5rem;
+
+                        .image-preview {
+                            width: 50px;
+                            height: 50px;
+                            object-fit: cover;
+                            border-radius: 50%;
+                        }
+                    }
+                }
+
+            }
+
+            .actions {
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+
+        .right-section {
+            flex: 1;
+
+            .info-section {
+                display: flex;
+                align-items: flex-start;
+                background-color: $bg-color;
+                border-radius: 8px;
+                padding: 0.5rem 1.2rem 0.5rem 1.2rem;
+                font-size: 14px;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+
+                label {
+                    flex: 1;
+                    color: $dark-secondary;
+                }
+
+                p {
+                    flex: 1;
+                    color: $gray-primary;
+                }
+            }
+        }
+    }
+}

@@ -5,7 +5,7 @@ export interface RouteType {
   label?: string;
   icon?: LazyExoticComponent<ComponentType<any>>;
   component: LazyExoticComponent<ComponentType<any>>;
-  layout?: "auth" | "default" | "none";
+  layout?: "auth" | "default" | "other";
   permission?: string;
   group?: string;
   children?: RouteType[];

@@ -20,7 +20,32 @@ export const createRM = async (data: any) => {
 }
 
 export const editRM = async (id: string | number, data: any) => {
-    const response = await api.patch(`/rm/edit/${id}`, data)
+    const response = await api.patch(`/rm/edit/${id}`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    })
     console.log("editRM response=", response.data)
+    return response.data
+}
+
+export const getRMByRecentActivity = async (params: any) => {
+    const response = await api.get('/rm/list/recent/activity', {
+        params
+    })
+    return response.data
+}
+
+export const getTop5RM = async (params: any) => {
+    const response = await api.get('/rm/list/top', {
+        params
+    })
+    return response.data
+}
+
+export const getRMNames = async (language: string) => {
+    const response = await api.get('/rm/listing', {
+        params: { language },
+    })
     return response.data
 }

@@ -33,8 +33,13 @@ export const editRMValidator = z
         email: z.string().email("Invalid email"),
         country_code: z.enum(["+91", "+81"]),
         phone: z.string(),
-        password: z.string().min(6, "Password must be at least 6 characters long"),
-        profile_img: z.string().optional(),
+        password: z
+            .string()
+            .optional()
+            .refine((val) => !val || val.length >= 6, {
+                message: "Password must be at least 6 characters long",
+            }),
+        profile_img: z.instanceof(File).optional(),
     })
     .partial()
     .refine(

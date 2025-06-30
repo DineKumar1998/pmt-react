@@ -1,4 +1,4 @@
-import type { ColorType } from "./types";
+import type { ColorType } from "@/types/other";
 
 export const colorMap: Record<ColorType, string> = {
     purple: "#2F93FD",
@@ -39,23 +39,4 @@ export const colorMap: Record<ColorType, string> = {
     "secondary-light": "#77ff97",
     "secondary-dark": "#30A448",
     "light-opacity": "#ffffff4d",
-};
-
-// enum LeadStatusEnum {
-//   Deleted // 0
-//   Spam // 2
-//   NBInc // 5
-//   NBComp // 6
-//   EBInc // 7
-//   EBComp // 8
-//   Verified // 9
-// }
-export const leadStatusColorMap: Record<string, keyof typeof colorMap> = {
-    Deleted: "danger",
-    Spam: "warning",
-    NBInc: "primary",
-    NBComp: "secondary",
-    EBInc: "blue",
-    EBComp: "info",
-    Verified: "secondary",
 };

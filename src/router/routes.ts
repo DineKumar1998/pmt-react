@@ -2,30 +2,34 @@ import { lazy } from "react";
 import type { RouteType } from "@/types";
 
 // Lazy load pages
-const DashboardPage = lazy(() => import("../views/pages/dashboard"));
-const LoginPage = lazy(() => import("../views/pages/login"));
-const NotFoundPage = lazy(() => import("../views/pages/not-found"));
+const DashboardPage = lazy(() => import("../views/admin-pages/dashboard"));
+const LoginPage = lazy(() => import("../views/admin-pages/login"));
+const NotFoundPage = lazy(() => import("../views/admin-pages/not-found"));
 const RelationshipManagersPage = lazy(
-  () => import("../views/pages/relationship-managers"),
+  () => import("../views/admin-pages/relationship-managers"),
 );
 const AddRMPage = lazy(
-  () => import("../views/pages/relationship-managers/AddRmForm"),
+  () => import("../views/admin-pages/relationship-managers/AddRmForm"),
 );
 
-const ClientListPage = lazy(() => import("../views/pages/client-list"));
+const ClientListPage = lazy(() => import("../views/admin-pages/client-list"));
 const EditClientPage = lazy(
-  () => import("../views/pages/client-list/EditClient"),
+  () => import("../views/admin-pages/client-list/EditClient"),
 );
 
 const ManageParametersPage = lazy(
-  () => import("../views/pages/manage-parameters"),
+  () => import("../views/admin-pages/manage-parameters"),
 );
 const AddParameterPage = lazy(
-  () => import("../views/pages/manage-parameters/AddParameter"),
+  () => import("../views/admin-pages/manage-parameters/AddParameter"),
 );
 
 const ManageWeightagePage = lazy(
-  () => import("../views/pages/manage-weightage"),
+  () => import("../views/admin-pages/manage-weightage"),
+);
+
+const UserProfilePage = lazy(
+  () => import("../views/admin-pages/profile"),
 );
 
 // ** Lazy Icons
@@ -78,7 +82,7 @@ export const routes: RouteType[] = [
     layout: "default",
     permission: "add-rm:page",
     group: "Children",
-    label: "Add Relationship Manager",
+    label: "Add User",
   },
   {
     path: "/relationship-managers/edit-rm/:rmId",
@@ -86,7 +90,7 @@ export const routes: RouteType[] = [
     layout: "default",
     permission: "edit-rm:page",
     group: "Children",
-    label: "Edit Relationship Manager",
+    label: "Edit User",
   },
   {
     path: "/client-list",
@@ -139,6 +143,22 @@ export const routes: RouteType[] = [
     label: "Manage Weightage",
     icon: ManageWeightageIcon,
   },
+  {
+    path: "/manage-weightage/industry",
+    component: ManageParametersPage,
+    layout: "default",
+    permission: "manage-industry-weightage:page",
+    group: "Children",
+    label: "Manage Industry Weightage",
+  },
+  {
+    path: "/profile",
+    component: UserProfilePage,
+    layout: "other",
+    permission: "profile:page",
+    group: "Main",
+    label: "Profile",
+  }
 ];
 
 export const SidebarRoutes: RouteType[] = routes.filter(

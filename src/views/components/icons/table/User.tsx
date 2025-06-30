@@ -1,4 +1,4 @@
-const TrendingIcon = ({
+const UserIcon = ({
   width = 18,
   height = 18,
   fill = "currentColor",
@@ -35,4 +35,4 @@ const TrendingIcon = ({
   );
 };
 
-export default TrendingIcon;
+export default UserIcon;
