@@ -27,7 +27,6 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const breadcrumbs = getBreadcrumbs(breakcrumbPath);
 
-  console.log("breadcrumbsData=", breadcrumbsData)
 
   function getBreadcrumbs(pathname?: string) {
     //Set initial breadcrumb of dashboard
@@ -45,7 +44,12 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
           if (accumulatedPath === "/manage-weightage/industry") {
             const industryName = searchParams.get("industryName");
             crumbs.push({ label: industryName ?? t.routes[route.label], path: accumulatedPath });
-          } else {
+          }
+          else if (accumulatedPath === "/client-list/parameters") {
+            const clientName = searchParams.get("clientName");
+            crumbs.push({ label: clientName ?? t.routes[route.label], path: accumulatedPath });
+          }
+          else {
             crumbs.push({ label: t.routes[route.label], path: accumulatedPath });
           }
         }

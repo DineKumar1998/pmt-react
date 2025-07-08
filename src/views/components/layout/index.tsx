@@ -1,11 +1,11 @@
 // components/layout/index.tsx
 import React, { useState } from "react";
-import LayoutSidebar from "./Sidebar";
-import type { LayoutProps } from "@/types";
 
 import "./layout.scss";
 import Header from "./Header";
 import { LangProvider } from "@/context/LangContext";
+import type { LayoutProps } from "@/types/routes";
+import LayoutSidebar from "./sidebar";
 
 const Layout: React.FC<LayoutProps> = ({ children, route }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,7 +23,7 @@ const Layout: React.FC<LayoutProps> = ({ children, route }) => {
         {/* Main Layout */}
         {/* Sidebar */}
         <aside>
-          <LayoutSidebar />
+          <LayoutSidebar/>
         </aside>
 
         {/* Main Content */}

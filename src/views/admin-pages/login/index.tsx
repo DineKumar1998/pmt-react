@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import TextBox from "@/views/components/TextBox";
 import Button from "@/views/components/button";
 
@@ -13,11 +13,14 @@ import { loginUser, verifyOtp } from "@/apis/auth";
 import { ToastContainer, toast } from "react-toastify";
 
 import "./login.scss"; // Assuming a CSS file for styling
-import { AUTH } from "@/utils/constants";
+// import { AUTH } from "@/utils/constants";
+import AuthContext from "@/context/AuthContext";
+import ReCAPTCHA from 'react-google-recaptcha';
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const Login = () => {
   const navigate = useNavigate();
-
+  const { login } = useContext(AuthContext);
   const [state, setState] = useState({
     showOtpView: false,
     otp: null as string | null,
@@ -29,12 +32,15 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<{ email?: string; password?: string; otp?: string }>({
+    setValue
+  } = useForm<{ email?: string; password?: string; otp?: string; captcha?: string }>({
     resolver: zodResolver(dynamicLoginSchema(state.showOtpView) as any),
     defaultValues: state.showOtpView
       ? { otp: "" }
-      : { email: "", password: "" },
+      : { email: "", password: "", captcha: "123" },
   });
+
+  console.log("RECAPTCHA_SITE_KEY=", RECAPTCHA_SITE_KEY)
 
   const { mutateAsync: loginMutate, isPending } = useMutation({
     mutationFn: (body: { email: string; password: string }) => loginUser(body),
@@ -64,17 +70,30 @@ const Login = () => {
         });
       }
 
-      localStorage.setItem(AUTH.TOKEN_KEY, data.authToken);
-      localStorage.setItem(AUTH.USER_ID, data.user?.id);
-      localStorage.setItem(
-        AUTH.USER_NAME,
-        [data.user?.first_name, data.user?.last_name].filter(Boolean).join(" ")
-      );
-      localStorage.setItem(AUTH.USER_TYPE, data.user?.user_type);
+      // localStorage.setItem(AUTH.TOKEN_KEY, data.authToken);
+      // localStorage.setItem(AUTH.USER_ID, data.user?.id);
 
-      if (data.user?.profile_img) {
-        localStorage.setItem(AUTH.PROFILE_IMG, data.user.profile_img);
-      }
+      // localStorage.setItem(
+      //   AUTH.USER_NAME,
+      //   [data.user?.first_name, data.user?.last_name].filter(Boolean).join(" ")
+      // );
+      // localStorage.setItem(AUTH.USER_TYPE, data.user?.user_type);
+
+      // if (data.user?.profile_img) {
+      //   localStorage.setItem(AUTH.PROFILE_IMG, data.user.profile_img);
+      // }
+
+
+
+      login(
+        data.authToken,
+        data.user?.id,
+        data.user?.first_name,
+        data.user?.last_name,
+        data.user?.profile_img,
+        data.user?.user_type
+      );
+
 
       navigate("/dashboard");
     },
@@ -90,6 +109,7 @@ const Login = () => {
     },
   });
 
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       if (data.email && data.password) {
@@ -101,7 +121,6 @@ const Login = () => {
         await loginMutate({ email: data.email, password: data.password });
       } else {
         if (data.otp) {
-          console.log("OTP:", data);
           console.log("Email from state:", storedEmail);
           //API Call
           otpMutate({
@@ -115,6 +134,11 @@ const Login = () => {
       // Fix for toast not working
       alert("An error occurred during login. Please try again.");
     }
+  };
+
+  const handleCaptchaChange = (value: string | null) => {
+    console.log("Captcha value:", value);
+    setValue("captcha", value || "");
   };
 
   return (
@@ -184,6 +208,14 @@ const Login = () => {
                 errors={errors}
                 control={control}
               />
+
+              <ReCAPTCHA
+                sitekey={RECAPTCHA_SITE_KEY}
+                onChange={handleCaptchaChange}
+              />
+              {errors?.captcha && (
+                <p className="form-error">{errors.captcha.message}</p>
+              )}
               <div style={{ marginTop: 10 }}>
                 <Button
                   text={isPending ? "Verifying" : "Submit"}

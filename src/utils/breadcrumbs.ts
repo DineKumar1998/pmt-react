@@ -51,5 +51,13 @@ export const breadcrumbsData: BreadcrumbType[] = [
     {
         path: "/profile",
         label: "profile",
-    }
+    },
+    {
+        path: "/client-list/parameters",
+        label: "clientParameters",
+    },
+    {
+        path: "/client-list/edit-parameter",
+        label: "editParameter",
+    },
 ];

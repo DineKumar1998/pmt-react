@@ -1,9 +1,12 @@
 import { NavLink } from "react-router-dom";
 
-import { SidebarRoutes } from "@/router/routes";
+// import { s } from "@/router/routes";
+import usePermissions from "@/hooks/usePermissions";
+import { useAppRoutes } from "@/hooks/useRoutes";
 
 const LayoutSidebar = () => {
-  // const { permissions, adminPermission } = useMyPermissions();
+  const { hasPermission } = usePermissions();
+  const {sidebarRoutes} = useAppRoutes()
 
   return (
     <>
@@ -13,9 +16,8 @@ const LayoutSidebar = () => {
         </NavLink>
 
         <ul className="sidebar-list">
-          {SidebarRoutes.map((route) => {
+          {sidebarRoutes.filter((route)=>hasPermission(route.permission)).map((route) => {
             if (route.label?.length === 0) return null;
-
             return (
               <NavLink
                 to={route.path}

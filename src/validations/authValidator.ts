@@ -23,6 +23,10 @@ export const otpValidation = z
         message: "OTP is required",
     })
 
+export const captchaValidation = z
+    .string()
+    .min(1, { message: "CAPTCHA verification is required" })
+
 
 export const dynamicLoginSchema = (isOtpStep: boolean) => {
     return isOtpStep
@@ -32,6 +36,7 @@ export const dynamicLoginSchema = (isOtpStep: boolean) => {
         : z.object({
             email: emailValidation,
             password: passwordValidation,
+            captcha: captchaValidation
         });
 };
 

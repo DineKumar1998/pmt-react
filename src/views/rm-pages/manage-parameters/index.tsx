@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import "./index.scss";
+import "./ParameterIndex.scss";
 import Button from "@/views/components/button";
 import {
   AddCircleIcon,

@@ -4,6 +4,8 @@ import {
     Controller,
 } from "react-hook-form";
 import ParameterField from "@/views/components/ParameterField";
+import { useLang } from "@/context/LangContext";
+import { translations } from "@/utils/translations";
 
 type ParameterSortableItemProps = {
     id: string;
@@ -38,6 +40,10 @@ export const ParameterSortableItem = ({ id, index, control, register, errors, re
         transition,
     };
 
+    const { selectedLang } = useLang();
+    const t = translations[selectedLang];
+
+
     return (
         <div ref={setNodeRef} style={style} {...attributes} className="option-row">
             <Controller
@@ -48,7 +54,7 @@ export const ParameterSortableItem = ({ id, index, control, register, errors, re
                     <ParameterField
                         {...field}
                         isShuffleIcon={true}
-                        placeholder="Enter option text"
+                        placeholder={t.text.enterOptionText}
                         className={errors.options?.[index]?.option_text ? "border-danger" : ""}
                         removeParameter={() => remove(index)}
                         dragHandleProps={listeners} // 👈 Pass drag handle here

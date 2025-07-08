@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 
 import Avatar from "@assets/Avatar.png";
 import BackArrow from "../icons/BackArrow";
@@ -7,12 +7,13 @@ import { LogoutIcon, UserCircleIcon, UserRoundedFillIcon } from "../icons";
 import { useMutation } from "@tanstack/react-query";
 import { logoutUser } from "../../../apis/auth";
 import { toast } from "react-toastify";
-import { ASSETS_FOLDERS, AUTH } from "@/utils/constants";
+import { ASSETS_FOLDERS } from "@/utils/constants";
+import AuthContext from "@/context/AuthContext";
 
 const AvatarDropdown = () => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-
+  const { user, logout } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -35,11 +36,7 @@ const AvatarDropdown = () => {
   const { mutate: logoutMutate } = useMutation({
     mutationFn: (body: any) => logoutUser(body),
     onSuccess: (_data) => {
-      localStorage.removeItem(AUTH.PROFILE_IMG);
-      localStorage.removeItem(AUTH.TOKEN_KEY);
-      localStorage.removeItem(AUTH.USER_ID);
-      localStorage.removeItem(AUTH.USER_NAME);
-      localStorage.removeItem(AUTH.USER_TYPE);
+      logout();
       setOpen(false);
       navigate("/login");
     },
@@ -52,16 +49,23 @@ const AvatarDropdown = () => {
       toast.error(message);
     },
   });
+ 
 
   const renderrAvatar = () => {
-    const profile = localStorage.getItem(AUTH.PROFILE_IMG);
-
-    if (profile && /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(profile)) {
-      return <img src={ASSETS_FOLDERS.PROFILE + "/" + profile} alt="User Avatar" />
+    if (
+      user.profile_img &&
+      /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(user.profile_img)
+    ) {
+      return (
+        <img
+          src={ASSETS_FOLDERS.PROFILE + "/" + user.profile_img}
+          alt="User Avatar"
+        />
+      );
     }
 
-    return <img src={Avatar} alt="User Avatar" />
-  }
+    return <img src={Avatar} alt="User Avatar" />;
+  };
 
   return (
     <div className="avatar" ref={dropdownRef}>
@@ -76,15 +80,15 @@ const AvatarDropdown = () => {
         <div className="dropdown-menu ">
           <ul>
             <li>
-              <p className="username">
+              <div className="username">
                 <span>
                   <UserCircleIcon />
                 </span>
                 <div>
-                  <h4>{localStorage.getItem(AUTH.USER_NAME)}</h4>
-                  <small>{localStorage.getItem(AUTH.USER_TYPE)}</small>
+                  <h4>{user.user_name}</h4>
+                  <small>{user.user_type}</small>
                 </div>
-              </p>
+              </div>
             </li>
             <li>
               <NavLink to="/profile" onClick={() => setOpen(false)}>

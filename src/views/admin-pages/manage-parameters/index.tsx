@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 
 import "./index.scss";
 import Button from "@/views/components/button";
@@ -9,13 +9,13 @@ import {
   Justice
 } from "@/views/components/icons";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getParameterList } from "@/apis/parameter";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getParameterList, editParameterWeightages, exportParameterList } from "@/apis/parameter";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import BackArrow from "@/views/components/icons/BackArrow";
 import { EditIcon } from "@/views/components/icons";
-import { useForm, type FieldError } from "react-hook-form";
+import { useForm, type FieldError, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
 
 
@@ -56,18 +56,9 @@ const ManageParametersPage: React.FC = () => {
     page: 1,
     pageSize: itemsPerPage,
     isPrimary: activeTab === "primary",
+    industry_id: industryId ?? 0
   });
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues: {
-      parameters: [{ weightage: 0 }],
-    },
-  });
 
   useEffect(() => {
     setQueryParams((prev) => ({
@@ -84,7 +75,6 @@ const ManageParametersPage: React.FC = () => {
     setActiveTab((prev) => {
       return prev === key ? prev : key;
     });
-    console.log("key=", key);
   };
 
   const handleBackClick = () => {
@@ -105,29 +95,93 @@ const ManageParametersPage: React.FC = () => {
     );
   };
 
+  const handleExportParameter = () => {
+    console.log("handleExportParameter clicked")
+    exportParameterMutate({
+      isPrimary: queryParams.isPrimary,
+      language: selectedLang,
+    })
+  }
+
   const { data: parameterList } = useQuery({
     queryKey: ["parameterList", queryParams, selectedLang],
     queryFn: () => getParameterList({ ...queryParams, language: selectedLang }),
   });
 
+  const { mutate: exportParameterMutate } =
+    useMutation({
+      mutationFn: (body: any) => exportParameterList(body),
+      onSuccess: (data) => {
+        const url = window.URL.createObjectURL(new Blob([data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'parameters.xlsx'); // set your filename
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      },
+      onError: (error: any) => {
+        const message = error?.message;
+        console.error("exportParameterMutate error =", message);
+        toast.error(message);
+      },
+    });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    control
+  } = useForm<FormValues>({
+    defaultValues: {
+      parameters: [],
+    },
+  });
+
+  const initialValues = useRef<{ id: number; weightage: number }[]>([]);
   useEffect(() => {
     if (parameterList?.data.length) {
-      const weightageData = parameterList.data.map((param: any) => ({
+      const params = parameterList.data.map((param: any) => ({
         id: param.id,
-        weightage: param.weightage || 0,
+        weightage: param.weightage ?? 0,
       }));
-      setValue("parameters", weightageData);
-
+      reset({ parameters: params });
+      initialValues.current = params;
       setTotalPages(Math.ceil(parameterList.totalCount / parameterList.limit));
     }
-  }, [parameterList]);
+  }, [parameterList, reset]);
 
   // const getParameterNumber = (index: number) => {
   //   return ((queryParams.page - 1) * itemsPerPage) + (index + 1)
   // }
 
+  const watchedParameters = useWatch({
+    name: "parameters",
+    control,
+  });
+
+  const isFormChanged = useMemo(() => {
+
+    return watchedParameters?.some((param, index) => {
+      const initialParam = initialValues.current?.[index];
+      if (!initialParam) return false;
+      if (!param.weightage) return false;
+      return param.weightage !== initialParam.weightage;
+    });
+  }, [watchedParameters]);
+
   const onSubmit = (data: any) => {
-    console.log("Submitted weightages:", data.parameters);
+    const currentValues = data.parameters;
+    const changedParameters = currentValues.filter((param: any, index: number) => {
+      return param.weightage !== initialValues.current[index]?.weightage;
+    });
+    const formattedData = {
+      weightages: changedParameters
+    }
+    console.log("formattedData=", formattedData)
+    editParameterWeightagesMutate(formattedData)
   };
 
   const onError = (errors: any) => {
@@ -139,6 +193,20 @@ const ManageParametersPage: React.FC = () => {
       }
     }
   };
+
+  const { mutate: editParameterWeightagesMutate } =
+    useMutation({
+      mutationFn: (body: any) => editParameterWeightages(body),
+      onSuccess: (data) => {
+        console.log("editParameterWeightages success data=", data);
+        toast.success("Weightage successfully updated");
+      },
+      onError: (error: any) => {
+        const message = error?.message;
+        console.error("editParameterWeightages error =", message);
+        toast.error(message);
+      },
+    });
 
   return (
     <div className="manage-parameters-page">
@@ -180,13 +248,13 @@ const ManageParametersPage: React.FC = () => {
             : <>
               {activeTab === "secondary" && (
                 <Button
-                  text="Add Parameter"
+                  text={t.heading.addParameter}
                   icon={<AddCircleIcon />}
                   onClick={handleAddParameter}
                   className="add-parameter-button"
                 />
               )}
-              <button className="export-button">
+              <button onClick={handleExportParameter} className="export-button">
                 <DownloadIcon />
               </button>
             </>}
@@ -278,6 +346,7 @@ const ManageParametersPage: React.FC = () => {
             <Button
               text={t.buttons.save}
               type="submit"
+              disabled={!isFormChanged}
               onClick={handleSubmit(onSubmit, onError)}
             />
             <Button

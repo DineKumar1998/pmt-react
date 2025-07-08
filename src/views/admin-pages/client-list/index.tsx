@@ -25,6 +25,8 @@ type Client = {
   assigned_date: string | null;
   rm_name: string | null;
   project_count: number | null;
+  primary_percentage: number;
+  secondary_percentage: number;
 };
 
 const ClientListPage: React.FC = () => {
@@ -38,6 +40,18 @@ const ClientListPage: React.FC = () => {
   });
   const navigate = useNavigate();
 
+  const ProgressBar = ({ value, isPrimary }: { value: number; isPrimary?: boolean }) => (
+    <div
+      className="progress-bar"
+    >
+      <div
+        className={`progress-bar-fill ${isPrimary ? "primary-fill" : "secondary-fill"}`}
+        style={{
+          width: `${value}%`,
+        }} />
+    </div>
+  );
+
 
   const columns: ColumnDef<Client>[] = [
     {
@@ -47,6 +61,7 @@ const ClientListPage: React.FC = () => {
           <ProfileWithOptionsIcon /> {t.table.id}
         </div>
       ),
+      size: 40
     },
     {
       accessorKey: "client_name",
@@ -55,6 +70,7 @@ const ClientListPage: React.FC = () => {
           <UserIcon /> {t.table.name}
         </div>
       ),
+      size: 120
     },
     {
       accessorKey: "industry_name",
@@ -63,6 +79,34 @@ const ClientListPage: React.FC = () => {
           <BagIcon /> {t.table.industry}
         </div>
       ),
+      size: 120
+    },
+    {
+      id: "status",
+      header: () => (
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <LocationIcon /> {t.formLabel.status}
+        </div>
+      ),
+      cell: ({ row }) => {
+        const { primary_percentage, secondary_percentage } = row.original;
+        return (
+          <div className="progress-bar-wrapper">
+            <div className="progress-bar-container">
+              <span>P</span>
+              <ProgressBar value={primary_percentage} isPrimary={true} />
+              <span>{primary_percentage}%</span>
+            </div>
+
+            <div className="progress-bar-container">
+              <span>S</span>
+              <ProgressBar value={secondary_percentage} />
+              <span>{secondary_percentage}%</span>
+            </div>
+          </div>
+        );
+      },
+      size: 250
     },
     {
       accessorKey: "address",
@@ -71,6 +115,7 @@ const ClientListPage: React.FC = () => {
           <LocationIcon /> {t.table.address}
         </div>
       ),
+      size: 120
     },
     {
       accessorKey: "assigned_date",
@@ -79,6 +124,7 @@ const ClientListPage: React.FC = () => {
           <ClockIcon /> {t.table.assignDate}
         </div>
       ),
+      size: 120
     },
     {
       accessorKey: "rm_name",
@@ -87,6 +133,7 @@ const ClientListPage: React.FC = () => {
           <UserIcon /> {t.table.rmAssigned}
         </div>
       ),
+      size: 120
     },
     {
       accessorKey: "project_count",
@@ -95,6 +142,7 @@ const ClientListPage: React.FC = () => {
           <TrendingIcon /> {t.table.projects}
         </div>
       ),
+      size: 80
     },
     {
       id: "action",
@@ -104,8 +152,13 @@ const ClientListPage: React.FC = () => {
         </div>
       ),
       cell: () => (
-        <EditIcon width={18} height={18} />
+        <EditIcon
+          width={18}
+          height={18}
+          style={{ cursor: "pointer" }}
+        />
       ),
+      size: 80
     },
   ];
 
@@ -140,11 +193,13 @@ const ClientListPage: React.FC = () => {
         rm_first_name,
         rm_last_name,
         assigned_date,
+        stats,
         ...rest
       }: {
         rm_first_name: string;
         rm_last_name?: string | null;
         assigned_date: string | null;
+        stats: any | null;
         [key: string]: any;
       }) => ({
         ...rest,
@@ -155,14 +210,25 @@ const ClientListPage: React.FC = () => {
             month: 'short',
             year: 'numeric',
           })
-          : null
+          : null,
+        primary_percentage: stats?.[0]?.primaryPercentage ?? 0,
+        secondary_percentage: stats?.[0]?.secondaryPercentage ?? 0,
       })
     );
   }
   return (
     <div className="client-list-page">
       <div className="buttons">
-        <SearchComponent placeholder="Search..." />
+        <SearchComponent
+          placeholder={`${t.buttons.search}...`}
+          onSearch={(value) => {
+            setQueryParams((prev) => ({
+              ...prev,
+              page: 1,
+              search: value ?? "",
+            }));
+          }}
+        />
       </div>
       <Table
         columns={columns}
@@ -172,6 +238,8 @@ const ClientListPage: React.FC = () => {
         hasNextPage={clientList?.hasNextPage ?? false}
         onPageChange={handlePageChange}
         onRowClick={handleRowClick}
+        customColumnWidth={true}
+        enableTableScroll={true}
       />
     </div>
   );

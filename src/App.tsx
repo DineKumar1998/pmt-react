@@ -6,14 +6,20 @@ import { HelmetProvider } from "react-helmet-async";
 import { ToastContainer } from "react-toastify";
 
 import "@styles/index.scss";
+import { AuthProvider } from "./context/AuthContext";
+import { CookiesProvider } from "react-cookie";
 
 const App = memo(function App() {
   return (
     <HelmetProvider>
-      <BrowserRouter>
-        <Router />
-        <ToastContainer />
-      </BrowserRouter>
+      <CookiesProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <Router />
+            <ToastContainer hideProgressBar={true} />
+          </BrowserRouter>
+        </AuthProvider>
+      </CookiesProvider>
     </HelmetProvider>
   );
 });

@@ -33,12 +33,23 @@ export const getParameterById = async (id: string | number, language: string) =>
 
 export const deleteParameterIndustryMapping = async (paramId: string | number, industryId: string | number) => {
     const response = await api.delete(`/parameter/${paramId}/industry/${industryId}`)
-    console.log("deleteParameterIndustryMapping response=", response.data)
     return response.data
 }
 
 export const editParameter = async (id: string | number, data: any) => {
     const response = await api.patch(`/parameter/edit/${id}`, data)
-    console.log("editParameter response=", response.data)
+    return response.data
+}
+
+export const editParameterWeightages = async (data: any) => {
+    const response = await api.patch(`/parameter/edit-weightages`, data)
+    return response.data
+}
+
+export const exportParameterList = async (params: any) => {
+    const response = await api.get('/parameter/export', {
+        params,
+        responseType: 'blob',
+    })
     return response.data
 }

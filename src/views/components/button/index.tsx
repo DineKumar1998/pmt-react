@@ -7,6 +7,7 @@ type ButtonProps = {
   disabled?: boolean;
   className?: string;
   icon?: React.ReactNode;
+  nextIcon?: React.ReactNode;
 };
 
 const Button = ({
@@ -16,6 +17,7 @@ const Button = ({
   disabled = false,
   className = "",
   icon = null,
+  nextIcon = null,
 }: ButtonProps) => {
   return (
     <div className="button-container">
@@ -27,6 +29,7 @@ const Button = ({
       >
         {icon && <span className="icon">{icon}</span>}
         <span className="text">{text}</span>
+        {nextIcon && <span className="next-icon">{nextIcon}</span>}
       </button>
     </div>
   );

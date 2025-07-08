@@ -1,176 +1,175 @@
 @use "../../../styles/variables" as *;
 
 .dashboard-page {
-    .cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 
-        .card {
-            box-sizing: border-box;
-            border-radius: 2rem;
-            background-color: $white;
+    .card {
+      box-sizing: border-box;
+      border-radius: 2rem;
+      background-color: $white;
+      width: 100%;
+      padding: 1.5rem 1.5rem 0 1.5rem;
+      min-height: 250px;
+
+      &.illustration {
+        background: linear-gradient(135deg, #68788d 25.5%, #becad7 100%);
+        position: relative;
+        width: 100%;
+
+        display: flex;
+        justify-content: space-between;
+
+        .person-icon {
+          width: 100%;
+
+          img {
             width: 100%;
-            padding: 1.5rem 1.5rem 0 1.5rem;
-            min-height: 250px;
-
-            &.illustration {
-                background: linear-gradient(135deg,
-                        #68788d 25.5%,
-                        #becad7 100%);
-                position: relative;
-                width: 100%;
-
-                display: flex;
-                justify-content: space-between;
-
-                .person-icon {
-                    width: 100%;
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: contain;
-                        object-position: center;
-                    }
-                }
-
-                .content {
-                    width: 220px;
-                    color: $white;
-
-                    p:first-child {
-                        font-size: 14px;
-                    }
-
-                    p:last-child {
-                        line-height: 1.5;
-                        font-size: 12px;
-                    }
-                }
-            }
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+          }
         }
 
-        .card.relationship-managers-chart {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            padding: 1.5rem;
+        .content {
+          width: 220px;
+          color: $white;
 
-            .chart {
-                position: absolute;
-                width: 100%;
-                height: 240px;
-            }
+          p:first-child {
+            font-size: 14px;
+          }
+
+          p:last-child {
+            line-height: 1.5;
+            font-size: 12px;
+          }
         }
-
-        .card.total-members-chart {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 1.5rem;
-            position: relative;
-
-            .client-dot:before,
-            .partner-dot:before {
-                content: "";
-                display: inline-block;
-                width: 10px;
-                height: 10px;
-                border-radius: 50%;
-                margin-right: 0.5rem;
-                flex-shrink: 0;
-            }
-
-            .client-dot:before {
-                background-color: #d3e1f3;
-            }
-
-            .partner-dot:before {
-                background-color: #a8b9cf;
-            }
-
-            .chart {
-                height: 180px;
-            }
-        }
+      }
     }
 
-    .completion-status-chart {
-        background-color: $white;
-        margin-block: 2rem;
-        padding: 1.5rem;
+    .card.relationship-managers-chart {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      padding: 1.5rem;
 
-        .chart {
-            width: 100%;
-            height: 350px;
-        }
-
-        .chart-container {
-            display: flex;
-            align-items: flex-start;
-            gap: 2rem;
-            position: relative;
-        }
-
-        .custom-legend {
-            display: flex;
-            flex-direction: column;
-            font-size: 16px;
-        }
-
-        .total-parameters-view {
-            margin-top: 0.5rem;
-            margin-bottom: 1.5rem;
-
-            strong {
-                font-size: 20px;
-            }
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: start;
-            margin-bottom: 1rem;
-        }
-
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 0.6rem;
-        }
-
-        .legend-label {
-            margin-top: -0.5rem;
-        }
-
-        .legend-label strong {
-            font-weight: bold;
-            font-size: 18px;
-            margin-left: 0.1rem;
-        }
-
-    }
-
-    .recent-activity {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-
-        gap: 1.5rem;
-
-        .relationship-manager-page,
-        .recent-added-clients-page {
-            .section-title {
-                margin-bottom: 1rem;
-            }
-        }
-    }
-
-    .redirect-icon {
-        cursor: pointer;
+      .chart {
         position: absolute;
+        width: 100%;
+        height: 240px;
+      }
     }
+
+    
+    .card.total-members-chart {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 1.5rem;
+      position: relative;
+
+      .client-dot:before,
+      .partner-dot:before {
+        content: "";
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        flex-shrink: 0;
+      }
+
+      .client-dot:before {
+        background-color: #d3e1f3;
+      }
+
+      .partner-dot:before {
+        background-color: #a8b9cf;
+      }
+
+      .chart {
+        height: 180px;
+      }
+    }
+  }
+
+  .completion-status-chart {
+    background-color: $white;
+    margin-block: 2rem;
+    padding: 1.5rem;
+
+    .chart {
+      width: 100%;
+      height: 350px;
+    }
+
+    .chart-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 2rem;
+      position: relative;
+    }
+
+    .custom-legend {
+      display: flex;
+      flex-direction: column;
+      font-size: 16px;
+    }
+
+    .total-parameters-view {
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+
+      strong {
+        font-size: 20px;
+      }
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 0.6rem;
+    }
+
+    .legend-label {
+      margin-top: -0.5rem;
+    }
+
+    .legend-label strong {
+      font-weight: bold;
+      font-size: 18px;
+      margin-left: 0.1rem;
+    }
+  }
+
+  .recent-activity {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+    gap: 1.5rem;
+
+    .relationship-manager-page,
+    .recent-added-clients-page {
+      .section-title {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  .redirect-icon {
+    cursor: pointer;
+    position: absolute;
+  }
 }

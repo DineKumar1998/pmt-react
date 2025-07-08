@@ -59,7 +59,7 @@ const RecentRM: React.FC = () => {
   ];
 
   const { data: rmList } = useQuery({
-    queryKey: ['rmList', selectedLang],
+    queryKey: ['recentRmList', selectedLang],
     queryFn: () =>
       getRMByRecentActivity({ limit: listLimit, language: selectedLang }),
   });

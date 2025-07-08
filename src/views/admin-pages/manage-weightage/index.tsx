@@ -1,5 +1,5 @@
 import SearchComponent from "@/views/components/Search";
-import React from "react";
+import React, { useState } from "react";
 
 import "./index.scss";
 import { RedirectIcon } from "@/views/components/icons";
@@ -14,6 +14,9 @@ const ManageWeightagePage: React.FC = () => {
   const navigate = useNavigate();
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
+  const [queryParams, setQueryParams] = useState({
+    search: "",
+  });
 
   const openIndustryParametersPage = (industryId: number, industryName: string) => {
     navigate(`/manage-weightage/industry?industryId=${industryId}&industryName=${industryName}`)
@@ -21,8 +24,8 @@ const ManageWeightagePage: React.FC = () => {
 
 
   const { data: industryList } = useQuery({
-    queryKey: ["industryList", selectedLang],
-    queryFn: () => getIndustryList(selectedLang),
+    queryKey: ["industryList", queryParams, selectedLang],
+    queryFn: () => getIndustryList({ ...queryParams, language: selectedLang }),
   });
 
   return (
@@ -30,7 +33,15 @@ const ManageWeightagePage: React.FC = () => {
       <div className="buttons">
         <h1>{t.heading.industries}</h1>
 
-        <SearchComponent placeholder={`${t.text.searchIndustries}...`} />
+        <SearchComponent
+          placeholder={`${t.text.searchIndustries}...`}
+          onSearch={(value) => {
+            setQueryParams((prev) => ({
+              ...prev,
+              search: value ?? "",
+            }));
+          }}
+        />
       </div>
 
       <section className="industries-list">

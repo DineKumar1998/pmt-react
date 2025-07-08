@@ -241,7 +241,7 @@ const AddParameter = () => {
 
   const { data: industryList } = useQuery({
     queryKey: ["industryList", selectedLang],
-    queryFn: () => getIndustryList(selectedLang),
+    queryFn: () => getIndustryList({ language: selectedLang }),
   });
 
   const { data: paramData } = useQuery({
@@ -475,7 +475,7 @@ const AddParameter = () => {
                     render={({ field }) => (
                       <ParameterField
                         {...field}
-                        placeholder="Enter parameter"
+                        placeholder={t.text.enterParameter}
                         className={errors.parameter ? "border-danger" : ""}
                         disabled={disableParamEditing}
                         showDeleteIcon={false}

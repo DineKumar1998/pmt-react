@@ -5,6 +5,15 @@
     border-top-right-radius: 1rem;
     overflow: hidden;
 
+    .table.table-scroll {
+        width: 100%;
+        overflow-x: auto;
+
+        table {
+            min-width: 900px;
+        }
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
@@ -22,6 +31,8 @@
                 text-align: left;
                 font-weight: normal;
                 /* width: 1%; */
+                white-space: normal;
+                word-break: break-word;
             }
 
             .sorted {
@@ -37,12 +48,17 @@
                     border-bottom: 1px solid $border-color-light;
                     width: 1%;
 
+                    white-space: normal;
+                    word-break: break-word;
+
                     a {
                         text-decoration: none;
                         color: inherit;
                     }
                 }
             }
+
+
         }
     }
 

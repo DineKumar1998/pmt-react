@@ -189,6 +189,8 @@ const RelationshipManagerPage: React.FC = () => {
         hasNextPage={rmList?.hasNextPage ?? false}
         onPageChange={handlePageChange}
         onRowClick={handleRowClick}
+        enableTableScroll={true}
+        isRowClickable={true}
       />
     </div>
   );

@@ -12,7 +12,9 @@ export const translations: any = {
       rating: "Rating",
       profileInfo: "Profile Info",
       rmRecentActivity: "Relationship Managers - Recent Activity",
-      clientRecentlyAdded: "Clients - Recently Added"
+      clientRecentlyAdded: "Clients - Recently Added",
+      clientRecentlyAssigned: "Recently Assigned",
+      clientRecentActivity: "Recent Activity"
     },
     table: {
       rmId: "RM ID",
@@ -28,7 +30,11 @@ export const translations: any = {
       assignDate: "Assign Date",
       rmAssigned: "RM Assigned",
       projects: "Projects",
-      action: "Action"
+      action: "Action",
+      clientName: "Client Name",
+      projectName: "Project Name",
+      projectCode: "Project Code",
+      status: "Status"
     },
     buttons: {
       back: "Back",
@@ -39,7 +45,8 @@ export const translations: any = {
       saveChanges: "Save Changes",
       reverseToIndustryDefault: "Reverse to Industry Default",
       primary: "Primary",
-      secondary: "Secondary"
+      secondary: "Secondary",
+      cancel: "Cancel"
     },
     text: {
       chooseIndustry: "Please choose your Industry",
@@ -50,9 +57,22 @@ export const translations: any = {
       totalMembers: "Total Members",
       clients: "Clients",
       partners: "Partners",
+      active: 'Completed',
+      closed: 'In-Progress',
+      totalClients: 'Total Clients',
       completionStatus: "Completion Status",
       searchIndustries: "Search Industries",
-      selectRm: "Select RM"
+      selectRm: "Select RM",
+      enterFirstName: "Enter first name",
+      enterLastName: "Enter last name",
+      enterEmail: "Enter email",
+      enterPhoneNumber: "Enter phone number",
+      enterPassword: "Enter password",
+      enterParameter: "Enter parameter",
+      enterOptionText: "Enter option text",
+      viewAll: "View All",
+      completed: "Completed",
+      notCompleted: "Not Completed"
     },
     formLabel: {
       profileImage: "Profile image",
@@ -60,6 +80,7 @@ export const translations: any = {
       lastName: "Last Name",
       mobile: "Mobile",
       password: "Password",
+      resetPassword: "Reset Password",
       email: "Email",
       id: "ID",
       role: "Role",
@@ -69,7 +90,8 @@ export const translations: any = {
       lastUpdated: "Last Updated",
       status: "Status",
       currentRM: "Current RM",
-      updatedRM: "Updated RM"
+      updatedRM: "Updated RM",
+      phoneNumber: "Phone Number"
     },
     routes: {
       dashboard: "Dashboard",
@@ -83,7 +105,8 @@ export const translations: any = {
       editParameter: "Edit Parameter",
       manageWeightage: "Manage Weightage",
       industry: "Industry",
-      profile: "Profile"
+      profile: "Profile",
+      clientParameters: "Client Parameters"
     }
   },
   jp: {
@@ -98,7 +121,9 @@ export const translations: any = {
       rating: "評価",
       profileInfo: "プロフィール情報",
       rmRecentActivity: "リレーションシップマネージャー - 最近の活動",
-      clientRecentlyAdded: "クライアント - 最近追加された"
+      clientRecentlyAdded: "クライアント - 最近追加された",
+      clientRecentlyAssigned: "最近割り当てられた",
+      clientRecentActivity: "最近の活動"
     },
     table: {
       rmId: "RM ID",
@@ -114,7 +139,11 @@ export const translations: any = {
       assignDate: "割り当て日",
       rmAssigned: "担当者",
       projects: "プロジェクト数",
-      action: "操作"
+      action: "操作",
+      clientName: "クライアント名",
+      projectName: "プロジェクト名",
+      projectCode: "プロジェクトコード",
+      status: "ステータス"
     },
     buttons: {
       back: "戻る",
@@ -125,7 +154,8 @@ export const translations: any = {
       saveChanges: "変更を保存",
       reverseToIndustryDefault: "業界デフォルトへの逆戻り",
       primary: "主要な",
-      secondary: "二次"
+      secondary: "二次",
+      cancel: "キャンセル"
     },
     text: {
       chooseIndustry: "あなたの業界を選択してください",
@@ -136,9 +166,22 @@ export const translations: any = {
       totalMembers: "合計メンバー",
       clients: "クライアント",
       partners: "パートナー",
+      active: '完了',
+      closed: '進行中',
+      totalClients: '合計クライアント',
       completionStatus: "完了ステータス",
       searchIndustries: "業界の検索",
-      selectRm: "RMを選択"
+      selectRm: "RMを選択",
+      enterFirstName: "名を入力してください",
+      enterLastName: "姓を入力してください",
+      enterEmail: "メールアドレスを入力してください",
+      enterPhoneNumber: "電話番号を入力してください",
+      enterPassword: "パスワードを入力してください",
+      enterParameter: "パラメーターを入力してください",
+      enterOptionText: "オプションのテキストを入力してください",
+      viewAll: "すべて表示",
+      completed: "完了",
+      notCompleted: "未完了"
     },
     formLabel: {
       profileImage: "プロフィール画像",
@@ -146,6 +189,7 @@ export const translations: any = {
       lastName: "苗字",
       mobile: "携帯",
       password: "パスワード",
+      resetPassword: "パスワードのリセット",
       email: "電子メール",
       id: "ID",
       role: "役割",
@@ -155,7 +199,8 @@ export const translations: any = {
       lastUpdated: "最終更新日",
       status: "ステータス",
       currentRM: "現在のRM",
-      updatedRM: "更新されたRM"
+      updatedRM: "更新されたRM",
+      phoneNumber: "電話番号"
     },
     routes: {
       dashboard: "ダッシュボード",
@@ -169,7 +214,8 @@ export const translations: any = {
       editParameter: "パラメーターを編集",
       manageWeightage: "ウェイトを管理",
       industry: "業界",
-      profile: "プロフィール"
+      profile: "プロフィール",
+      clientParameters: "クライアントパラメータ"
     }
   },
 };

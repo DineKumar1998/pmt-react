@@ -25,7 +25,6 @@ export const editRM = async (id: string | number, data: any) => {
             "Content-Type": "multipart/form-data"
         }
     })
-    console.log("editRM response=", response.data)
     return response.data
 }
 

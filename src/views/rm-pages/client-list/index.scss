@@ -8,6 +8,41 @@
     }
 }
 
+.progress-bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    // flex-direction: column;
+    // align-items: flex-start;
+
+    .progress-bar-container {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+}
+
+.progress-bar {
+    background-color: $progress-bar-bg;
+    width: 60px;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+
+    .progress-bar-fill {
+        height: 100%;
+        background-color: $white;
+    }
+
+    .primary-fill {
+        background-color: $progress-primary-fill;
+    }
+
+    .secondary-fill {
+        background-color: $progress-secondary-fill;
+    }
+}
+
 /* Edit Client */
 .edit-client {
     background-color: $white;
@@ -16,12 +51,14 @@
     h2 {
         color: $primary;
     }
+
     .details {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
 
         max-width: 450px;
+
         .text-value {
             color: $gray-600;
         }
@@ -38,11 +75,9 @@
             background-color: #fafafa;
             border: 1px solid #f0f0f0;
 
-            option {
-            }
+            // option {}
         }
     }
 
-    .buttons {
-    }
+    // .buttons {}
 }

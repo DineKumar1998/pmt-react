@@ -1,30 +1,28 @@
 import { lazy, Suspense } from "react";
 import { useLang } from "@/context/LangContext";
-import { useQuery } from '@tanstack/react-query';
-import { getDashboardStats } from "@/apis/dashboard"
+import { useQuery } from "@tanstack/react-query";
 
-const Top5RMCardChart = lazy(() => import("@/views/components/charts/Top5RM"));
-const TotalMemberChart = lazy(
-  () => import("@/views/components/charts/TotalMember"),
+const Top5RMCardChart = lazy(
+  () => import("@/views/components/rm-portal/charts/Top5Clients")
+);
+const TotalProjectsChart = lazy(
+  () => import("@/views/components/rm-portal/charts/TotalProjects")
 );
 const IllustrationChart = lazy(
-  () => import("@/views/components/charts/Illustration"),
-);
-const CompletionStatusChart = lazy(
-  () => import("@/views/components/charts/CompletionStatus"),
+  () => import("@/views/components/rm-portal/charts/Illustration")
 );
 
 import "./dashboard.scss";
-import RecentClient from "./RecentClient";
-import RecentRM from "./RecentRM";
+import RecentAssigned from "./RecentAssigned";
+import RecentActivity from "./RecentActivity";
+import { getRMDashboardStats } from "@/apis/rm-portal/dashboard";
 
 const Dashboard = () => {
   const { selectedLang } = useLang();
 
   const { data: dashboardStats } = useQuery({
-    queryKey: ['dashboardStats', selectedLang],
-    queryFn: () =>
-      getDashboardStats({ language: selectedLang }),
+    queryKey: ["rm-portal-dashboard", selectedLang],
+    queryFn: () => getRMDashboardStats({ language: selectedLang }),
   });
 
   return (
@@ -34,21 +32,20 @@ const Dashboard = () => {
           <IllustrationChart />
         </Suspense>
         <Suspense fallback={null}>
-          <Top5RMCardChart />
+          <Top5RMCardChart record={dashboardStats?.client} />
         </Suspense>
         <Suspense fallback={null}>
-          <TotalMemberChart membersData={dashboardStats?.membersData} />
+          <TotalProjectsChart record={dashboardStats?.project} />
         </Suspense>
       </section>
-      <CompletionStatusChart industriesStats={dashboardStats?.industriesStats} />
 
       <section className="recent-activity">
         <Suspense fallback={<div>Loading...</div>}>
-          <RecentRM />
+          <RecentActivity />
         </Suspense>
 
         <Suspense fallback={<div>Loading...</div>}>
-          <RecentClient />
+          <RecentAssigned />
         </Suspense>
       </section>
     </div>

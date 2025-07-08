@@ -7,7 +7,7 @@ import ConfirmationModal from "@/views/components/ConfirmationModel";
 import Button from "@/views/components/button";
 
 // scss
-import "./index.scss";
+import "./ParameterIndex.scss";
 import AddCircle from "@/views/components/icons/AddCircle";
 
 // Import use-form-hook
@@ -241,7 +241,7 @@ const AddParameter = () => {
 
   const { data: industryList } = useQuery({
     queryKey: ["industryList", selectedLang],
-    queryFn: () => getIndustryList(selectedLang),
+    queryFn: () => getIndustryList({ language: selectedLang }),
   });
 
   const { data: paramData } = useQuery({

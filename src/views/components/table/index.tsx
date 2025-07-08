@@ -25,6 +25,9 @@ interface CommonTableProps<T extends WithId> {
   hasNextPage?: boolean;
   onPageChange?: (pageIndex: number) => void;
   onRowClick?: (id: number) => void;
+  customColumnWidth?: boolean;
+  enableTableScroll?: boolean;
+  isRowClickable?: boolean;
 }
 
 function Table<T extends WithId>({
@@ -34,7 +37,10 @@ function Table<T extends WithId>({
   total_rms,
   hasNextPage,
   onPageChange,
-  onRowClick
+  onRowClick,
+  customColumnWidth,
+  enableTableScroll,
+  isRowClickable
 }: CommonTableProps<T>) {
   const [sorting, setSorting] = React.useState<import("@tanstack/react-table").SortingState>([]);
 
@@ -70,7 +76,7 @@ function Table<T extends WithId>({
   return (
     <div className="table-container">
       {/* Table Container */}
-      <div className="table">
+      <div className={`table${enableTableScroll ? " table-scroll" : ""}`}>
         <table>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -84,6 +90,13 @@ function Table<T extends WithId>({
                       cursor: header.column.getCanSort()
                         ? "pointer"
                         : undefined,
+                      ...(customColumnWidth
+                        ? {
+                          width: header.getSize(),
+                          minWidth: header.getSize(),
+                          maxWidth: header.getSize(),
+                        }
+                        : {})
                     }}
                   >
                     {flexRender(
@@ -114,7 +127,7 @@ function Table<T extends WithId>({
                         onRowClick(row.original.id as number);
                       }
                     }}
-                    style={{ cursor: "pointer" }}
+                    style={isRowClickable ? { cursor: "pointer" } : {}}
                   >
                     {row.getVisibleCells().map((cell) => {
                       // Remove the console.log and ensure cell rendering
@@ -124,7 +137,10 @@ function Table<T extends WithId>({
                       );
 
                       return (
-                        <td key={cell.id} className="table-cell">
+                        <td
+                          key={cell.id}
+                          className="table-cell"
+                        >
                           {renderedCell !== null &&
                             renderedCell !== undefined &&
                             renderedCell !== "" ? (
@@ -144,44 +160,47 @@ function Table<T extends WithId>({
       </div>
 
       {/* Pagination Controls */}
-      {total_rms && (total_rms > (itemsPerPage ?? 10)) && (
-        <div className="pagination-container">
-          <div className="pagination">
-            <button
-              onClick={() => {
-                table.previousPage();
-              }}
-              disabled={!table.getCanPreviousPage()}
-              className="pagination-button"
-            >
-              <BackArrow />
-            </button>
-            <span className="pagination-pages">
-              {Array.from({ length: table.getPageCount() }, (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => {
-                    table.setPageIndex(i);
-                  }}
-                  className={`pagination-page-number${table.getState().pagination.pageIndex === i ? " active" : ""}`}
-                  disabled={table.getState().pagination.pageIndex === i}
-                >
-                  {i + 1}
-                </button>
-              ))}
-            </span>
-            <button
-              onClick={() => {
-                table.nextPage();
-              }}
-              disabled={!hasNextPage}
-              className="pagination-button"
-            >
-              <BackArrow />
-            </button>
+      {total_rms && (total_rms > (itemsPerPage ?? 10))
+        ? (
+          <div className="pagination-container">
+            <div className="pagination">
+              <button
+                onClick={() => {
+                  table.previousPage();
+                }}
+                disabled={!table.getCanPreviousPage()}
+                className="pagination-button"
+              >
+                <BackArrow />
+              </button>
+              <span className="pagination-pages">
+                {Array.from({ length: table.getPageCount() }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      table.setPageIndex(i);
+                    }}
+                    className={`pagination-page-number${table.getState().pagination.pageIndex === i ? " active" : ""}`}
+                    disabled={table.getState().pagination.pageIndex === i}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </span>
+              <button
+                onClick={() => {
+                  table.nextPage();
+                }}
+                disabled={!hasNextPage}
+                className="pagination-button"
+              >
+                <BackArrow />
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )
+        : null
+      }
     </div>
   );
 }

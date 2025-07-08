@@ -9,11 +9,11 @@ import { toast } from 'react-toastify'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { createRM, getRMById, editRM } from '@/apis/rm';
 import { useLang } from "@/context/LangContext";
-// import { translations } from "@/utils/translations";
+import { translations } from "@/utils/translations";
 
 const AddUserForm = () => {
   const { selectedLang } = useLang();
-  // const t = translations[selectedLang];
+  const t = translations[selectedLang];
 
   const { rmId } = useParams();
   const isEditMode = !!rmId;
@@ -104,10 +104,8 @@ const AddUserForm = () => {
     },
     onError: (error: any) => {
       console.log("error===", error)
-      const message =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Something went wrong."
+      const message = error?.message;
+
       console.error("createRM error =", message)
       toast.error(message)
     },
@@ -155,7 +153,7 @@ const AddUserForm = () => {
 
   return (
     <div className="add-rm-form">
-      <h2>{isEditMode ? `Edit User` : `Add User`}</h2>
+      <h2>{isEditMode ? t.routes.editUser : t.routes.addUser}</h2>
 
       <form>
         {isEditMode ?
@@ -170,44 +168,44 @@ const AddUserForm = () => {
             />
           </div> : null}
         <div>
-          <label className="label">First Name*</label>
+          <label className="label">{t.formLabel.firstName}*</label>
           <input
             type="text"
             name="first_name"
             value={formData.first_name}
             onChange={handleChange}
             className="input-field"
-            placeholder="Enter first name"
+            placeholder={t.text.enterFirstName}
           />
           {errors.first_name && <p className="form-error">{errors.first_name}</p>}
         </div>
         <div>
-          <label className="label">Last Name</label>
+          <label className="label">{t.formLabel.lastName}</label>
           <input
             type="text"
             name="last_name"
             value={formData.last_name}
             onChange={handleChange}
             className="input-field"
-            placeholder="Enter last name"
+            placeholder={t.text.enterLastName}
           />
           {errors.last_name && <p className="form-error">{errors.last_name}</p>}
         </div>
 
         <div>
-          <label className="label">Email Address*</label>
+          <label className="label">{t.table.email}*</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             className="input-field"
-            placeholder="Enter email"
+            placeholder={t.text.enterEmail}
           />
           {errors.email && <p className="form-error">{errors.email}</p>}
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <label className="label">Phone Number</label>
+          <label className="label">{t.formLabel.phoneNumber}</label>
           <div style={{ display: "flex", alignItems: "center" }}>
             <select
               name="country_code"
@@ -234,7 +232,7 @@ const AddUserForm = () => {
               className="input-field"
               style={{ borderRadius: "0 5px 5px 0" }}
               maxLength={10}
-              placeholder="Enter phone number"
+              placeholder={t.text.enterPhoneNumber}
             />
           </div>
 
@@ -243,14 +241,14 @@ const AddUserForm = () => {
 
         {!isEditMode || (isEditMode && editPasswordView) ?
           <div>
-            <label className="label">{isEditMode ? `Reset Password` : `Password*`}</label>
+            <label className="label">{isEditMode ? `${t.formLabel.resetPassword}` : `${t.formLabel.password}*`}</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               className="input-field"
-              placeholder="Enter password"
+              placeholder={t.text.enterPassword}
             />
             {errors.password && <p className="form-error">{errors.password}</p>}
           </div> : null}
@@ -269,8 +267,8 @@ const AddUserForm = () => {
             text="Reset Password"
           /> : null}
         <div className="save-cancel-btn">
-          <Button text="Save" type="submit" onClick={isEditMode ? handleEdit : handleSave} />
-          <Button className="back-btn" onClick={handleCancel} text="Cancel" />
+          <Button text={t.buttons.save} type="submit" onClick={isEditMode ? handleEdit : handleSave} />
+          <Button className="back-btn" onClick={handleCancel} text={t.buttons.cancel} />
         </div>
       </div>
     </div>

@@ -45,9 +45,6 @@ export default function CompletionStatusChart({ industriesStats }: ChartProps) {
     secondaryData.push(industry.secondaryPercentage ?? 0)
   });
 
-  console.log("labels=", labels)
-  console.log("primaryData=", primaryData)
-  console.log("secondaryData=", secondaryData)
 
   const options: any = {
     layout: {

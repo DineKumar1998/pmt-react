@@ -1,9 +1,8 @@
 import api from './axios'
 
-export const getIndustryList = async (language: string) => {
+export const getIndustryList = async (params: any) => {
     const response = await api.get('/industry/list', {
-        params: { language },
+        params,
     })
-    console.log("getIndustryList response=", response.data)
     return response.data
 }

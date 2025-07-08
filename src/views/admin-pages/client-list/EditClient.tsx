@@ -54,11 +54,9 @@ const EditClient = () => {
   const { mutate: assignRmMutate } = useMutation({
     mutationFn: (body: any) => assignRmToClient(clientId || "", body),
     onSuccess: (data) => {
-      console.log("assignRmToClient success data=", data)
       toast.success(data?.message)
     },
     onError: (error: any) => {
-      console.log("error===", error)
       const message =
         error?.response?.data?.message ||
         error?.message ||

@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { isLoggedIn } from "@/utils";
-import { routes } from "./routes";
+
 import RouteComponent from "./RouteComponent";
+import { useAppRoutes } from "@/hooks/useRoutes";
+import AuthContext from "@/context/AuthContext";
+
 
 const Router: React.FC = () => {
-  const userIsLoggedIn = isLoggedIn();
+  const {isLoggedIn} = useContext(AuthContext)
+  const {routes} = useAppRoutes()
 
   return (
     <Routes>
@@ -21,7 +24,7 @@ const Router: React.FC = () => {
       <Route
         path="*"
         element={
-          userIsLoggedIn ? (
+          isLoggedIn() ? (
             <Navigate to="/404" replace />
           ) : (
             <Navigate to="/login" replace />
