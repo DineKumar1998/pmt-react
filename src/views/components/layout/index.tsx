@@ -5,7 +5,7 @@ import "./layout.scss";
 import Header from "./Header";
 import { LangProvider } from "@/context/LangContext";
 import type { LayoutProps } from "@/types/routes";
-import LayoutSidebar from "./sidebar";
+import LayoutSidebar from "./SideBar";
 
 const Layout: React.FC<LayoutProps> = ({ children, route }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
