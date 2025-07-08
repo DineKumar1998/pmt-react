@@ -21,8 +21,8 @@ import WhiteTick from "@/views/components/icons/WhiteTick";
 
 
 const EditParameter = () => {
-  const navigate = useNavigate();
-  const { selectedLang } = useLang();
+    const navigate = useNavigate();
+    const { selectedLang } = useLang();
 
     const t = translations[selectedLang];
     const { editParamId } = useParams();
@@ -52,11 +52,11 @@ const EditParameter = () => {
         selectParameterOptionMutate(formattedData)
     };
 
-  const { data: paramData } = useQuery({
-    queryKey: ["paramData", editParamId, selectedLang],
-    queryFn: () => getParameterById(editParamId || "", selectedLang),
-    enabled: isEditMode,
-  });
+    const { data: paramData } = useQuery({
+        queryKey: ["paramData", editParamId, selectedLang],
+        queryFn: () => getParameterById(editParamId || "", selectedLang),
+        enabled: isEditMode,
+    });
 
     const {
         data: paramList,
@@ -95,80 +95,80 @@ const EditParameter = () => {
         }
     }, [paramData]);
 
-  const hasScrolledRef = useRef(false);
-  const triedFetchingRef = useRef(false);
+    const hasScrolledRef = useRef(false);
+    const triedFetchingRef = useRef(false);
 
-  useEffect(() => {
-    // Match height of parameter listing view to form view
-    if (leftRef.current && rightRef.current) {
-      const height = leftRef.current.offsetHeight;
-      rightRef.current.style.height = `${height}px`;
-    }
-
-    if (!editParamId || hasScrolledRef.current) return;
-
-    const paramId = Number(editParamId);
-
-    const tryScrollToItem = async () => {
-      const exists = parameterList.some((param) => param.id === paramId);
-      console.log("exists =", exists);
-
-      if (exists && itemRefs.current[paramId]) {
-        itemRefs.current[paramId]?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-        hasScrolledRef.current = true;
-        return;
-      }
-
-      if (hasNextPage && !triedFetchingRef.current) {
-        triedFetchingRef.current = true;
-        console.log("fetchNextPage 1");
-        await fetchNextPage();
-        triedFetchingRef.current = false;
-      }
-    };
-
-    tryScrollToItem();
-  }, [parameterList, editParamId]);
-
-  useEffect(() => {
-    //Call pagination api on scroll
-    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          console.log("fetchNextPage 2");
-          fetchNextPage();
+    useEffect(() => {
+        // Match height of parameter listing view to form view
+        if (leftRef.current && rightRef.current) {
+            const height = leftRef.current.offsetHeight;
+            rightRef.current.style.height = `${height}px`;
         }
-      },
-      { threshold: 1 },
-    );
 
-    observer.observe(loadMoreRef.current);
-    return () => observer.disconnect();
-  }, [loadMoreRef.current, hasNextPage, isFetchingNextPage, fetchNextPage]);
+        if (!editParamId || hasScrolledRef.current) return;
 
-  const handleNavigateParam = (direction: "prev" | "next") => {
-    if (selectedIndex === -1) return;
+        const paramId = Number(editParamId);
 
-    const newIndex =
-      direction === "prev" ? selectedIndex - 1 : selectedIndex + 1;
+        const tryScrollToItem = async () => {
+            const exists = parameterList.some((param) => param.id === paramId);
+            console.log("exists =", exists);
 
-    if (
-      newIndex >= parameterList.length &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      console.log("fetchNextPage 3");
-      fetchNextPage();
-      return;
-    }
+            if (exists && itemRefs.current[paramId]) {
+                itemRefs.current[paramId]?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+                hasScrolledRef.current = true;
+                return;
+            }
 
-    // Prevent out-of-bounds
-    if (newIndex < 0 || newIndex >= parameterList.length) return;
+            if (hasNextPage && !triedFetchingRef.current) {
+                triedFetchingRef.current = true;
+                console.log("fetchNextPage 1");
+                await fetchNextPage();
+                triedFetchingRef.current = false;
+            }
+        };
+
+        tryScrollToItem();
+    }, [parameterList, editParamId]);
+
+    useEffect(() => {
+        //Call pagination api on scroll
+        if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    console.log("fetchNextPage 2");
+                    fetchNextPage();
+                }
+            },
+            { threshold: 1 },
+        );
+
+        observer.observe(loadMoreRef.current);
+        return () => observer.disconnect();
+    }, [loadMoreRef.current, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+    const handleNavigateParam = (direction: "prev" | "next") => {
+        if (selectedIndex === -1) return;
+
+        const newIndex =
+            direction === "prev" ? selectedIndex - 1 : selectedIndex + 1;
+
+        if (
+            newIndex >= parameterList.length &&
+            hasNextPage &&
+            !isFetchingNextPage
+        ) {
+            console.log("fetchNextPage 3");
+            fetchNextPage();
+            return;
+        }
+
+        // Prevent out-of-bounds
+        if (newIndex < 0 || newIndex >= parameterList.length) return;
 
         const nextParam = parameterList[newIndex];
         navigate(`/client-list/edit-parameter/${nextParam.id}`, {
@@ -234,14 +234,14 @@ const EditParameter = () => {
                                             )}
                                         </div>
 
-                    <p>
-                      <span>{String.fromCharCode(65 + index)}.</span>{" "}
-                      {option.option_text}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
+                                        <p>
+                                            <span>{String.fromCharCode(65 + index)}.</span>{" "}
+                                            {option.option_text}
+                                        </p>
+                                    </div>
+                                ))
+                            }
+                        </div>
 
                         <div className={`parent-actions ${isEditMode && parameterList.length ? 'has-actions-left' : ''}`}>
                             <div className="actions-left">
