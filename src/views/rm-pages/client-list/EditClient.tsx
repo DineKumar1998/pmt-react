@@ -1,13 +1,13 @@
 import React from "react";
 
 // ** SCSS
-import "./index.scss";
 import Button from "@/views/components/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query'
 import { useLang } from "@/context/LangContext";
 import { getClientById } from "@/apis/client";
 import { translations } from "@/utils/translations";
+import "./index.scss";
 
 const EditClient = () => {
   const { selectedLang } = useLang();

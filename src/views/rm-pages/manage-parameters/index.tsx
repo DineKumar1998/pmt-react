@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-
-import "./ParameterIndex.scss";
 import Button from "@/views/components/button";
 import {
   AddCircleIcon,
@@ -17,6 +15,7 @@ import BackArrow from "@/views/components/icons/BackArrow";
 import { EditIcon } from "@/views/components/icons";
 import { useForm, type FieldError } from "react-hook-form";
 import { toast } from "react-toastify";
+import "./ParameterIndex.scss";
 
 
 type FormValues = {

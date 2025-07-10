@@ -34,17 +34,33 @@
             color: $primary;
             background-color: transparent;
 
+            &.primary {
+                border-top-left-radius: 1.5rem;
+            }
+
             &.active {
                 background-color: $primary;
                 color: $white;
             }
         }
 
-        .actions {
+        .actions-container {
             display: inherit;
-            gap: 1rem;
-            margin-right: 2rem;
+
+            .weightage-actions {
+                display: inherit;
+                gap: 1rem;
+                margin-right: 1rem;
+            }
+
+            .manage-actions {
+                display: inherit;
+                gap: 1rem;
+                margin-right: 2rem;
+            }
+
         }
+
 
         .button-container {
             .button-primary {
@@ -120,7 +136,7 @@
                     align-items: center;
 
                     .parameter-weightage {
-                        margin-right: 2rem;
+                        margin-right: 5rem;
                         margin-left: 0.5rem;
 
                         input[type="number"] {
@@ -140,25 +156,31 @@
                             }
                         }
                     }
+
+                    .expand-icon {
+                        cursor: pointer;
+                        display: inline-flex;
+                        align-items: center;
+
+                        transition: transform 0.3s ease;
+
+                        &.expanded {
+                            transform: rotate(45deg);
+                        }
+
+                        svg {
+                            object-fit: cover;
+                            vertical-align: middle;
+                        }
+                    }
+                }
+
+                .parameter-action:has(.parameter-weightage) {
+                    margin-right: 0.8rem;
                 }
             }
 
-            .expand-icon {
-                cursor: pointer;
-                display: inline-flex;
-                align-items: center;
 
-                transition: transform 0.3s ease;
-
-                &.expanded {
-                    transform: rotate(45deg);
-                }
-
-                svg {
-                    object-fit: cover;
-                    vertical-align: middle;
-                }
-            }
         }
 
         .parameter-details {

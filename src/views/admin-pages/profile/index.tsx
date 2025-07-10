@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useForm } from "react-hook-form";
-import "./index.scss";
 import Button from "@/views/components/button";
 import { getRMById, editRM } from "@/apis/rm";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -12,6 +11,7 @@ import { translations } from "@/utils/translations";
 import { toast } from "react-toastify";
 import { ASSETS_FOLDERS } from "@/utils/constants";
 import AuthContext from "@/context/AuthContext";
+import "./index.scss";
 
 type FormValues = z.infer<typeof editRMValidator>;
 

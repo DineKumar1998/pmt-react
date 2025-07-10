@@ -12,9 +12,9 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import "./index.scss";
 import { useNavigate } from "react-router-dom";
 import { getRMClientList } from "@/apis/rm-portal/client";
+import "./index.scss";
 
 type Client = {
   id: number;

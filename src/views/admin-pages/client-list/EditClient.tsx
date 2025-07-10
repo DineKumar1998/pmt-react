@@ -1,7 +1,6 @@
 import React from "react";
 
 // ** SCSS
-import "./index.scss";
 import Button from "@/views/components/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -10,6 +9,7 @@ import { getClientById, assignRmToClient } from "@/apis/client";
 import { getRMNames } from "@/apis/rm";
 import { translations } from "@/utils/translations";
 import { toast } from 'react-toastify'
+import "./index.scss";
 
 const EditClient = () => {
   const { selectedLang } = useLang();

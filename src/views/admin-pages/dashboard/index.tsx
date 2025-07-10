@@ -14,9 +14,9 @@ const CompletionStatusChart = lazy(
   () => import("@/views/components/charts/CompletionStatus"),
 );
 
-import "./dashboard.scss";
 import RecentClient from "./RecentClient";
 import RecentRM from "./RecentRM";
+import "./dashboard.scss";
 
 const Dashboard = () => {
   const { selectedLang } = useLang();

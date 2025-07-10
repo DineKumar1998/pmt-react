@@ -12,10 +12,10 @@ const IllustrationChart = lazy(
   () => import("@/views/components/rm-portal/charts/Illustration")
 );
 
-import "./dashboard.scss";
 import RecentAssigned from "./RecentAssigned";
 import RecentActivity from "./RecentActivity";
 import { getRMDashboardStats } from "@/apis/rm-portal/dashboard";
+import "./dashboard.scss";
 
 const Dashboard = () => {
   const { selectedLang } = useLang();

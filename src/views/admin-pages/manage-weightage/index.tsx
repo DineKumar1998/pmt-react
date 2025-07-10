@@ -1,13 +1,12 @@
 import SearchComponent from "@/views/components/Search";
 import React, { useState } from "react";
-
-import "./index.scss";
-import { RedirectIcon } from "@/views/components/icons";
+import { EditIcon, RedirectIcon } from "@/views/components/icons";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query'
 import { getIndustryList } from "@/apis/industry";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
+import "./index.scss";
 
 
 const ManageWeightagePage: React.FC = () => {
@@ -49,14 +48,23 @@ const ManageWeightagePage: React.FC = () => {
           ? industryList.map((industry: any) => (
             <div key={industry.id} className="industry-item">
               <div className="industry-name">
-                <h2>{industry.name}</h2>
-                <span className="redirect-icon" onClick={() => openIndustryParametersPage(industry.id, industry.name)}>
-                  <RedirectIcon />
-                </span>
-              </div>
-              <div className="percentages">
-                <span className="prim">Prim: {industry.primaryPercentage}%</span>
-                <span className="sec">Sec: {industry.secondaryPercentage}%</span>
+                <div className="main-container">
+                  <h2>{industry.name}</h2>
+                  <div className="percentages">
+                    <span className="prim">Prim: {industry.primaryPercentage}%</span>
+                    <span className="sec">Sec: {industry.secondaryPercentage}%</span>
+                  </div>
+                </div>
+                <div className="action-container">
+                  <span className="redirect-icon" onClick={() => openIndustryParametersPage(industry.id, industry.name)}>
+                    <RedirectIcon />
+                  </span>
+                  {industry.totalWeightage !== 1000 ?
+                    <span className="edit-icon" onClick={() => openIndustryParametersPage(industry.id, industry.name)}>
+                      <EditIcon fill={"#e46363"} width={18} height={18} />
+                    </span>
+                    : null}
+                </div>
               </div>
             </div>
           ))

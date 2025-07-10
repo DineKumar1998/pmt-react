@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-
-
 import Button from "@/views/components/button";
-
-// scss
-import "./ParameterIndex.scss";
-
 import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
     getParameterById,
@@ -18,7 +12,7 @@ import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import BackArrow from "@/views/components/icons/BackArrow";
 import WhiteTick from "@/views/components/icons/WhiteTick";
-
+import "./ParameterIndex.scss";
 
 const EditParameter = () => {
     const navigate = useNavigate();

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-
-import "./parameter.scss";
 import Button from "@/views/components/button";
 import {
   PlusIcon,
@@ -14,7 +12,7 @@ import BackArrow from "@/views/components/icons/BackArrow";
 import DownArrow from "@/views/components/icons/DownArrow";
 import { EditIcon } from "@/views/components/icons";
 import EyeIcon from "@/views/components/icons/Eye";
-
+import "./parameter.scss";
 
 const ClientParameters: React.FC = () => {
   const { selectedLang } = useLang();

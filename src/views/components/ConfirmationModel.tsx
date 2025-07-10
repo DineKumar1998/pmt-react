@@ -1,6 +1,6 @@
 import React from "react";
-import "./components.scss";
 import Button from "@/views/components/button";
+import "./components.scss";
 
 
 interface ConfirmationModalProps {

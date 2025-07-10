@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-
-import "./index.scss";
 import Button from "@/views/components/button";
 import {
   AddCircleIcon,
@@ -17,6 +15,7 @@ import BackArrow from "@/views/components/icons/BackArrow";
 import { EditIcon } from "@/views/components/icons";
 import { useForm, type FieldError, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
+import "./index.scss";
 
 
 type FormValues = {
@@ -103,7 +102,7 @@ const ManageParametersPage: React.FC = () => {
     })
   }
 
-  const { data: parameterList } = useQuery({
+  const { data: parameterList, refetch: parameterlistRefetch } = useQuery({
     queryKey: ["parameterList", queryParams, selectedLang],
     queryFn: () => getParameterList({ ...queryParams, language: selectedLang }),
   });
@@ -200,6 +199,7 @@ const ManageParametersPage: React.FC = () => {
       onSuccess: (data) => {
         console.log("editParameterWeightages success data=", data);
         toast.success("Weightage successfully updated");
+        parameterlistRefetch();
       },
       onError: (error: any) => {
         const message = error?.message;
@@ -231,21 +231,21 @@ const ManageParametersPage: React.FC = () => {
           ))}
         </section>
 
-        <div className="actions">
+        <div className="actions-container">
           {showIndustryWeightage
             ?
-            <>
+            <div className="weightage-actions">
               <div className="weightage-view">
                 <Justice />
-                <p>1000</p>
+                <p>{parameterList?.totalWeightage ?? 0}</p>
               </div>
               <Button
                 text={t.buttons.back}
                 icon={<BackArrow />}
                 onClick={handleBackClick}
               />
-            </>
-            : <>
+            </div>
+            : <div className="manage-actions">
               {activeTab === "secondary" && (
                 <Button
                   text={t.heading.addParameter}
@@ -257,7 +257,7 @@ const ManageParametersPage: React.FC = () => {
               <button onClick={handleExportParameter} className="export-button">
                 <DownloadIcon />
               </button>
-            </>}
+            </div>}
         </div>
       </div>
 

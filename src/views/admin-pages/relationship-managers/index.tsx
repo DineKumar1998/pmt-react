@@ -8,7 +8,6 @@ import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import React, { useState } from "react";
-import "./index.scss";
 import AddCircle from "@/views/components/icons/AddCircle";
 import BackArrow from "@/views/components/icons/BackArrow";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getRMList } from '@/apis/rm';
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
+import "./index.scss";
 
 type RM = {
   id: number;

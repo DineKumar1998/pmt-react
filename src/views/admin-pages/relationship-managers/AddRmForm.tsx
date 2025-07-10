@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from "@/views/components/button";
 
-// scss
-import "./index.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { createRMValidator, editRMValidator } from "@/validations/rmValidator";
 import { toast } from 'react-toastify'
@@ -10,6 +8,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { createRM, getRMById, editRM } from '@/apis/rm';
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
+import "./index.scss";
 
 const AddUserForm = () => {
   const { selectedLang } = useLang();

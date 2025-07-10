@@ -14,8 +14,8 @@ import { useQuery } from '@tanstack/react-query';
 import { getClientList } from '@/apis/client';
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import "./index.scss";
 import { useNavigate } from "react-router-dom";
+import "./index.scss";
 
 type Client = {
   id: number;

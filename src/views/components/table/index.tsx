@@ -7,9 +7,9 @@ import {
   flexRender,
   type ColumnDef,
 } from "@tanstack/react-table";
-import "./table.scss";
 import { SortIcon } from "../icons";
 import BackArrow from "../icons/BackArrow";
+import "./table.scss";
 
 // Define a base type that requires an 'id' property
 interface WithId {

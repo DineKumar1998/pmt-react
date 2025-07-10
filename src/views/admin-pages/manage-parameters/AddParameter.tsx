@@ -6,8 +6,6 @@ import ConfirmationModal from "@/views/components/ConfirmationModel";
 
 import Button from "@/views/components/button";
 
-// scss
-import "./index.scss";
 import AddCircle from "@/views/components/icons/AddCircle";
 
 // Import use-form-hook
@@ -46,6 +44,7 @@ import {
 } from "@dnd-kit/sortable";
 import { ParameterSortableItem } from "@/views/components/ParameterSortableItem";
 import BackArrow from "@/views/components/icons/BackArrow";
+import "./index.scss";
 
 type FormValues = {
   parameter: string;

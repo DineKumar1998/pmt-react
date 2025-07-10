@@ -4,10 +4,11 @@ import { memo } from "react";
 
 import { HelmetProvider } from "react-helmet-async";
 import { ToastContainer } from "react-toastify";
-
-import "@styles/index.scss";
 import { AuthProvider } from "./context/AuthContext";
 import { CookiesProvider } from "react-cookie";
+import "@styles/index.scss";
+
+// ** From Master
 
 const App = memo(function App() {
   return (

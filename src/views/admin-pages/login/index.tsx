@@ -12,11 +12,11 @@ import { useMutation } from "@tanstack/react-query";
 import { loginUser, verifyOtp } from "@/apis/auth";
 import { ToastContainer, toast } from "react-toastify";
 
-import "./login.scss"; // Assuming a CSS file for styling
 // import { AUTH } from "@/utils/constants";
 import AuthContext from "@/context/AuthContext";
 import ReCAPTCHA from 'react-google-recaptcha';
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+import "./login.scss"; // Assuming a CSS file for styling
 
 const Login = () => {
   const navigate = useNavigate();
