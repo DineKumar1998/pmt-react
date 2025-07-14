@@ -5,14 +5,14 @@ import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
     getParameterById,
 } from "@/apis/parameter";
-import { getClientParameterList } from "@/apis/rm-portal/client";
-import { selectParameterOption } from "@/apis/rm-portal/parameter";
+import { getClientParameterList } from "@/apis/parameter";
+import { selectParameterOption } from "@/apis/parameter";
 import { toast } from "react-toastify";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import BackArrow from "@/views/components/icons/BackArrow";
 import WhiteTick from "@/views/components/icons/WhiteTick";
-import "./ParameterIndex.scss";
+import "./EditClientParameter.scss";
 
 const EditParameter = () => {
     const navigate = useNavigate();
@@ -165,7 +165,7 @@ const EditParameter = () => {
         if (newIndex < 0 || newIndex >= parameterList.length) return;
 
         const nextParam = parameterList[newIndex];
-        navigate(`/client-list/edit-parameter/${nextParam.id}`, {
+        navigate(`/manage-parameters/client/edit-parameter/${nextParam.id}?clientName=${clientName}`, {
             state: {
                 clientId: clientId,
                 clientName: clientName,
@@ -287,7 +287,7 @@ const EditParameter = () => {
                                         itemRefs.current[parameter.id] = el;
                                     }}
                                     onClick={() => {
-                                        navigate(`/client-list/edit-parameter/${parameter.id}`, {
+                                        navigate(`/manage-parameters/client/edit-parameter/${parameter.id}?clientName=${clientName}`, {
                                             state: {
                                                 clientId: clientId,
                                                 clientName: clientName,

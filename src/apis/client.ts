@@ -25,3 +25,10 @@ export const assignRmToClient = async (id: string | number, data: any) => {
     const response = await api.patch(`/client/assign-rm/${id}`, data)
     return response.data
 }
+
+export const getRMClientProjects = async (id: number, params: any) => {
+    const response = await api.get(`/rm-portal/client/projects/${id}`, {
+        params
+    })
+    return response.data
+}

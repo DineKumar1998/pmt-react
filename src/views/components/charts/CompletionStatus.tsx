@@ -134,38 +134,36 @@ export default function CompletionStatusChart({ industriesStats }: ChartProps) {
   }
 
   return (
-    industriesStats?.stats?.length
-      ? <div className="completion-status-chart">
-        <p style={{ textAlign: "center", marginBottom: "1rem" }}>
-          {t.text.completionStatus} (%)
-        </p>
+    <div className="completion-status-chart">
+      <p style={{ textAlign: "center", marginBottom: "1rem" }}>
+        {t.text.completionStatus} (%)
+      </p>
 
-        <div className="chart-container">
-          <div className="custom-legend">
-            <div className="total-parameters-view">
-              <p>{t.heading.parameter}</p>
-              <strong>{industriesStats.totalParametersCount ?? 0}</strong>
-            </div>
-            <div className="legend-item">
-              <span className="legend-color" style={{ backgroundColor: primaryLabelColor }} />
-              <span className="legend-label">{t.buttons.primary} <strong>{industriesStats.totalPrimaryCount ?? 0}</strong></span>
-            </div>
-            <div className="legend-item">
-              <span className="legend-color" style={{ backgroundColor: secondaryLabelColor }} />
-              <span className="legend-label">{t.buttons.secondary} <strong>{industriesStats.totalSecondaryCount ?? 0}</strong></span>
-            </div>
+      <div className="chart-container">
+        <div className="custom-legend">
+          <div className="total-parameters-view">
+            <p>{t.heading.parameter}</p>
+            <strong>{industriesStats?.totalParametersCount ?? 0}</strong>
           </div>
-          <div className="chart">
-            <Bar data={data} options={options} />
+          <div className="legend-item">
+            <span className="legend-color" style={{ backgroundColor: primaryLabelColor }} />
+            <span className="legend-label">{t.buttons.primary} <strong>{industriesStats?.totalPrimaryCount ?? 0}</strong></span>
           </div>
-          <span className="redirect-icon"
-            onClick={openManageWeightagePage}
-            style={{ bottom: "-1rem", right: "-0.5rem" }}
-          >
-            <RedirectForward width={28} height={28} />
-          </span>
+          <div className="legend-item">
+            <span className="legend-color" style={{ backgroundColor: secondaryLabelColor }} />
+            <span className="legend-label">{t.buttons.secondary} <strong>{industriesStats?.totalSecondaryCount ?? 0}</strong></span>
+          </div>
         </div>
+        <div className="chart">
+          <Bar data={data} options={options} />
+        </div>
+        <span className="redirect-icon"
+          onClick={openManageWeightagePage}
+          style={{ bottom: "-1rem", right: "-0.5rem" }}
+        >
+          <RedirectForward width={28} height={28} />
+        </span>
       </div>
-      : null
+    </div>
   );
 }

@@ -11,6 +11,14 @@ const AddRMPage = lazy(
   () => import("../views/admin-pages/relationship-managers/AddRmForm"),
 );
 
+const RmClientsPage = lazy(
+  () => import("../views/admin-pages/client-list/RmClientsPage"),
+);
+
+const ClientProjects = lazy(
+  () => import("../views/admin-pages/client-list/ClientProjects"),
+);
+
 const ClientListPage = lazy(() => import("../views/admin-pages/client-list"));
 const EditClientPage = lazy(
   () => import("../views/admin-pages/client-list/EditClient"),
@@ -19,6 +27,15 @@ const EditClientPage = lazy(
 const ManageParametersPage = lazy(
   () => import("../views/admin-pages/manage-parameters"),
 );
+
+const ManageClientParametersPage = lazy(
+  () => import("../views/admin-pages/manage-parameters/ManageClientParameters"),
+);
+
+const EditClientParameter = lazy(
+  () => import("../views/admin-pages/manage-parameters/EditClientParameter"),
+)
+
 const AddParameterPage = lazy(
   () => import("../views/admin-pages/manage-parameters/AddParameter"),
 );
@@ -92,6 +109,14 @@ export const adminRoutes: RouteType[] = [
     label: "Edit User",
   },
   {
+    path: "/relationship-managers/rm",
+    component: RmClientsPage,
+    layout: "default",
+    permission: "rm:read",
+    group: "Children",
+    label: "RM",
+  },
+  {
     path: "/client-list",
     component: ClientListPage,
     layout: "default",
@@ -109,6 +134,14 @@ export const adminRoutes: RouteType[] = [
     label: "Edit Client",
   },
   {
+    path: "/client-list/projects",
+    component: ClientProjects,
+    layout: "default",
+    permission: "client:read",
+    group: "Children",
+    label: "Client Projects",
+  },
+  {
     path: "/manage-parameters",
     component: ManageParametersPage,
     layout: "default",
@@ -116,6 +149,22 @@ export const adminRoutes: RouteType[] = [
     group: "Main",
     label: "Manage Parameters",
     icon: ManageParametersIcon,
+  },
+  {
+    path: "/manage-parameters/client",
+    component: ManageClientParametersPage,
+    layout: "default",
+    permission: "parameter:read",
+    group: "Children",
+    label: "Manage Client Parameters",
+  },
+  {
+    path: "/manage-parameters/client/edit-parameter/:editParamId",
+    component: EditClientParameter,
+    layout: "default",
+    permission: "parameter:update",
+    group: "Children",
+    label: "Edit Client Parameters",
   },
   {
     path: "/manage-parameters/add-parameter",
@@ -149,6 +198,14 @@ export const adminRoutes: RouteType[] = [
     permission: "manage-industry-weightage:page",
     group: "Children",
     label: "Manage Industry Weightage",
+  },
+  {
+    path: "/manage-weightage/client",
+    component: ManageParametersPage,
+    layout: "default",
+    permission: "manage-industry-weightage:page",
+    group: "Children",
+    label: "Manage Client Weightage",
   },
   {
     path: "/profile",

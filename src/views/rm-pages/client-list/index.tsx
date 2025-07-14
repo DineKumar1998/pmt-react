@@ -147,16 +147,16 @@ const ClientListPage: React.FC = () => {
             <TrendingIcon /> {t.table.projects}
           </div>
         ),
-        size: 80,
         cell: ({ row }: any) => {
           const { project_count, id } = row.original;
           return <div
             onClick={() => handleProjectsClick(id)}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", textAlign: "center", width: "50%" }}
           >
             {project_count}
           </div>;
         },
+        size: 80,
       },
       {
         id: "action",
@@ -167,12 +167,14 @@ const ClientListPage: React.FC = () => {
         ),
         cell: ({ row }: any) => {
           const { id, client_name } = row.original;
-          return <EditIcon
-            onClick={() => handleEditClick(id, client_name)}
-            width={18}
-            height={18}
-            style={{ cursor: "pointer" }}
-          />;
+          return <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
+            <EditIcon
+              onClick={() => handleEditClick(id, client_name)}
+              width={18}
+              height={18}
+              style={{ cursor: "pointer" }}
+            />
+          </div>;
         },
         size: 80,
       },

@@ -97,24 +97,22 @@ export default function RelationshipManagersChart() {
   }
 
   return (
-    rmList?.length ?
-      <div className="card relationship-managers-chart">
-        <div>
-          <p style={{ lineHeight: 0.8 }}>{t.text.relationship} </p>
-          <p>{t.text.managers}</p>
-          <h3>{t.text.top5}</h3>
-        </div>
-        <div className="chart">
-          <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />
-        </div>
-        <span
-          className="redirect-icon"
-          onClick={openRmPage}
-          style={{ bottom: "0.5rem", right: "1rem" }}
-        >
-          <RedirectForward width={28} height={28} />
-        </span>
+    <div className="card relationship-managers-chart">
+      <div>
+        <p style={{ lineHeight: 0.8 }}>{t.text.relationship} </p>
+        <p>{t.text.managers}</p>
+        <h3>{t.text.top5}</h3>
       </div>
-      : null
+      <div className="chart">
+        <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />
+      </div>
+      <span
+        className="redirect-icon"
+        onClick={openRmPage}
+        style={{ bottom: "0.5rem", right: "1rem" }}
+      >
+        <RedirectForward width={28} height={28} />
+      </span>
+    </div>
   );
 }

@@ -9,6 +9,7 @@ import UserIcon from "@/views/components/icons/table/User";
 import UserGroupIcon from "@/views/components/icons/table/UserGroup";
 import { useQuery } from '@tanstack/react-query';
 import { getRMByRecentActivity } from "@/apis/rm"
+import { useNavigate } from "react-router-dom";
 
 type RM = {
   id: number;
@@ -21,6 +22,8 @@ const RecentRM: React.FC = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const listLimit = 5;
+  const navigate = useNavigate();
+
 
   const columns: ColumnDef<RM>[] = [
     {
@@ -30,6 +33,15 @@ const RecentRM: React.FC = () => {
           <ProfileWithOptionsIcon /> {t.table.rmId}
         </div>
       ),
+      cell: ({ row }: any) => {
+        const { id } = row.original;
+        return <div
+          onClick={() => handleRmEdit(id)}
+          style={{ cursor: "pointer" }}
+        >
+          {id}
+        </div>;
+      },
     },
     {
       accessorKey: "name",
@@ -38,7 +50,15 @@ const RecentRM: React.FC = () => {
           <UserIcon /> {t.table.name}
         </div>
       ),
-
+      cell: ({ row }: any) => {
+        const { id, name } = row.original;
+        return <div
+          onClick={() => handleRmEdit(id)}
+          style={{ cursor: "pointer" }}
+        >
+          {name}
+        </div>;
+      },
     },
     {
       accessorKey: "last_login",
@@ -55,6 +75,15 @@ const RecentRM: React.FC = () => {
           <UserGroupIcon /> {t.table.clientAssigned}
         </div>
       ),
+      cell: ({ row }: any) => {
+        const { id, clients_assigned_count, name } = row.original;
+        return <div
+          onClick={() => openRmClientsPage(id, name)}
+          style={{ cursor: "pointer", textAlign: "center", width: "50%" }}
+        >
+          {clients_assigned_count}
+        </div>;
+      },
     },
   ];
 
@@ -95,17 +124,29 @@ const RecentRM: React.FC = () => {
     );
   }
 
-  return (
-    updatedRmList?.length ?
-      <div className="relationship-manager-page">
-        <h2 className="section-title">{t.heading.rmRecentActivity}</h2>
+  const handleRmEdit = (id: number) => {
+    console.log("handleRmEdit:", id);
+    navigate(
+      `/relationship-managers/edit-rm/${id}`,
+    )
+  };
 
-        <Table
-          columns={columns}
-          data={updatedRmList}
-        />
-      </div>
-      : null
+  const openRmClientsPage = (id: number, name: string) => {
+    console.log("openRmClientsPage=", id)
+    navigate(
+      `/relationship-managers/rm?rmId=${id}&rmName=${name}`,
+    )
+  }
+
+  return (
+    <div className="relationship-manager-page">
+      <h2 className="section-title">{t.heading.rmRecentActivity}</h2>
+
+      <Table
+        columns={columns}
+        data={updatedRmList}
+      />
+    </div>
   );
 };
 

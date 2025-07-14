@@ -223,10 +223,7 @@ const AddParameter = () => {
       onSuccess: (data) => {
         console.log("mapParameterToIndustriesMutate success data=", data);
         toast.success(data?.message);
-        navigate("/manage-parameters", {
-          state: { showSecondary: true },
-          replace: true,
-        });
+        navigate(-1);
       },
       onError: (error: any) => {
         const message =

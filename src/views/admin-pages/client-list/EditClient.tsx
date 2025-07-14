@@ -86,7 +86,6 @@ const EditClient = () => {
 
   return (
     <div className="edit-client">
-      <h2 className="mb-1">{t.heading.editParameter}</h2>
       <div className="details">
         <label className="label">{t.formLabel.companyName}</label>
         <span className="text-value">{clientData?.client_name}</span>

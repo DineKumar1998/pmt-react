@@ -6,7 +6,7 @@ import {
   PlusIcon,
   Justice
 } from "@/views/components/icons";
-import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getParameterList, editParameterWeightages, exportParameterList } from "@/apis/parameter";
 import { useLang } from "@/context/LangContext";
@@ -40,13 +40,13 @@ const ManageParametersPage: React.FC = () => {
   ];
   const itemsPerPage = 10;
   const [expandedIds, setExpandedIds] = useState<number[]>([]);
-  const location = useLocation();
-  const [activeTab, setActiveTab] = useState(() =>
-    location.state?.showSecondary ? TABS[1].key : TABS[0].key
-  );
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const industryId = searchParams.get("industryId");
   const industryName = searchParams.get("industryName");
+  const selectedTab = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(() =>
+    selectedTab || TABS[0].key
+  );
   const showIndustryWeightage = !!industryId;
 
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -71,8 +71,14 @@ const ManageParametersPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleTabClick = (key: string) => {
+
     setActiveTab((prev) => {
-      return prev === key ? prev : key;
+      const next = prev === key ? prev : key;
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.set("tab", next);
+
+      setSearchParams(newParams, { replace: true });
+      return next;
     });
   };
 

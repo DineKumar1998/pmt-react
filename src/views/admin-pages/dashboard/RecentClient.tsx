@@ -84,15 +84,13 @@ const RecentClient: React.FC = () => {
   }
 
   return (
-    updatedClientList?.length ?
-      <div className="recent-added-clients-page">
-        <h2 className="section-title">{t.heading.clientRecentlyAdded}</h2>
-        <Table
-          columns={columns}
-          data={updatedClientList}
-        />
-      </div>
-      : null
+    <div className="recent-added-clients-page">
+      <h2 className="section-title">{t.heading.clientRecentlyAdded}</h2>
+      <Table
+        columns={columns}
+        data={updatedClientList}
+      />
+    </div>
   );
 };
 

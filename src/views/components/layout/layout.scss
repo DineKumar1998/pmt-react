@@ -311,6 +311,11 @@
                     text-decoration: underline;
                 }
 
+                .breadcrumb-link.is-disabled {
+                    text-decoration: none;
+                    cursor: auto;
+                }
+
                 .breadcrumb-current-tab {
                     font-weight: 900;
                     color: $black;

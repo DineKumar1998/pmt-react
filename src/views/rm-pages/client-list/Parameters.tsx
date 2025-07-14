@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Button from "@/views/components/button";
 import {
   PlusIcon,
 } from "@/views/components/icons";
-import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getClientParameterList } from "@/apis/rm-portal/client";
 import { useLang } from "@/context/LangContext";
@@ -29,13 +29,13 @@ const ClientParameters: React.FC = () => {
   ];
   const itemsPerPage = 10;
   const [expandedIds, setExpandedIds] = useState<number[]>([]);
-  const location = useLocation();
-  const [activeTab, setActiveTab] = useState(() =>
-    location.state?.showSecondary ? TABS[1].key : TABS[0].key
-  );
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const clientId = searchParams.get("clientId");
   const clientName = searchParams.get("clientName");
+  const selectedTab = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(() =>
+    selectedTab || TABS[0].key
+  );
 
   const showClientParameterView = !!clientId;
 
@@ -61,7 +61,27 @@ const ClientParameters: React.FC = () => {
   ]);
 
   const [openParameterSearchDropdown, setOpenParameterSearchDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenParameterSearchDropdown(false);
+      }
+    };
+
+    if (openParameterSearchDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openParameterSearchDropdown]);
 
   useEffect(() => {
     setQueryParams((prev) => ({
@@ -83,8 +103,14 @@ const ClientParameters: React.FC = () => {
   const navigate = useNavigate();
 
   const handleTabClick = (key: string) => {
+
     setActiveTab((prev) => {
-      return prev === key ? prev : key;
+      const next = prev === key ? prev : key;
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.set("tab", next);
+
+      setSearchParams(newParams, { replace: true });
+      return next;
     });
   };
 
@@ -149,7 +175,7 @@ const ClientParameters: React.FC = () => {
                 icon={<BackArrow />}
                 onClick={handleBackClick}
               />
-              <div className="parameter-dropdown-container">
+              <div className="parameter-dropdown-container" ref={dropdownRef}>
                 <button
                   className="parameter-dropdown-button"
                   onClick={() => setOpenParameterSearchDropdown(!openParameterSearchDropdown)}

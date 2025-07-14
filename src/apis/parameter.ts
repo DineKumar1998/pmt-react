@@ -53,3 +53,18 @@ export const exportParameterList = async (params: any) => {
     })
     return response.data
 }
+
+export const getClientParameterList = async (id: string | number, params: any) => {
+    console.log("id123=", id)
+    console.log("params123=", params)
+    const response = await api.get(`/rm-portal/client/parameters/${id}`, {
+        params
+    })
+    console.log("getClientParameterList=", response.data)
+    return response.data
+}
+
+export const selectParameterOption = async (data: any) => {
+    const response = await api.patch(`/rm-portal/client/edit/parameter`, data)
+    return response.data
+}

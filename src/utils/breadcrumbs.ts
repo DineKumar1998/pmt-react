@@ -21,6 +21,10 @@ export const breadcrumbsData: BreadcrumbType[] = [
         label: "editUser",
     },
     {
+        path: "/relationship-managers/rm",
+        label: "RM",
+    },
+    {
         path: "/client-list",
         label: "clientList",
     },
@@ -41,12 +45,24 @@ export const breadcrumbsData: BreadcrumbType[] = [
         label: "editParameter",
     },
     {
+        path: "/manage-parameters/client",
+        label: "client",
+    },
+    {
+        path: "/manage-parameters/client/edit-parameter/:editParamId",
+        label: "editParameter",
+    },
+    {
         path: "/manage-weightage",
         label: "manageWeightage",
     },
     {
         path: "/manage-weightage/industry",
         label: "industry",
+    },
+    {
+        path: "/manage-weightage/client",
+        label: "client",
     },
     {
         path: "/profile",
@@ -59,5 +75,9 @@ export const breadcrumbsData: BreadcrumbType[] = [
     {
         path: "/client-list/edit-parameter",
         label: "editParameter",
+    },
+    {
+        path: "/client-list/projects",
+        label: "clientProjects",
     },
 ];

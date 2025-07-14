@@ -222,7 +222,7 @@ const ProfilePage = () => {
                     {...register("password")}
                     className="input-field"
                     placeholder={
-                      isPasswordEditable ? "Enter new password" : "************"
+                      isPasswordEditable ? "Enter new password" : "•••••••••••"
                     }
                     readOnly={!isPasswordEditable}
                   />

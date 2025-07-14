@@ -6,6 +6,47 @@
         justify-content: flex-end;
         margin-bottom: 1rem;
     }
+
+    .parameter-dropdown-container {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin-left: 1rem;
+
+        .parameter-dropdown-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            width: 12rem;
+            height: 40px;
+            padding: 0.3rem 1.3rem;
+            border-radius: 100px;
+            box-shadow: 0px 0px 8px 0px $border-color-light;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            color: $primary;
+            font-weight: 700;
+            font-size: 14px;
+            background-color: $white;
+
+            svg {
+                margin-top: 0.5rem;
+            }
+        }
+
+        .dropdown-view {
+            position: absolute;
+            z-index: 500;
+            top: 2.8rem;
+
+
+            .parameter-dropdown-button {
+                margin-bottom: 0.3rem;
+            }
+        }
+    }
 }
 
 .progress-bar-wrapper {
@@ -46,6 +87,7 @@
 /* Edit Client */
 .edit-client {
     background-color: $white;
+    border-radius: 10px;
     padding: clamp(1rem, 4vw, 2rem) clamp(0.75rem, 4vw, 1.5rem);
 
     h2 {

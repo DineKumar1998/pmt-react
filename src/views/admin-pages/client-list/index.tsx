@@ -61,6 +61,15 @@ const ClientListPage: React.FC = () => {
           <ProfileWithOptionsIcon /> {t.table.id}
         </div>
       ),
+      cell: ({ row }: any) => {
+        const { id } = row.original;
+        return <div
+          onClick={() => openEditClientPage(id)}
+          style={{ cursor: "pointer" }}
+        >
+          {id}
+        </div>;
+      },
       size: 40
     },
     {
@@ -70,6 +79,15 @@ const ClientListPage: React.FC = () => {
           <UserIcon /> {t.table.name}
         </div>
       ),
+      cell: ({ row }: any) => {
+        const { id, client_name } = row.original;
+        return <div
+          onClick={() => openEditClientPage(id)}
+          style={{ cursor: "pointer" }}
+        >
+          {client_name}
+        </div>;
+      },
       size: 120
     },
     {
@@ -142,6 +160,15 @@ const ClientListPage: React.FC = () => {
           <TrendingIcon /> {t.table.projects}
         </div>
       ),
+      cell: ({ row }: any) => {
+        const { id, project_count, client_name } = row.original;
+        return <div
+          onClick={() => openClientProjectsPage(id, client_name)}
+          style={{ cursor: "pointer", textAlign: "center", width: "50%" }}
+        >
+          {project_count}
+        </div>;
+      },
       size: 80
     },
     {
@@ -151,13 +178,17 @@ const ClientListPage: React.FC = () => {
           <ActionIcon /> {t.table.action}
         </div>
       ),
-      cell: () => (
-        <EditIcon
-          width={18}
-          height={18}
-          style={{ cursor: "pointer" }}
-        />
-      ),
+      cell: ({ row }: any) => {
+        const { id, client_name } = row.original;
+        return <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
+          <EditIcon
+            width={18}
+            height={18}
+            style={{ cursor: "pointer" }}
+            onClick={() => openManageClientParametersPage(id, client_name)}
+          />
+        </div>;
+      },
       size: 80
     },
   ];
@@ -171,11 +202,21 @@ const ClientListPage: React.FC = () => {
   };
 
 
-  const handleRowClick = (id: number) => {
-    console.log("handleRowClick:", id);
+  const openEditClientPage = (id: number) => {
+    console.log("openEditClientPage:", id);
     navigate(
       `/client-list/edit-client/${id}`,
     )
+  };
+
+  const openClientProjectsPage = (id: number, name: string) => {
+    navigate(
+      `/client-list/projects?clientId=${id}&clientName=${name}`,
+    )
+  };
+
+  const openManageClientParametersPage = (id: number, clientName: string) => {
+    navigate(`/manage-parameters/client?clientId=${id}&clientName=${clientName}`)
   };
 
   const { data: clientList } = useQuery({
@@ -237,7 +278,6 @@ const ClientListPage: React.FC = () => {
         total_rms={total_clients}
         hasNextPage={clientList?.hasNextPage ?? false}
         onPageChange={handlePageChange}
-        onRowClick={handleRowClick}
         customColumnWidth={true}
         enableTableScroll={true}
       />

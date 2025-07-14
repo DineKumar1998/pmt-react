@@ -30,7 +30,7 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
 
   function getBreadcrumbs(pathname?: string) {
     //Set initial breadcrumb of dashboard
-    const crumbs: { label?: string, path: string }[] = [
+    const crumbs: { label?: string, path: string, isDisabled?: boolean }[] = [
       { label: t.routes[breadcrumbsData[0].label], path: breadcrumbsData[0].path }
     ];
 
@@ -45,9 +45,19 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
             const industryName = searchParams.get("industryName");
             crumbs.push({ label: industryName ?? t.routes[route.label], path: accumulatedPath });
           }
-          else if (accumulatedPath === "/client-list/parameters") {
+          else if (
+            accumulatedPath === "/manage-weightage/client" ||
+            accumulatedPath === "/client-list/parameters" ||
+            accumulatedPath === "/client-list/projects" ||
+            accumulatedPath === "/manage-parameters/client"
+          ) {
             const clientName = searchParams.get("clientName");
-            crumbs.push({ label: clientName ?? t.routes[route.label], path: accumulatedPath });
+            crumbs.push({ label: clientName ?? t.routes[route.label], path: accumulatedPath, isDisabled: true });
+          }
+
+          else if (accumulatedPath === "/relationship-managers/rm") {
+            const rmName = searchParams.get("rmName");
+            crumbs.push({ label: rmName ?? t.routes[route.label], path: accumulatedPath });
           }
           else {
             crumbs.push({ label: t.routes[route.label], path: accumulatedPath });
@@ -94,7 +104,17 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
                 {idx < breadcrumbs.length - 1 ? (
                   <>
                     {idx === 0 ? "" : " / "}
-                    <Link className="breadcrumb-link" to={crumb.path}>{crumb.label}</Link>
+                    <Link
+                      className={`breadcrumb-link${crumb.isDisabled ? " is-disabled" : ""}`}
+                      to={crumb.path}
+                      onClick={e => {
+                        if (crumb.isDisabled) {
+                          e.preventDefault();
+                        }
+                      }}
+                    >
+                      {crumb.label}
+                    </Link>
                   </>
                 ) : (
                   <span className="breadcrumb-current-tab"> / {crumb.label}</span>

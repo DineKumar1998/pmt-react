@@ -34,7 +34,8 @@ export const translations: any = {
       clientName: "Client Name",
       projectName: "Project Name",
       projectCode: "Project Code",
-      status: "Status"
+      status: "Status",
+      manageWeightage: "Manage Weightage"
     },
     buttons: {
       back: "Back",
@@ -106,7 +107,9 @@ export const translations: any = {
       manageWeightage: "Manage Weightage",
       industry: "Industry",
       profile: "Profile",
-      clientParameters: "Client Parameters"
+      clientParameters: "Client Parameters",
+      clientProjects: "Client Projects",
+      client: "Client"
     }
   },
   jp: {
@@ -143,7 +146,8 @@ export const translations: any = {
       clientName: "クライアント名",
       projectName: "プロジェクト名",
       projectCode: "プロジェクトコード",
-      status: "ステータス"
+      status: "ステータス",
+      manageWeightage: "体重管理"
     },
     buttons: {
       back: "戻る",
@@ -215,7 +219,9 @@ export const translations: any = {
       manageWeightage: "ウェイトを管理",
       industry: "業界",
       profile: "プロフィール",
-      clientParameters: "クライアントパラメータ"
+      clientParameters: "クライアントパラメータ",
+      clientProjects: "クライアントプロジェクト",
+      client: "クライアント"
     }
   },
 };
