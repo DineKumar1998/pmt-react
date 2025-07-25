@@ -10,7 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { loginUser, verifyOtp } from "@/apis/auth";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 // import { AUTH } from "@/utils/constants";
 import AuthContext from "@/context/AuthContext";
@@ -143,7 +143,6 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <ToastContainer /> {/* Add ToastContainer to display toasts */}
       <div className="login-welcome-section">
         <h2 style={{ marginBottom: 20 }}>Welcome</h2>
         <p>
