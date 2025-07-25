@@ -1,8 +1,8 @@
 @use "../../../styles/variables" as *;
 
 .table-container {
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
     overflow: hidden;
 
     .table.table-scroll {
@@ -27,12 +27,29 @@
             color: $white;
 
             th {
+                height: 3.25rem ;
+                box-sizing: border-box;
                 padding: 0.5rem 1rem;
                 text-align: left;
                 font-weight: normal;
                 /* width: 1%; */
                 white-space: normal;
                 word-break: break-word;
+
+                >.table-header {
+                    max-width: 150px;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+
+                    svg {
+                        flex-shrink: 0;
+                    }
+
+                    span.title {
+                        white-space: nowrap;
+                    }
+                }
             }
 
             .sorted {
@@ -42,6 +59,13 @@
         }
 
         tbody {
+            .empty-state {
+                text-align: center;
+                padding: 1rem;
+
+                color: gray;
+            }
+
             tr {
                 td.table-cell {
                     padding: 0.5rem 1rem;

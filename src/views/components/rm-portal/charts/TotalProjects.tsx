@@ -26,7 +26,7 @@ export default function TotalMemberChart({ record }: TotalMemberProps) {
     labels: [t.text.active, t.text.closed],
     datasets: [
       {
-        data: [record?.active, record?.closed],
+        data: [record?.active || 0, record?.closed || 0],
         backgroundColor: ["#DCEBFA", "#97A9C9"],
         borderWidth: 0,
       },
@@ -61,19 +61,19 @@ export default function TotalMemberChart({ record }: TotalMemberProps) {
     navigate(`/client-list`);
   };
 
-  return record ? (
+  return (
     <div className="card total-members-chart">
       <div>
         <p>{t.text.totalMembers}</p>
-        <h3>{record.total}</h3>
+        <h3>{record?.total}</h3>
         <div>
           <p className="client-dot">
             {t.text.active}{" "}
-            <strong style={{ display: "block" }}>{record.active}</strong>
+            <strong style={{ display: "block" }}>{record?.active}</strong>
           </p>
           <p className="partner-dot">
             {t.text.closed}{" "}
-            <strong style={{ display: "block" }}>{record.closed}</strong>
+            <strong style={{ display: "block" }}>{record?.closed}</strong>
           </p>
         </div>
       </div>
@@ -88,5 +88,5 @@ export default function TotalMemberChart({ record }: TotalMemberProps) {
         <RedirectForward width={28} height={28} />
       </span>
     </div>
-  ) : null;
+  );
 }

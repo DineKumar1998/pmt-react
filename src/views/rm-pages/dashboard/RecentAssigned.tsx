@@ -34,25 +34,25 @@ const RecentClient: React.FC = () => {
     {
       accessorKey: "id",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <ProfileWithOptionsIcon /> {t.table.id}
-        </div>
+        </>
       ),
     },
     {
       accessorKey: "client_name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <UserIcon /> {t.table.clientName}
-        </div>
+        </>
       ),
     },
     {
       id: "assigned_date",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <ClockIcon /> {t.table.assignDate}
-        </div>
+        </>
       ),
       cell: ({ row }: any) => {
         const { id, assigned_date } = row.original;
@@ -107,12 +107,10 @@ const RecentClient: React.FC = () => {
     );
   }
 
-  return updatedClientList?.length ? (
-    <div className="recent-added-clients-page">
+  return <div className="recent-added-clients-page">
       <h2 className="section-title">{t.heading.clientRecentlyAssigned}</h2>
       <Table columns={columns} data={updatedClientList} />
     </div>
-  ) : null;
 };
 
 export default RecentClient;

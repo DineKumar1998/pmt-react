@@ -35,25 +35,25 @@ const RecentActivity: React.FC = () => {
     {
       accessorKey: "id",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <ProfileWithOptionsIcon /> {t.table.id}
-        </div>
+        </>
       ),
     },
     {
       accessorKey: "client_name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <UserIcon /> {t.table.clientName}
-        </div>
+        </>
       ),
     },
     {
       id: "last_parameter_update",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <ClockIcon /> {t.formLabel.lastUpdated}
-        </div>
+        </>
       ),
       cell: ({ row }: any) => {
         const { id, last_parameter_update } = row.original;
@@ -77,6 +77,7 @@ const RecentActivity: React.FC = () => {
   });
 
   let updatedClientList: Client[] = [];
+
   if (clientList?.length) {
     updatedClientList = clientList.map(
       ({
@@ -101,12 +102,12 @@ const RecentActivity: React.FC = () => {
     );
   }
 
-  return updatedClientList?.length ? (
+  return (
     <div className="recent-added-clients-page">
       <h2 className="section-title">{t.heading.clientRecentActivity}</h2>
       <Table columns={columns} data={updatedClientList} />
     </div>
-  ) : null;
+  );
 };
 
 export default RecentActivity;

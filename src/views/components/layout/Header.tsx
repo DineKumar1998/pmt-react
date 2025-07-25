@@ -5,6 +5,7 @@ import AvatarDropdown from "./UserAvatar";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import { breadcrumbsData } from "@utils/breadcrumbs";
+import Wrapper from "../wrapper";
 
 type HeaderProps = {
   breakcrumbPath?: string;
@@ -94,74 +95,76 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
 
   return (
     <header className="header">
-      <nav className="breadcrumbs">
-        {breadcrumbs?.length
-          ? breadcrumbs.length === 1
-            ?
-            <span className="heading">{breadcrumbs[0].label}</span>
-            : breadcrumbs.map((crumb, idx) => (
-              <span key={crumb.path}>
-                {idx < breadcrumbs.length - 1 ? (
-                  <>
-                    {idx === 0 ? "" : " / "}
-                    <Link
-                      className={`breadcrumb-link${crumb.isDisabled ? " is-disabled" : ""}`}
-                      to={crumb.path}
-                      onClick={e => {
-                        if (crumb.isDisabled) {
-                          e.preventDefault();
-                        }
-                      }}
-                    >
-                      {crumb.label}
-                    </Link>
-                  </>
-                ) : (
-                  <span className="breadcrumb-current-tab"> / {crumb.label}</span>
-                )}
-              </span>
-            )
-            )
-          : null
-        }
-      </nav>
+      <Wrapper>
+        <nav className="breadcrumbs">
+          {breadcrumbs?.length
+            ? breadcrumbs.length === 1
+              ?
+              <span className="heading">{breadcrumbs[0].label}</span>
+              : breadcrumbs.map((crumb, idx) => (
+                <span key={crumb.path}>
+                  {idx < breadcrumbs.length - 1 ? (
+                    <>
+                      {idx === 0 ? "" : " / "}
+                      <Link
+                        className={`breadcrumb-link${crumb.isDisabled ? " is-disabled" : ""}`}
+                        to={crumb.path}
+                        onClick={e => {
+                          if (crumb.isDisabled) {
+                            e.preventDefault();
+                          }
+                        }}
+                      >
+                        {crumb.label}
+                      </Link>
+                    </>
+                  ) : (
+                    <span className="breadcrumb-current-tab"> / {crumb.label}</span>
+                  )}
+                </span>
+              )
+              )
+            : null
+          }
+        </nav>
 
-      <section className="header-nav">
-        <div className="language-toggle">
-          <div className={`active-pill ${selectedLang}`} />
+        <section className="header-nav">
+          <div className="language-toggle">
+            <div className={`active-pill ${selectedLang}`} />
 
-          <button
-            className={selectedLang === "jp" ? "active" : ""}
-            onClick={() => {
-              console.log("japanese selected");
-              setSelectedLang("jp")
-            }}
-          >
-            日本語
-          </button>
-          <button
-            className={selectedLang === "en" ? "active" : ""}
-            onClick={() => {
-              console.log("english selected");
-              setSelectedLang("en")
-            }}
-          >
-            English
-          </button>
-        </div>
+            <button
+              className={selectedLang === "jp" ? "active" : ""}
+              onClick={() => {
+                console.log("japanese selected");
+                setSelectedLang("jp")
+              }}
+            >
+              日本語
+            </button>
+            <button
+              className={selectedLang === "en" ? "active" : ""}
+              onClick={() => {
+                console.log("english selected");
+                setSelectedLang("en")
+              }}
+            >
+              English
+            </button>
+          </div>
 
-        {/* Right side */}
-        <div className="right-section">
-          <CalendarIcon />
-          <p className="datetime">
-            <span>{formattedDate}</span>, <span>{formattedTime}</span>
-          </p>
+          {/* Right side */}
+          <div className="right-section">
+            <CalendarIcon />
+            <p className="datetime">
+              <span>{formattedDate}</span>, <span>{formattedTime}</span>
+            </p>
 
-          {/* <BellIcon /> */}
+            {/* <BellIcon /> */}
 
-          <AvatarDropdown />
-        </div>
-      </section>
+            <AvatarDropdown />
+          </div>
+        </section>
+      </Wrapper>
     </header>
   );
 };

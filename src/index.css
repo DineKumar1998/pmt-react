@@ -20,3 +20,8 @@ ul {
   padding: 0;
   line-height: 28px;
 }
+
+.text-underline:hover {
+  text-decoration: underline !important;
+  cursor: pointer;
+}

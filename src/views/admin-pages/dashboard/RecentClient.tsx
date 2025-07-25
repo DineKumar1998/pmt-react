@@ -26,33 +26,33 @@ const RecentClient: React.FC = () => {
     {
       accessorKey: "id",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <ProfileWithOptionsIcon /> {t.table.id}
-        </div>
+        </>
       ),
     },
     {
       accessorKey: "client_name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <UserIcon /> {t.table.name}
-        </div>
+        </>
       ),
     },
     {
       accessorKey: "industry_name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <BagIcon /> {t.table.industry}
-        </div>
+        </>
       ),
     },
     {
       accessorKey: "rm_name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <UserIcon /> {t.table.rm}
-        </div>
+        </>
       ),
     },
   ];
@@ -62,8 +62,6 @@ const RecentClient: React.FC = () => {
     queryFn: () =>
       getRecentlyAddedClients({ limit: listLimit, language: selectedLang }),
   });
-
-  console.log("clientList=", clientList)
 
   let updatedClientList: Client[] = [];
   if (clientList?.length) {

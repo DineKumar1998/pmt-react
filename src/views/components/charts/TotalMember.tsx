@@ -66,13 +66,15 @@ export default function TotalMemberChart({ membersData }: TotalMemberProps) {
       <div>
         <p>{t.text.totalMembers}</p>
         <h3>{membersData?.total}</h3>
-        <div>
+        <div className="dots">
           <p className="client-dot">
-            {t.text.clients} <strong style={{ display: "block" }}>{membersData?.clients}</strong>
+            {t.text.clients} 
           </p>
+          <h3>{membersData?.clients}</h3>
           <p className="partner-dot">
-            {t.text.partners}  <strong style={{ display: "block" }}>{membersData?.users}</strong>
+            {t.text.partners} 
           </p>
+           <h3>{membersData?.users}</h3>
         </div>
       </div>
       <div className="chart">

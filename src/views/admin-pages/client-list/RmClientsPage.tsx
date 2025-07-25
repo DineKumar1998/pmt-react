@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { getClientList } from '@/apis/client';
 import { getRMNames } from "@/apis/rm";
 import Button from "@/views/components/button";
@@ -84,89 +84,73 @@ const RmClientsPage: React.FC = () => {
         {
             accessorKey: "id",
             header: () => (
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <>
                     <ProfileWithOptionsIcon /> {t.table.id}
-                </div>
+                </>
             ),
-            cell: ({ row }: any) => {
-                const { id } = row.original;
-                return <div
-                    onClick={() => openEditClientPage(id)}
-                    style={{ cursor: "pointer" }}
-                >
-                    {id}
-                </div>;
-            },
             size: 40
         },
         {
             accessorKey: "client_name",
             header: () => (
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <>
                     <UserIcon /> {t.table.name}
-                </div>
+                </>
             ),
             cell: ({ row }: any) => {
                 const { id, client_name } = row.original;
-                return <div
-                    onClick={() => openEditClientPage(id)}
-                    style={{ cursor: "pointer" }}
-                >
+                return <NavLink to={`/client-list/edit-client/${id}`} className="text-underline">
                     {client_name}
-                </div>;
+                </NavLink>
             },
             size: 120
         },
         {
             accessorKey: "address",
             header: () => (
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <>
                     <LocationIcon /> {t.table.address}
-                </div>
+                </>
             ),
             size: 140
         },
         {
             accessorKey: "assigned_date",
             header: () => (
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <>
                     <ClockIcon /> {t.table.assignDate}
-                </div>
+                </>
             ),
             size: 120
         },
         {
             accessorKey: "rm_name",
             header: () => (
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <>
                     <UserIcon /> {t.table.rmAssigned}
-                </div>
+                </>
             ),
             cell: ({ row }: any) => {
-                const { id, rm_name } = row.original;
-                return <div
-                    onClick={() => openEditClientPage(id)}
-                    style={{ cursor: "pointer" }}
-                >
+                const { rm_name } = row.original;
+                return <span>
                     {rm_name}
-                </div>;
+                </span>;
             },
             size: 120
         },
         {
             accessorKey: "project_count",
             header: () => (
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <>
                     <TrendingIcon /> {t.table.projects}
-                </div>
+                </>
             ),
             cell: ({ row }: any) => {
                 const { id, project_count, client_name } = row.original;
-                return <div
-                    onClick={() => openClientProjectsPage(id, client_name)}
-                    style={{ cursor: "pointer", textAlign: "center", width: "50%" }}
-                >
-                    {project_count}
+                return <div>
+                    <NavLink to={`/client-list/projects?clientId=${id}&clientName=${client_name}`} className="text-underline">
+                        {project_count}
+                    </NavLink>
                 </div>;
             },
             size: 80
@@ -174,20 +158,15 @@ const RmClientsPage: React.FC = () => {
         {
             id: "action",
             header: () => (
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <>
                     <ActionIcon /> {t.table.action}
-                </div>
+                </>
             ),
             cell: ({ row }: any) => {
                 const { id, client_name } = row.original;
-                return <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
-                    <EditIcon
-                        width={18}
-                        height={18}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => openManageClientParametersPage(id, client_name)}
-                    />
-                </div>
+                return <NavLink to={`/manage-parameters/client?clientId=${id}&clientName=${client_name}`} style={{ display: "flex", justifyContent: "center", width: "50%" }}>
+                    <EditIcon width={18} height={18} />
+                </NavLink>
             },
             size: 80
         },
@@ -200,24 +179,6 @@ const RmClientsPage: React.FC = () => {
             page: pageIndex,
         }));
     };
-
-    const openEditClientPage = (id: number) => {
-        navigate(
-            `/client-list/edit-client/${id}`,
-        )
-    };
-
-    const openClientProjectsPage = (id: number, name: string) => {
-        navigate(
-            `/client-list/projects?clientId=${id}&clientName=${name}`,
-        )
-    };
-
-    const openManageClientParametersPage = (id: number, clientName: string) => {
-        navigate(`/manage-parameters/client?clientId=${id}&clientName=${clientName}`)
-    };
-
-
 
     const { data: rmNamesList } = useQuery({
         queryKey: ['rmNamesList', selectedLang],

@@ -84,7 +84,7 @@ const AvatarDropdown = () => {
                 <span>
                   <UserCircleIcon />
                 </span>
-                <div>
+                <div title={user.user_name}>
                   <h4>{user.user_name}</h4>
                   <small>{user.user_type}</small>
                 </div>

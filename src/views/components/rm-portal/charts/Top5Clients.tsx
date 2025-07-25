@@ -3,7 +3,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Doughnut } from "react-chartjs-2";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-// import RedirectForward from "../../icons/RedirectForward";
+
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 // Define the center text plugin
@@ -96,15 +96,10 @@ export default function RelationshipManagersChart({ record }: any) {
     },
   };
 
-  // const openRmPage = () => {
-  //   navigate(`/relationship-managers`);
-  // };
-
-  return record?.total ? (
-    <div className="card rm-relationship-managers-chart ">
+  return <div className="card rm-relationship-managers-chart ">
       <div className="content">
         <p style={{ lineHeight: 0.8 }}>{t.text.totalClients} </p>
-        <p>{record.total}</p>
+        <p>{record?.total}</p>
       </div>
       <div className="chart">
         <Doughnut 
@@ -113,13 +108,7 @@ export default function RelationshipManagersChart({ record }: any) {
           plugins={[ChartDataLabels, centerTextPlugin]} 
         />
       </div>
-      {/* <span
-        className="redirect-icon"
-        onClick={openRmPage}
-        style={{ bottom: "0.5rem", right: "1rem" }}
-      >
-        <RedirectForward width={28} height={28} />
-      </span> */}
+     
     </div>
-  ) : null;
+  
 }

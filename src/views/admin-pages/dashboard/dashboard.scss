@@ -5,37 +5,42 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 2rem;
 
     .card {
       box-sizing: border-box;
-      border-radius: 2rem;
+      border-radius: 1.5rem;
       background-color: $white;
       width: 100%;
       padding: 1.5rem 1.5rem 0 1.5rem;
-      min-height: 250px;
+      height: 234px;
+
+              overflow: hidden;
+
 
       &.illustration {
         background: linear-gradient(135deg, #68788d 25.5%, #becad7 100%);
         position: relative;
         width: 100%;
+        padding: 1.5rem 0rem 0 1.5rem;
 
         display: flex;
         justify-content: space-between;
 
         .person-icon {
-          width: 100%;
+
+          width: 230px;
 
           img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+            width: 240px;
+            height: 210px;
+            margin-bottom: -0.5rem;
+            object-fit: cover;
             object-position: center;
           }
         }
 
         .content {
-          width: 220px;
+          min-width: 120px;
           color: $white;
 
           p:first-child {
@@ -65,7 +70,7 @@
       }
     }
 
-    
+
     .card.total-members-chart {
       display: flex;
       align-items: center;
@@ -73,24 +78,32 @@
       padding-bottom: 1.5rem;
       position: relative;
 
-      .client-dot:before,
-      .partner-dot:before {
-        content: "";
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin-right: 0.5rem;
-        flex-shrink: 0;
+      .dots {
+        h3 {
+          margin-left: 1rem;
+        }
+
+        .client-dot:before,
+        .partner-dot:before {
+          content: "";
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          margin-right: 0.5rem;
+          flex-shrink: 0;
+        }
+
+        .client-dot:before {
+          background-color: #d3e1f3;
+        }
+
+        .partner-dot:before {
+          background-color: #a8b9cf;
+        }
+
       }
 
-      .client-dot:before {
-        background-color: #d3e1f3;
-      }
-
-      .partner-dot:before {
-        background-color: #a8b9cf;
-      }
 
       .chart {
         height: 180px;
@@ -100,8 +113,9 @@
 
   .completion-status-chart {
     background-color: $white;
-    margin-block: 2rem;
+    margin-block: 1.5rem;
     padding: 1.5rem;
+    border-radius: 1.5rem;
 
     .chart {
       width: 100%;
@@ -134,6 +148,7 @@
       display: flex;
       align-items: start;
       margin-bottom: 1rem;
+      text-wrap: nowrap;
     }
 
     .legend-color {

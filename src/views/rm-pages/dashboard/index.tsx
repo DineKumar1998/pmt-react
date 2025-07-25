@@ -26,7 +26,7 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="dashboard-page">
+    <div className="dashboard-page rm-portal">
       <section className="cards">
         <Suspense fallback={null}>
           <IllustrationChart />

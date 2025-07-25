@@ -5,7 +5,7 @@ import AuthContext from "@/context/AuthContext";
 const RMIllustration = () => {
   const {user} = useContext(AuthContext)
   return (
-    <div className="card rm-portal illustration ">
+    <div className="card illustration">
       <div className="content">
         <p>Welcome {user.user_type}</p>
         <h2>{user.user_name}</h2>

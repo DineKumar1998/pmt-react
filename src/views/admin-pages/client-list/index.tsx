@@ -57,9 +57,9 @@ const ClientListPage: React.FC = () => {
     {
       accessorKey: "id",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <ProfileWithOptionsIcon /> {t.table.id}
-        </div>
+        <>
+          <ProfileWithOptionsIcon /> <span className="title">{t.table.id}</span>
+        </>
       ),
       cell: ({ row }: any) => {
         const { id } = row.original;
@@ -70,22 +70,24 @@ const ClientListPage: React.FC = () => {
           {id}
         </div>;
       },
-      size: 40
+      size: 80
     },
     {
       accessorKey: "client_name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <UserIcon /> {t.table.name}
-        </div>
+        </>
       ),
       cell: ({ row }: any) => {
         const { id, client_name } = row.original;
-        return <div
-          onClick={() => openEditClientPage(id)}
-          style={{ cursor: "pointer" }}
-        >
-          {client_name}
+        return <div>
+          <span
+            onClick={() => openEditClientPage(id)}
+            className="text-underline"
+          >
+            {client_name}
+          </span>
         </div>;
       },
       size: 120
@@ -93,18 +95,18 @@ const ClientListPage: React.FC = () => {
     {
       accessorKey: "industry_name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <BagIcon /> {t.table.industry}
-        </div>
+        </>
       ),
       size: 120
     },
     {
       id: "status",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <LocationIcon /> {t.formLabel.status}
-        </div>
+        </>
       ),
       cell: ({ row }) => {
         const { primary_percentage, secondary_percentage } = row.original;
@@ -129,36 +131,36 @@ const ClientListPage: React.FC = () => {
     {
       accessorKey: "address",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <LocationIcon /> {t.table.address}
-        </div>
+        </>
       ),
       size: 120
     },
     {
       accessorKey: "assigned_date",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <ClockIcon /> {t.table.assignDate}
-        </div>
+        </>
       ),
       size: 120
     },
     {
       accessorKey: "rm_name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <UserIcon /> {t.table.rmAssigned}
-        </div>
+        <>
+          <UserIcon /> <span className="title"> {t.table.rmAssigned}</span>
+        </>
       ),
       size: 120
     },
     {
       accessorKey: "project_count",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <TrendingIcon /> {t.table.projects}
-        </div>
+        <>
+          <TrendingIcon /> <span className="title">{t.table.projects}</span>
+        </>
       ),
       cell: ({ row }: any) => {
         const { id, project_count, client_name } = row.original;
@@ -174,9 +176,9 @@ const ClientListPage: React.FC = () => {
     {
       id: "action",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <ActionIcon /> {t.table.action}
-        </div>
+        <>
+          <ActionIcon /> <span className="title">{t.table.action}</span>
+        </>
       ),
       cell: ({ row }: any) => {
         const { id, client_name } = row.original;

@@ -9,7 +9,7 @@ import UserIcon from "@/views/components/icons/table/User";
 import UserGroupIcon from "@/views/components/icons/table/UserGroup";
 import { useQuery } from '@tanstack/react-query';
 import { getRMByRecentActivity } from "@/apis/rm"
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 type RM = {
   id: number;
@@ -29,60 +29,45 @@ const RecentRM: React.FC = () => {
     {
       accessorKey: "id",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <ProfileWithOptionsIcon /> {t.table.rmId}
-        </div>
-      ),
-      cell: ({ row }: any) => {
-        const { id } = row.original;
-        return <div
-          onClick={() => handleRmEdit(id)}
-          style={{ cursor: "pointer" }}
-        >
-          {id}
-        </div>;
-      },
+        </>
+      )
     },
     {
       accessorKey: "name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <UserIcon /> {t.table.name}
-        </div>
+        </>
       ),
       cell: ({ row }: any) => {
         const { id, name } = row.original;
-        return <div
-          onClick={() => handleRmEdit(id)}
-          style={{ cursor: "pointer" }}
-        >
+        return <NavLink to={`/relationship-managers/edit-rm/${id}`} className={'text-underline'}>
           {name}
-        </div>;
+        </NavLink>;
       },
     },
     {
       accessorKey: "last_login",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <ClockIcon /> {t.table.lastLogin}
-        </div>
+        </>
       ),
     },
     {
       accessorKey: "clients_assigned_count",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <UserGroupIcon /> {t.table.clientAssigned}
-        </div>
+        <>
+          <UserGroupIcon />  <span className="title">{t.table.clientAssigned}</span>
+        </>
       ),
       cell: ({ row }: any) => {
         const { id, clients_assigned_count, name } = row.original;
-        return <div
-          onClick={() => openRmClientsPage(id, name)}
-          style={{ cursor: "pointer", textAlign: "center", width: "50%" }}
-        >
+        return <NavLink to={ `/relationship-managers/rm?rmId=${id}&rmName=${name}`} className={'text-underline'}>
           {clients_assigned_count}
-        </div>;
+        </NavLink>;
       },
     },
   ];
@@ -123,13 +108,6 @@ const RecentRM: React.FC = () => {
       })
     );
   }
-
-  const handleRmEdit = (id: number) => {
-    console.log("handleRmEdit:", id);
-    navigate(
-      `/relationship-managers/edit-rm/${id}`,
-    )
-  };
 
   const openRmClientsPage = (id: number, name: string) => {
     console.log("openRmClientsPage=", id)

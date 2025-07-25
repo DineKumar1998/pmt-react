@@ -10,6 +10,7 @@ import {
 import { SortIcon } from "../icons";
 import BackArrow from "../icons/BackArrow";
 import "./table.scss";
+import { TableHeaderWrapper } from "./TableHeaderWrapper";
 
 // Define a base type that requires an 'id' property
 interface WithId {
@@ -99,10 +100,10 @@ function Table<T extends WithId>({
                         : {})
                     }}
                   >
-                    {flexRender(
+                    <TableHeaderWrapper children={flexRender(
                       header.column.columnDef.header,
                       header.getContext(),
-                    )}
+                    )} />
                     {header.column.getIsSorted() ? <SortIcon /> : ""}
                   </th>
                 ))}

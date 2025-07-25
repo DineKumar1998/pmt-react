@@ -6,6 +6,7 @@ import { LangProvider } from "@/context/LangContext";
 import type { LayoutProps } from "@/types/routes";
 import LayoutSidebar from "./SideBarComponent";
 import "./layout.scss";
+import Wrapper from "../wrapper";
 
 const Layout: React.FC<LayoutProps> = ({ children, route }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -31,7 +32,9 @@ const Layout: React.FC<LayoutProps> = ({ children, route }) => {
           {/* Header */}
           <Header breakcrumbPath={route} />
 
-          <div className="main-content">{children}</div>
+          <Wrapper>
+            <div className="main-content">{children}</div>
+          </Wrapper>
         </main>
 
         {/* Footer */}

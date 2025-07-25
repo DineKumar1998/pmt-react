@@ -10,7 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import React, { useState } from "react";
 import AddCircle from "@/views/components/icons/AddCircle";
 import BackArrow from "@/views/components/icons/BackArrow";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { getRMList } from '@/apis/rm';
 import { useLang } from "@/context/LangContext";
@@ -30,6 +30,11 @@ const RelationshipManagerPage: React.FC = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const itemsPerPage = 10;
+
+   const [searchParams, setSearchParams] = useSearchParams();
+
+   const currentPage = parseInt(searchParams.get('page') || '1', 10);
+
   const [queryParams, setQueryParams] = useState({
     page: 1,
     pageSize: itemsPerPage,
@@ -39,77 +44,68 @@ const RelationshipManagerPage: React.FC = () => {
   const columns: ColumnDef<RM>[] = [
     {
       accessorKey: "id",
+      size: 100,
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <ProfileWithOptionsIcon /> {t.table.rmId}
-        </div>
+        </>
       ),
-      cell: ({ row }: any) => {
-        const { id } = row.original;
-        return <div
-          onClick={() => handleRmEdit(id)}
-          style={{ cursor: "pointer" }}
-        >
-          {id}
-        </div>;
-      },
     },
     {
       accessorKey: "name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <UserIcon /> {t.table.name}
-        </div>
+        <>
+          <UserIcon />  <span className="title">{t.table.name}</span>
+        </>
       ),
       cell: ({ row }: any) => {
         const { id, name } = row.original;
-        return <div
-          onClick={() => handleRmEdit(id)}
-          style={{ cursor: "pointer" }}
-        >
-          {name}
+        return <div>
+          <NavLink
+            to={`/relationship-managers/edit-rm/${id}`}
+            className="text-underline"
+          >
+            {name}
+          </NavLink>
         </div>;
       },
     },
     {
       accessorKey: "email",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <LocationIcon /> {t.table.email}
-        </div>
+        </>
       ),
     },
     {
       accessorKey: "phone",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <UserIcon /> {t.table.phone}
-        </div>
+        </>
       ),
     },
     {
       accessorKey: "last_login",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <ClockIcon /> {t.table.lastLogin}
-        </div>
+        </>
       ),
     },
     {
       accessorKey: "clients_assigned_count",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <UserGroupIcon /> {t.table.clientAssigned}
-        </div>
+        <>
+          <UserGroupIcon /> <span className="title">{t.table.clientAssigned}</span>
+        </>
       ),
       cell: ({ row }: any) => {
         const { id, clients_assigned_count, name } = row.original;
-        return <div
-          onClick={() => openRmClientsPage(id, name)}
-          style={{ cursor: "pointer", textAlign: "center", width: "50%" }}
-        >
+        return <NavLink to={`/relationship-managers/rm?rmId=${id}&rmName=${name}`} className="text-underline">
           {clients_assigned_count}
-        </div>;
+        </NavLink>
       },
     },
   ];
@@ -132,22 +128,6 @@ const RelationshipManagerPage: React.FC = () => {
       page: pageIndex,
     }));
   };
-
-
-  const handleRmEdit = (id: number) => {
-    console.log("handleRmEdit:", id);
-    navigate(
-      `/relationship-managers/edit-rm/${id}`,
-    )
-  };
-
-  const openRmClientsPage = (id: number, name: string) => {
-    console.log("openRmClientsPage=", id)
-    navigate(
-      `/relationship-managers/rm?rmId=${id}&rmName=${name}`,
-    )
-  }
-
 
   const { data: rmList } = useQuery({
     queryKey: ['rmList', queryParams, selectedLang],
