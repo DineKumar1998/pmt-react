@@ -9,7 +9,7 @@ import UserIcon from "@/views/components/icons/table/User";
 import UserGroupIcon from "@/views/components/icons/table/UserGroup";
 import { useQuery } from '@tanstack/react-query';
 import { getRMByRecentActivity } from "@/apis/rm"
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 type RM = {
   id: number;
@@ -22,7 +22,7 @@ const RecentRM: React.FC = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const listLimit = 5;
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
 
   const columns: ColumnDef<RM>[] = [
