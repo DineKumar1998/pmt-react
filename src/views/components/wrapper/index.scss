@@ -2,5 +2,7 @@
   width: 100%;
   max-width: 1290px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 clamp(1rem, 4vw, 2em);
+
+  box-sizing: border-box;
 }
