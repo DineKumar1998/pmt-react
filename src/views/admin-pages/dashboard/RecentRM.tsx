@@ -109,13 +109,6 @@ const RecentRM: React.FC = () => {
     );
   }
 
-  const openRmClientsPage = (id: number, name: string) => {
-    console.log("openRmClientsPage=", id)
-    navigate(
-      `/relationship-managers/rm?rmId=${id}&rmName=${name}`,
-    )
-  }
-
   return (
     <div className="relationship-manager-page">
       <h2 className="section-title">{t.heading.rmRecentActivity}</h2>

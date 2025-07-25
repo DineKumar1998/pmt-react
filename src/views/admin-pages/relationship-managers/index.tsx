@@ -10,7 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import React, { useState } from "react";
 import AddCircle from "@/views/components/icons/AddCircle";
 import BackArrow from "@/views/components/icons/BackArrow";
-import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { getRMList } from '@/apis/rm';
 import { useLang } from "@/context/LangContext";
@@ -31,9 +31,9 @@ const RelationshipManagerPage: React.FC = () => {
   const t = translations[selectedLang];
   const itemsPerPage = 10;
 
-   const [searchParams, setSearchParams] = useSearchParams();
+  //  const [searchParams, setSearchParams] = useSearchParams();
 
-   const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  //  const currentPage = parseInt(searchParams.get('page') || '1', 10);
 
   const [queryParams, setQueryParams] = useState({
     page: 1,
