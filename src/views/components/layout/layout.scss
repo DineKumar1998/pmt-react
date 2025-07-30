@@ -76,15 +76,21 @@
     }
 
     .main-container {
+        display: grid;
+        grid-template-rows: auto 1fr 2rem;
+        grid-template-areas: "header" "main" "footer_area";
+
         flex-grow: 1;
         background-color: $bg-color;
         overflow-y: auto;
 
         /* Main Content Header */
         .header {
+            grid-area: header;
             border-bottom: 1px solid $border-color-light;
-                            z-index: 100;
+            z-index: 100;
 
+            box-shadow: 0 0.5rem 20px #f4f7fe;
 
             position: sticky;
             top: 0;
@@ -344,9 +350,19 @@
         }
 
         .main-content {
+            grid-area: main;
             padding-block: 1.5rem;
             background-color: inherit;
             border-radius: 0.5rem;
+
+            overflow-y: auto;
+        }
+
+        footer.footer {
+            grid-area: footer_area;
+            box-shadow: 0 -3px 20px #f4f7fe;
+            padding: 0.25rem 1rem;
+            background-color: white;
         }
     }
 }

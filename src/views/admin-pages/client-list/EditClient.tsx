@@ -127,79 +127,88 @@ const EditClient = () => {
           {/* ... all your <dt> and <dd> elements remain the same ... */}
           <dt>{t.formLabel.companyName}</dt>
           <dd>{clientData?.client_name}</dd>
+
           <dt>{t.heading.industry}</dt>
           <dd>{clientData?.industry_name}</dd>
-          <dt>{t.formLabel.email}</dt>
-          <dd>{clientData?.email}</dd>
+
+          <dt>{t.formLabel.status}</dt>
+          <dd>{getStats(clientData?.stats)}</dd>
+
           <dt>{t.table.address}</dt>
           <dd>{clientData?.address}</dd>
-          <dt>{t.formLabel.contactDetails}</dt>
-          <dd>{clientData?.phone}</dd>
+
           <dt>{t.formLabel.projectCount}</dt>
           <dd>
             <NavLink to={`/client-list/projects?clientId=${clientId}&clientName=${clientData?.client_name}`}>
               {clientData?.project_count} ➚
             </NavLink>
           </dd>
+
+          <dt>{t.formLabel.email}</dt>
+          <dd>{clientData?.email}</dd>
+
+
+          <dt>{t.formLabel.contactDetails}</dt>
+          <dd>{clientData?.phone}</dd>
+
           <dt>{t.formLabel.assignedDate}</dt>
           <dd>{getFormattedDate(clientData?.assigned_date)}</dd>
           <dt>{t.formLabel.lastUpdated}</dt>
           <dd>{getFormattedDate(clientData?.updatedAt)}</dd>
-          <dt>{t.formLabel.status}</dt>
-          <dd>{getStats(clientData?.stats)}</dd>
+
           <dt>{t.formLabel.currentRM}</dt>
           <dd>
             {`${clientData?.rm_first_name} ${(clientData?.rm_last_name ?? '').trim()}`.trim()}
           </dd>
         </dl>
 
-        <form onSubmit={handleSave} className="edit-client-form">
-          <div className="form-field-group mt-1">
-            <label className="label">{t.formLabel.updatedRM}</label>
+<form onSubmit={handleSave} className="edit-client-form">
+            <div className="form-field-group mt-1">
+              <label className="label">{t.formLabel.updatedRM}</label>
 
-            <Combobox value={selectedRm} onChange={(data) => {
-              setSelectedRm(data)
-            }} as="div" className="combobox-container">
-              <ComboboxButton className="combobox-button">
-                <ComboboxInput
-                  className="input-field"
-                  onChange={(event) => {
-                    setQuery(event.target.value)
-                  }}
-                  displayValue={(rm: RmData) => rm ? `${rm.first_name} ${rm.last_name ?? ''}`.trim() : ''}
-                  placeholder={t.text.selectRm}
-                />
-              </ComboboxButton>
+              <Combobox value={selectedRm} onChange={(data) => {
+                setSelectedRm(data)
+              }} as="div" className="combobox-container">
+                <ComboboxButton className="combobox-button">
+                  <ComboboxInput
+                    className="input-field"
+                    onChange={(event) => {
+                      setQuery(event.target.value)
+                    }}
+                    displayValue={(rm: RmData) => rm ? `${rm.first_name} ${rm.last_name ?? ''}`.trim() : ''}
+                    placeholder={t.text.selectRm}
+                  />
+                </ComboboxButton>
 
-              <ComboboxOptions className="combobox-options">
+                <ComboboxOptions className="combobox-options">
 
-                {filteredRmList.length === 0 && query !== '' ? (
-                  // If true, render a non-selectable message
-                  <div className="combobox-no-results">
-                    No results found.
-                  </div>
-                ) : (
-                  // Otherwise, render the list of options as before
-                  filteredRmList.map((rm: RmData) => (
-                    <ComboboxOption key={rm.id} value={rm} className="combobox-option">
-                      {`${rm.first_name} ${rm.last_name ?? ''}`.trim()}
-                    </ComboboxOption>
-                  ))
-                )}
+                  {filteredRmList.length === 0 && query !== '' ? (
+                    // If true, render a non-selectable message
+                    <div className="combobox-no-results">
+                      No results found.
+                    </div>
+                  ) : (
+                    // Otherwise, render the list of options as before
+                    filteredRmList.map((rm: RmData) => (
+                      <ComboboxOption key={rm.id} value={rm} className="combobox-option">
+                        {`${rm.first_name} ${rm.last_name ?? ''}`.trim()}
+                      </ComboboxOption>
+                    ))
+                  )}
 
-              </ComboboxOptions>
-            </Combobox>
-          </div>
+                </ComboboxOptions>
+              </Combobox>
+            </div>
 
-          <div className="form-actions mt-2">
-            <Button
-              type="submit"
-              onClick={() => null}
-              text={t.buttons.save}
-              disabled={!selectedRm || isPending}
-            />
-          </div>
-        </form>
+            <div className="form-actions mt-2">
+              <Button
+                type="submit"
+                onClick={() => null}
+                text={t.buttons.save}
+                disabled={!selectedRm || isPending}
+              />
+            </div>
+          </form>
       </div>
     </div>
   );

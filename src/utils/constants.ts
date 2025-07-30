@@ -1,4 +1,4 @@
-const VITE_IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
+const VITE_IMAGE_BASE_URL = 'https://pmt-api.whdev.in/uploads';
 
 export const ASSETS_FOLDERS = {
     PROFILE: VITE_IMAGE_BASE_URL

@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { ASSETS_FOLDERS } from "@/utils/constants";
 import AuthContext from "@/context/AuthContext";
 import "./index.scss";
+import { BackButton } from "@/views/components/BackButton";
 
 type FormValues = z.infer<typeof editRMValidator>;
 
@@ -119,7 +120,10 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-form">
+     <div className="d-flex">
+       <BackButton title="Back" />
       <p className="profile-heading">{t.heading.profileInfo}</p>
+     </div>
       <hr />
 
       <div className="parent-section">

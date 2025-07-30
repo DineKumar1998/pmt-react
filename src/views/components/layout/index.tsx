@@ -5,8 +5,11 @@ import Header from "./Header";
 import { LangProvider } from "@/context/LangContext";
 import type { LayoutProps } from "@/types/routes";
 import LayoutSidebar from "./SideBarComponent";
-import "./layout.scss";
 import Wrapper from "../wrapper";
+import Footer from "./Footer";
+
+import "./layout.scss";
+
 
 const Layout: React.FC<LayoutProps> = ({ children, route }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -35,10 +38,12 @@ const Layout: React.FC<LayoutProps> = ({ children, route }) => {
           <Wrapper>
             <div className="main-content">{children}</div>
           </Wrapper>
+
+          <Footer />
+
         </main>
 
         {/* Footer */}
-        {/* <Footer /> */}
       </div>
     </LangProvider>
   );
