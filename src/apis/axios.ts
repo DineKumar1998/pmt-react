@@ -1,9 +1,9 @@
 import { AUTH } from "@/utils/constants";
 import axios, { AxiosError } from "axios";
-import { Cookies } from "react-cookie";
+// import { Cookies } from "react-cookie";
 // const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-const cookies = new Cookies()
+// const cookies = new Cookies()
 
 const api = axios.create({
   baseURL: "https://pmt-api.whdev.in/api",
