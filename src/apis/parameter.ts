@@ -55,12 +55,9 @@ export const exportParameterList = async (params: any) => {
 }
 
 export const getClientParameterList = async (id: string | number, params: any) => {
-    console.log("id123=", id)
-    console.log("params123=", params)
     const response = await api.get(`/rm-portal/client/parameters/${id}`, {
         params
     })
-    console.log("getClientParameterList=", response.data)
     return response.data
 }
 

@@ -3,39 +3,44 @@
 .dashboard-page.rm-portal {
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1rem;
 
     .card {
       box-sizing: border-box;
-      border-radius: 2rem;
+      border-radius: 1.5rem;
       background-color: $white;
       width: 100%;
       padding: 1.5rem;
-      min-height: 250px;
+      height: 234px;
       overflow: hidden;
     }
 
     .illustration {
-      display: flex;
-      gap: 0.5rem;
-      position: relative;
       background: linear-gradient(135deg, #68788d 25.5%, #becad7 100%);
 
-      .person-icon {
-        flex-shrink: 0;
-        width: 300px;
-        height: 220px;
+      position: relative;
+      width: 100%;
+      padding: 1.5rem 0rem 0 1.5rem;
 
-        position: absolute;
-        right: 0;
-        bottom: -20px;
+      display: flex;
+      justify-content: space-between;
+
+      .person-icon {
+        position: relative;
+
+        width: 230px;
+        height: 280px;
+
 
         img {
-          width: 100%;
-          height: 100%;
+          position: absolute;
+          left: -5rem;
+          bottom: 0.43rem;
+          width: 300px;
+          height: 300px;
           object-fit: contain;
-          /* Use contain to ensure the whole image is visible */
+          object-position: center;
         }
       }
 
@@ -72,27 +77,13 @@
       }
     }
 
-    // .card.relationship-managers-chart {
-    //   width: 100%;
-    //   display: flex;
-    //   align-items: center;
-    //   justify-content: space-between;
-    //   position: relative;
-    //   padding: 1.5rem;
-
-    //   .chart {
-    //     position: absolute;
-    //     width: 100%;
-    //     height: 240px;
-    //   }
-    // }
     .card.rm-relationship-managers-chart {
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: start !important;
       position: relative;
-      padding: .75rem 1.5rem !important;
+      // padding: .75rem 1.5rem !important;
       gap: 2rem;
 
       .content {
@@ -105,6 +96,9 @@
         position: absolute;
         width: 100%;
         height: 240px;
+
+        bottom: 0;
+        right: -3rem;
       }
     }
 

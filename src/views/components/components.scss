@@ -43,9 +43,8 @@
 
         .icon {
             /* position: absolute; */
-            height: 24px;
-            width: 24px;
-            margin-top: 5px;
+            height: 20px;
+            width: 20px;
             margin-right: 5px;
             flex-shrink: 0;
 
@@ -59,7 +58,6 @@
         .next-icon {
             height: 24px;
             width: 24px;
-            margin-top: -5px;
             margin-left: 5px;
             flex-shrink: 0;
 
@@ -161,5 +159,20 @@
             justify-content: center;
             gap: 1rem;
         }
+    }
+}
+
+.bb-container {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+
+    .bb-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: rgb(59, 58, 58);
     }
 }

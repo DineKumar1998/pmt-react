@@ -27,7 +27,6 @@ const RecentActivity: React.FC = () => {
 
 
   const handleEditClick = (id: number) => {
-    console.log("handleRowClick:", id);
     navigate(`/client-list/projects/${id}`);
   };
 

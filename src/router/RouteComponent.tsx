@@ -18,8 +18,8 @@ const RouteComponent: React.FC<RouteComponentProps> = ({
 }) => {
   const LayoutComponent = route.layout === "auth" ? AuthLayout : Layout;
   const Component = route.component;
-const {isLoggedIn} = useContext(AuthContext)
-  
+  const {isLoggedIn} = useContext(AuthContext)
+
   // const { hasPermission } = usePermissions();
 
   if (route.layout !== "auth" && !isLoggedIn()) {

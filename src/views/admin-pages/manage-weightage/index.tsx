@@ -1,7 +1,7 @@
 import SearchComponent from "@/views/components/Search";
 import React, { useState } from "react";
 import { EditIcon, RedirectIcon } from "@/views/components/icons";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query'
 import { getIndustryList } from "@/apis/industry";
 import { useLang } from "@/context/LangContext";
@@ -56,9 +56,9 @@ const ManageWeightagePage: React.FC = () => {
                   </div>
                 </div>
                 <div className="action-container">
-                  <span className="redirect-icon" onClick={() => openIndustryParametersPage(industry.id, industry.name)}>
+                  <NavLink style={{ textDecoration: 'none' }} to={`/manage-weightage/industry?industryId=${industry.id}&industryName=${industry.name}`} className="redirect-icon" >
                     <RedirectIcon />
-                  </span>
+                  </NavLink>
                   {industry.totalWeightage !== 1000 ?
                     <span className="edit-icon" onClick={() => openIndustryParametersPage(industry.id, industry.name)}>
                       <EditIcon fill={"#e46363"} width={18} height={18} />

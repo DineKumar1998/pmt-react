@@ -135,7 +135,7 @@ export default function CompletionStatusChart({ industriesStats }: ChartProps) {
 
   return (
     <div className="completion-status-chart">
-      <p style={{ textAlign: "center", marginBottom: "1rem" }}>
+      <p style={{ textAlign: "center", marginBottom: "1rem", fontWeight: 600 }}>
         {t.text.completionStatus} (%)
       </p>
 

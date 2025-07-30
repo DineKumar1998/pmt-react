@@ -1,70 +1,87 @@
-import React from "react";
-
-// ** SCSS
+import React, { useState, useEffect } from "react";
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react'
 import Button from "@/views/components/button";
-import { useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useLang } from "@/context/LangContext";
 import { getClientById, assignRmToClient } from "@/apis/client";
 import { getRMNames } from "@/apis/rm";
 import { translations } from "@/utils/translations";
 import { toast } from 'react-toastify'
+import { ProgressBar } from ".";
+import { BackButton } from "@/views/components/BackButton";
+
 import "./index.scss";
+
+type RmData = {
+  id: number;
+  first_name: string;
+  last_name: string;
+}
 
 const EditClient = () => {
   const { selectedLang } = useLang();
+  const navigate = useNavigate();
   const t = translations[selectedLang];
   const { clientId } = useParams();
-  let navigate = useNavigate();
 
-  const [formData, setFormData] = React.useState({
-    updatedRM: "",
+  const [selectedRm, setSelectedRm] = useState(null);
+  const [query, setQuery] = useState('');
+
+  const { data: clientData, } = useQuery({
+    queryKey: ['clientData', clientId, selectedLang],
+    queryFn: () => getClientById(clientId || "", selectedLang),
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const { data: rmList, isFetching } = useQuery({
+    queryKey: ['rmList', selectedLang],
+    queryFn: () => getRMNames(selectedLang),
+  });
 
-  const handleSave = () => {
+  useEffect(() => {
+    if (clientData && rmList) {
+      const currentRm = rmList.find((rm: RmData) => rm.id === clientData.rm_id);
+      if (currentRm) {
+        setSelectedRm(currentRm);
+      }
+    }
+  }, [clientData, rmList]);
+
+  const { mutate: assignRmMutate, isPending } = useMutation({
+    mutationFn: (body: any) => assignRmToClient(clientId || "", body),
+    onSuccess: (data) => {
+      toast.success(data?.message);
+    },
+    onError: (error: any) => {
+      const message = error?.response?.data?.message || error?.message || "Something went wrong.";
+      console.error("assignRmToClient error =", message);
+      toast.error(message);
+    },
+  });
+
+  // 3. Update submission logic to use the selectedRm state object
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent page reload
+    if (!selectedRm) {
+      toast.error("Please select a Relationship Manager.");
+      return;
+    }
     const formattedData = {
-      rmId: parseInt(formData.updatedRM)
+      rmId: selectedRm['id']
     };
-    assignRmMutate(formattedData)
-  };
+    assignRmMutate(formattedData);
 
-  const backHandler = () => {
     navigate(-1);
   };
 
-  const { data: clientData } = useQuery({
-    queryKey: ['clientData', clientId, selectedLang],
-    queryFn: () =>
-      getClientById(clientId || "", selectedLang),
-  });
-
-  const { data: rmList } = useQuery({
-    queryKey: ['rmList', selectedLang],
-    queryFn: () =>
-      getRMNames(selectedLang),
-  });
-
-  const { mutate: assignRmMutate } = useMutation({
-    mutationFn: (body: any) => assignRmToClient(clientId || "", body),
-    onSuccess: (data) => {
-      toast.success(data?.message)
-    },
-    onError: (error: any) => {
-      const message =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Something went wrong."
-      console.error("assignRmToClient error =", message)
-      toast.error(message)
-    },
-  })
+  // 4. Filter the RM list based on the user's input query
+  const filteredRmList =
+    query === ''
+      ? rmList
+      : rmList?.filter((rm: any) => {
+        const fullName = `${rm.first_name} ${rm.last_name ?? ''}`.trim().toLowerCase();
+        return fullName.includes(query.toLowerCase());
+      }) || [];
 
 
   const getFormattedDate = (date: string): string => {
@@ -77,69 +94,112 @@ const EditClient = () => {
       : ""
   }
 
-  const getStats = (statsData: any): string => {
+  const getStats = (statsData: any) => {
     const [first] = statsData ?? [];
     const primary = first?.primaryPercentage ?? 0;
     const secondary = first?.secondaryPercentage ?? 0;
-    return `P-${primary}% / S-${secondary}%`;
+
+    return <div className="progress-bar-wrapper">
+      <div className="progress-bar-container">
+        <span>P</span>
+        <ProgressBar value={primary} isPrimary={true} />
+        <span>{primary}%</span>
+      </div>
+      <div className="progress-bar-container">
+        <span>S</span>
+        <ProgressBar value={secondary} />
+        <span>{secondary}%</span>
+      </div>
+    </div>
   };
 
+  if (isFetching) {
+    return <div>Loading...</div>
+  }
+
   return (
-    <div className="edit-client">
-      <div className="details">
-        <label className="label">{t.formLabel.companyName}</label>
-        <span className="text-value">{clientData?.client_name}</span>
-
-        <label className="label">{t.heading.industry}</label>
-        <span className="text-value">{clientData?.industry_name}</span>
-
-        <label className="label">{t.formLabel.email}</label>
-        <span className="text-value">{clientData?.email}</span>
-
-        <label className="label">{t.table.address}</label>
-        <span className="text-value">{clientData?.address}</span>
-
-        <label className="label">{t.formLabel.contactDetails}</label>
-        <span className="text-value">{clientData?.phone}</span>
-
-        <label className="label">{t.formLabel.assignedDate}</label>
-        <span className="text-value">{getFormattedDate(clientData?.assigned_date)}</span>
-
-        <label className="label">{t.formLabel.lastUpdated}</label>
-        <span className="text-value">{getFormattedDate(clientData?.updatedAt)}</span>
-
-        <label className="label">{t.formLabel.status}</label>
-        <span className="text-value">{getStats(clientData?.stats)}</span>
-
-        <label className="label">{t.formLabel.currentRM}</label>
-        <span className="text-value">
-          {`${clientData?.rm_first_name} ${(clientData?.rm_last_name ?? '').trim()}`.trim()}
-        </span>
-
-        <label className="label mt-1">{t.formLabel.updatedRM}</label>
-        <select
-          name="updatedRM"
-          value={formData.updatedRM}
-          onChange={handleChange}
-          className="input-field"
-        >
-          <option value="" disabled hidden>{t.text.selectRm}</option>
-          {rmList?.map((rm: any) => (
-            <option key={rm.id} value={rm.id}>
-              {`${rm.first_name} ${(rm.last_name ?? '').trim()}`.trim()}
-            </option>
-          ))}
-        </select>
+    <div>
+      <div className="d-flex">
+        <BackButton /> {' '}  <h4> CLIENT ID: #{clientId}</h4>
       </div>
+      <div className="edit-client-page mt-1">
+        <dl className="details-list">
+          {/* ... all your <dt> and <dd> elements remain the same ... */}
+          <dt>{t.formLabel.companyName}</dt>
+          <dd>{clientData?.client_name}</dd>
+          <dt>{t.heading.industry}</dt>
+          <dd>{clientData?.industry_name}</dd>
+          <dt>{t.formLabel.email}</dt>
+          <dd>{clientData?.email}</dd>
+          <dt>{t.table.address}</dt>
+          <dd>{clientData?.address}</dd>
+          <dt>{t.formLabel.contactDetails}</dt>
+          <dd>{clientData?.phone}</dd>
+          <dt>{t.formLabel.projectCount}</dt>
+          <dd>
+            <NavLink to={`/client-list/projects?clientId=${clientId}&clientName=${clientData?.client_name}`}>
+              {clientData?.project_count} ➚
+            </NavLink>
+          </dd>
+          <dt>{t.formLabel.assignedDate}</dt>
+          <dd>{getFormattedDate(clientData?.assigned_date)}</dd>
+          <dt>{t.formLabel.lastUpdated}</dt>
+          <dd>{getFormattedDate(clientData?.updatedAt)}</dd>
+          <dt>{t.formLabel.status}</dt>
+          <dd>{getStats(clientData?.stats)}</dd>
+          <dt>{t.formLabel.currentRM}</dt>
+          <dd>
+            {`${clientData?.rm_first_name} ${(clientData?.rm_last_name ?? '').trim()}`.trim()}
+          </dd>
+        </dl>
 
-      <div className="mt-2 d-flex gap-1">
-        <Button onClick={backHandler} text={t.buttons.back} className="back-btn" />
+        <form onSubmit={handleSave} className="edit-client-form">
+          <div className="form-field-group mt-1">
+            <label className="label">{t.formLabel.updatedRM}</label>
 
-        <Button
-          onClick={handleSave}
-          text={t.buttons.save}
-          disabled={!formData.updatedRM}
-        />
+            <Combobox value={selectedRm} onChange={(data) => {
+              setSelectedRm(data)
+            }} as="div" className="combobox-container">
+              <ComboboxButton className="combobox-button">
+                <ComboboxInput
+                  className="input-field"
+                  onChange={(event) => {
+                    setQuery(event.target.value)
+                  }}
+                  displayValue={(rm: RmData) => rm ? `${rm.first_name} ${rm.last_name ?? ''}`.trim() : ''}
+                  placeholder={t.text.selectRm}
+                />
+              </ComboboxButton>
+
+              <ComboboxOptions className="combobox-options">
+
+                {filteredRmList.length === 0 && query !== '' ? (
+                  // If true, render a non-selectable message
+                  <div className="combobox-no-results">
+                    No results found.
+                  </div>
+                ) : (
+                  // Otherwise, render the list of options as before
+                  filteredRmList.map((rm: RmData) => (
+                    <ComboboxOption key={rm.id} value={rm} className="combobox-option">
+                      {`${rm.first_name} ${rm.last_name ?? ''}`.trim()}
+                    </ComboboxOption>
+                  ))
+                )}
+
+              </ComboboxOptions>
+            </Combobox>
+          </div>
+
+          <div className="form-actions mt-2">
+            <Button
+              type="submit"
+              onClick={() => null}
+              text={t.buttons.save}
+              disabled={!selectedRm || isPending}
+            />
+          </div>
+        </form>
       </div>
     </div>
   );

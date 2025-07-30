@@ -2,17 +2,15 @@ import React from "react";
 
 // ** SCSS
 import Button from "@/views/components/button";
-import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from "react-router-dom";
 import { useLang } from "@/context/LangContext";
-import { getClientById } from "@/apis/client";
 import { translations } from "@/utils/translations";
 import "./index.scss";
+// import { Combobox, ComboboxInput, ComboboxOptions } from "@headlessui/react";
 
 const EditClient = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
-  const { clientId } = useParams();
   let navigate = useNavigate();
 
   const [formData, setFormData] = React.useState({
@@ -44,14 +42,6 @@ const EditClient = () => {
   const backHandler = () => {
     navigate(-1);
   };
-
-  const { data: clientData } = useQuery({
-    queryKey: ['clientData', clientId, selectedLang],
-    queryFn: () =>
-      getClientById(clientId || "", selectedLang),
-  });
-
-  console.log("clientData=", clientData)
 
   return (
     <div className="edit-client">
@@ -85,6 +75,34 @@ const EditClient = () => {
         <span className="text-value">{formData.currentRM}</span>
 
         <label className="label mt-1">Updated RM</label>
+
+        {/* <Combobox value={formData.updatedRM} onChange={handleChange} as="div" className="combobox-container">
+          <ComboboxInput
+            className="input-field"
+            onChange={(event) => {
+              setQuery(event.target.value)
+            }}
+            displayValue={(rm: RmData) => rm ? `${rm.first_name} ${rm.last_name ?? ''}`.trim() : ''}
+            placeholder={t.text.selectRm}
+          />
+          <ComboboxOptions className="combobox-options">
+
+            {rmOptions.length === 0 && query !== '' ? (
+              // If true, render a non-selectable message
+              <div className="combobox-no-results">
+                No results found.
+              </div>
+            ) : (
+              // Otherwise, render the list of options as before
+              rmOptions.map((rm: RmData) => (
+                <Combobox.Option key={rm.id} value={rm} className="combobox-option">
+                  {`${rm.first_name} ${rm.last_name ?? ''}`.trim()}
+                </Combobox.Option>
+              ))
+            )}
+
+          </ComboboxOptions>
+        </Combobox> */}
         <select
           name="updatedRM"
           value={formData.updatedRM}

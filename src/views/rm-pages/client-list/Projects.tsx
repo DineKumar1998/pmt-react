@@ -41,36 +41,36 @@ const ClientProjects: React.FC = () => {
     {
       accessorKey: "id",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <ProfileWithOptionsIcon /> {t.table.projectCode}
-        </div>
+        <>
+          <ProfileWithOptionsIcon /><span className="title"> {t.table.projectCode}</span>
+        </>
       ),
       size: 40,
     },
     {
       accessorKey: "name",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <UserIcon /> {t.table.projectName}
-        </div>
+        </>
       ),
       size: 120,
     },
     {
       accessorKey: "industry",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <BagIcon /> {t.table.industry}
-        </div>
+        </>
       ),
       size: 120,
     },
     {
       accessorKey: "status",
       header: () => (
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <>
           <BagIcon /> {t.table.status}
-        </div>
+        </>
       ),
       size: 120,
       cell: ({ row }: any) => {
@@ -80,7 +80,6 @@ const ClientProjects: React.FC = () => {
   ];
 
   const handlePageChange = (pageIndex: number) => {
-    console.log("Page changed to:", pageIndex);
     setQueryParams((prev) => ({
       ...prev,
       page: pageIndex,
@@ -128,7 +127,6 @@ const ClientProjects: React.FC = () => {
   }
 
   const backButtonHandler = () => {
-    console.log("Back button clicked");
     navigate(-1);
   };
   return (

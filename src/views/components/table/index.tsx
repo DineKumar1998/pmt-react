@@ -70,7 +70,6 @@ function Table<T extends WithId>({
   React.useEffect(() => {
     if (onPageChange) {
       onPageChange(pagination.pageIndex + 1);
-      console.log("Current Page:", pagination.pageIndex + 1);
     }
   }, [pagination.pageIndex]);
 
@@ -97,7 +96,7 @@ function Table<T extends WithId>({
                           minWidth: header.getSize(),
                           maxWidth: header.getSize(),
                         }
-                        : {})
+                        : {}),
                     }}
                   >
                     <TableHeaderWrapper children={flexRender(
@@ -131,7 +130,6 @@ function Table<T extends WithId>({
                     style={isRowClickable ? { cursor: "pointer" } : {}}
                   >
                     {row.getVisibleCells().map((cell) => {
-                      // Remove the console.log and ensure cell rendering
                       const renderedCell = flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

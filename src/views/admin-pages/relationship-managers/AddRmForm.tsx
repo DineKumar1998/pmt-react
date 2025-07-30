@@ -5,10 +5,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { createRMValidator, editRMValidator } from "@/validations/rmValidator";
 import { toast } from 'react-toastify'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { createRM, getRMById, editRM } from '@/apis/rm';
+import { createRM, getRMById, editRM, sendNewPassword } from '@/apis/rm';
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
+import { BackButton } from "@/views/components/BackButton";
+
 import "./index.scss";
+import CustomModal from "@/views/components/modal";
 
 const AddUserForm = () => {
   const { selectedLang } = useLang();
@@ -18,7 +21,7 @@ const AddUserForm = () => {
   const isEditMode = !!rmId;
   const navigate = useNavigate();
 
-  const [editPasswordView, showEditPasswordView] = useState(false);
+  const [isOpen, setOpen] = useState(false)
 
   const [formData, setFormData] = React.useState({
     rmId: "",
@@ -47,8 +50,6 @@ const AddUserForm = () => {
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log("field name=", name)
-    console.log("errors=", errors)
     setErrors({ ...errors, [name]: null }); // clear error on change
   };
 
@@ -58,51 +59,37 @@ const AddUserForm = () => {
   // };
 
   const handleResetPassword = () => {
-    //OTP will be sent to the RM's email for confirmation. 
-    //Only after OTP validation, admin can set the password
-    showEditPasswordView(true)
+    setOpen(true)
   }
 
   const handleSave = () => {
-    console.log("Save clicked=", formData);
     const parsed = createRMValidator.safeParse(formData);
     if (!parsed.success) {
       const fieldErrors = parsed.error.flatten().fieldErrors;
-      console.log("fieldErrors=", fieldErrors)
       setErrors(fieldErrors as any);
       return;
     }
-    console.log("Validated data:", parsed.data);
     createRmMutate(parsed.data)
   };
 
   const handleEdit = () => {
-    console.log("Edit clicked=", formData);
     const { password, ...editData } = formData;
     const parsed = editRMValidator.safeParse(password === "" ? editData : formData);
     if (!parsed.success) {
       const fieldErrors = parsed.error.flatten().fieldErrors;
-      console.log("fieldErrors=", fieldErrors)
       setErrors(fieldErrors as any);
       return;
     }
-    console.log("Validated data:", parsed.data);
     editRmMutate(parsed.data)
-  };
-
-  const handleCancel = () => {
-    navigate(-1);
   };
 
   const { mutate: createRmMutate } = useMutation({
     mutationFn: (body: any) => createRM(body),
     onSuccess: (data) => {
-      console.log("createRM success data=", data)
       toast.success(data?.message)
       navigate(-1);
     },
     onError: (error: any) => {
-      console.log("error===", error)
       const message = error?.message;
 
       console.error("createRM error =", message)
@@ -113,12 +100,10 @@ const AddUserForm = () => {
   const { mutate: editRmMutate } = useMutation({
     mutationFn: (body: any) => editRM(rmId || "", body),
     onSuccess: (data) => {
-      console.log("editRM success data=", data)
       toast.success(data?.message)
       navigate(-1);
     },
     onError: (error: any) => {
-      console.log("error===", error)
       const message =
         error?.response?.data?.message ||
         error?.message ||
@@ -135,9 +120,12 @@ const AddUserForm = () => {
     enabled: isEditMode,
   });
 
+  const { mutateAsync: sendNewPasswordHandler } = useMutation({
+    mutationFn: () => sendNewPassword(+(rmId ?? ""))
+  })
+
   useEffect(() => {
     if (rmData) {
-      console.log("rmData loaded:", rmData);
       setFormData((prev) => ({
         ...prev,
         rmId: rmData.id,
@@ -150,9 +138,11 @@ const AddUserForm = () => {
     }
   }, [rmData]);
 
+  console.log(isOpen)
+
   return (
     <div className="add-rm-form">
-      <h2>{isEditMode ? t.routes.editUser : t.routes.addUser}</h2>
+      <h2 className="d-flex"> <BackButton /> {isEditMode ? t.routes.editUser : t.routes.addUser}</h2>
 
       <form>
         {isEditMode ?
@@ -238,7 +228,7 @@ const AddUserForm = () => {
           {errors.phone && <p className="form-error">{errors.phone}</p>}
         </div>
 
-        {!isEditMode || (isEditMode && editPasswordView) ?
+        {!(isEditMode) ?
           <div>
             <label className="label">{isEditMode ? `${t.formLabel.resetPassword}` : `${t.formLabel.password}*`}</label>
             <input
@@ -254,22 +244,29 @@ const AddUserForm = () => {
       </form>
 
       <div className="actions">
-        {/* <Button
-          className="generate-password"
-          onClick={handleGeneratePassword}
-          text="Generate Password"
-        /> */}
-        {isEditMode && !editPasswordView ?
+        {isEditMode ?
           <Button
             className="generate-password"
             onClick={handleResetPassword}
-            text="Reset Password"
+            text="Generate Password"
           /> : null}
         <div className="save-cancel-btn">
           <Button text={t.buttons.save} type="submit" onClick={isEditMode ? handleEdit : handleSave} />
-          <Button className="back-btn" onClick={handleCancel} text={t.buttons.cancel} />
         </div>
       </div>
+
+      <CustomModal
+        isOpen={isOpen}
+        confirmLabel={`Confirm`}
+        onClose={() => setOpen(false)}
+        onConfirm={async () => {
+          await sendNewPasswordHandler();
+          setOpen(false);
+          toast.success('New password has been sent to the email address')
+        }}
+        title="Confirm Password Reset"
+        description="Are you sure you want to proceed? A new password will be generated and sent to the Relationship Manager's email address. They will be required to use this new password to log in."
+      />
     </div>
   );
 };

@@ -42,7 +42,6 @@ const EditParameter = () => {
             optionIds: selectedOptionIds
         };
 
-        console.log("Formatted Payload: ", formattedData);
         selectParameterOptionMutate(formattedData)
     };
 
@@ -81,7 +80,6 @@ const EditParameter = () => {
 
     useEffect(() => {
         if (paramData) {
-            console.log("paramData loaded:", paramData);
             const selectedList = paramData.options
                 ?.filter((option: any) => option.is_selected)
                 .map((option: any) => option.id) || [];
@@ -105,7 +103,6 @@ const EditParameter = () => {
 
         const tryScrollToItem = async () => {
             const exists = parameterList.some((param) => param.id === paramId);
-            console.log("exists =", exists);
 
             if (exists && itemRefs.current[paramId]) {
                 itemRefs.current[paramId]?.scrollIntoView({
@@ -118,7 +115,6 @@ const EditParameter = () => {
 
             if (hasNextPage && !triedFetchingRef.current) {
                 triedFetchingRef.current = true;
-                console.log("fetchNextPage 1");
                 await fetchNextPage();
                 triedFetchingRef.current = false;
             }
@@ -134,7 +130,6 @@ const EditParameter = () => {
         const observer = new IntersectionObserver(
             (entries) => {
                 if (entries[0].isIntersecting) {
-                    console.log("fetchNextPage 2");
                     fetchNextPage();
                 }
             },
@@ -156,7 +151,6 @@ const EditParameter = () => {
             hasNextPage &&
             !isFetchingNextPage
         ) {
-            console.log("fetchNextPage 3");
             fetchNextPage();
             return;
         }
@@ -193,7 +187,6 @@ const EditParameter = () => {
         useMutation({
             mutationFn: (body: any) => selectParameterOption(body),
             onSuccess: (data) => {
-                console.log("selectParameterOption success data=", data);
                 toast.success(data?.message || "Parameter successfully updated");
             },
             onError: (error: any) => {

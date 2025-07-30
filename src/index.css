@@ -25,3 +25,74 @@ ul {
   text-decoration: underline !important;
   cursor: pointer;
 }
+
+.combobox-container {
+  position: relative;
+
+  .combobox-button {
+    position: relative;
+
+    background: transparent;
+    border: none;
+    padding: 0;
+
+    svg {
+      pointer-events: none;
+      position: absolute;
+      top: 60%;
+      transform: translateY(-50%);
+      right: 0.5rem;
+      fill: rgb(211, 211, 211);
+    }
+  }
+
+}
+
+.combobox-container .input-field {
+  padding: 0.5rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  color: #626974;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgb(0 0 0 / 0.4);
+  cursor: pointer;
+}
+
+.combobox-options {
+  position: absolute;
+  z-index: 100;
+
+  min-width: 200px;
+  margin-top: 4px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+}
+
+.combobox-options .combobox-no-results {
+  padding: 0.5rem 0.75rem;
+  color: #68788d;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.combobox-option {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  color: #68788d;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.combobox-option[data-headlessui-state*='active'] {
+  background-color: #68788d;
+  color: white;
+}

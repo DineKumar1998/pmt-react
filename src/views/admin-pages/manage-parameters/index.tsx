@@ -16,6 +16,9 @@ import { EditIcon } from "@/views/components/icons";
 import { useForm, type FieldError, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
 import "./index.scss";
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
+import { IndustryScale } from "@/utils/constants";
+import DownArrow from "@/views/components/icons/DownArrow";
 
 
 type FormValues = {
@@ -28,6 +31,7 @@ type FormValues = {
 const ManageParametersPage: React.FC = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
+
   const TABS = [
     {
       key: "primary",
@@ -38,12 +42,15 @@ const ManageParametersPage: React.FC = () => {
       label: t.buttons.secondary,
     },
   ];
+
   const itemsPerPage = 10;
   const [expandedIds, setExpandedIds] = useState<number[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const industryId = searchParams.get("industryId");
   const industryName = searchParams.get("industryName");
   const selectedTab = searchParams.get("tab");
+  const scale = searchParams.get('scale');
+
   const [activeTab, setActiveTab] = useState(() =>
     selectedTab || TABS[0].key
   );
@@ -58,6 +65,7 @@ const ManageParametersPage: React.FC = () => {
     industry_id: industryId ?? 0
   });
 
+  const [selectedScale, setSelectedScale] = useState(scale || "Startup");
 
   useEffect(() => {
     setQueryParams((prev) => ({
@@ -71,15 +79,12 @@ const ManageParametersPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleTabClick = (key: string) => {
+    setActiveTab(key);
 
-    setActiveTab((prev) => {
-      const next = prev === key ? prev : key;
-      const newParams = new URLSearchParams(searchParams.toString());
-      newParams.set("tab", next);
-
-      setSearchParams(newParams, { replace: true });
-      return next;
-    });
+    // Update the URL search parameters
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("tab", key);
+    setSearchParams(newParams, { replace: true });
   };
 
   const handleBackClick = () => {
@@ -101,7 +106,6 @@ const ManageParametersPage: React.FC = () => {
   };
 
   const handleExportParameter = () => {
-    console.log("handleExportParameter clicked")
     exportParameterMutate({
       isPrimary: queryParams.isPrimary,
       language: selectedLang,
@@ -185,7 +189,6 @@ const ManageParametersPage: React.FC = () => {
     const formattedData = {
       weightages: changedParameters
     }
-    console.log("formattedData=", formattedData)
     editParameterWeightagesMutate(formattedData)
   };
 
@@ -202,8 +205,7 @@ const ManageParametersPage: React.FC = () => {
   const { mutate: editParameterWeightagesMutate } =
     useMutation({
       mutationFn: (body: any) => editParameterWeightages(body),
-      onSuccess: (data) => {
-        console.log("editParameterWeightages success data=", data);
+      onSuccess: (_data) => {
         toast.success("Weightage successfully updated");
         parameterlistRefetch();
       },
@@ -217,10 +219,40 @@ const ManageParametersPage: React.FC = () => {
   return (
     <div className="manage-parameters-page">
       {showIndustryWeightage && industryName ?
-        <div className="industry-name-view">
-          <p>{industryName}</p>
+        <div style={{ display: 'flex', justifyContent: "space-between", alignItems: 'center' }} className="mb-1">
+          <div className="industry-name-view">
+            <p>{industryName}</p>
+          </div>
+
+          <Combobox value={selectedScale} onChange={(event) => {
+            if (event) {
+              setSelectedScale(event);
+              const scaleParam = new URLSearchParams(searchParams.toString());
+              scaleParam.set('scale', event);
+              setSearchParams(scaleParam);
+            }
+          }} as="div" className="combobox-container">
+            <ComboboxButton className="combobox-button" style={{ width: "200px"}}>
+              <ComboboxInput
+                className="input-field"
+                aria-label="Scale"
+                placeholder="Select a scale"
+              />
+              <DownArrow height={16} width={16} />
+            </ComboboxButton>
+
+
+            <ComboboxOptions anchor="bottom" className="combobox-options">
+              {IndustryScale.map((scale: string, index: number) => (
+                <ComboboxOption key={index} value={scale} className="combobox-option">
+                  {scale}
+                </ComboboxOption>
+              ))}
+            </ComboboxOptions>
+          </Combobox>
         </div>
         : null}
+
 
 
       {/* Two tabs - Primary, Secondary */}

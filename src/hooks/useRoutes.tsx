@@ -22,6 +22,7 @@ export const useAppRoutes = () => {
             route
           )}. Path and component are required.`
         );
+        return;
       }
     });
   };

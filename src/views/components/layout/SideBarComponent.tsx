@@ -12,7 +12,7 @@ const LayoutSidebar = () => {
     <>
       <div className="sidebar">
         <NavLink to="/" className="sidebar-logo">
-          <h1>P-I cube</h1>
+          <h1>PI3 - PMT</h1>
         </NavLink>
 
         <ul className="sidebar-list">

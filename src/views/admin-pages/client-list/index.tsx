@@ -1,9 +1,7 @@
-import ClockIcon from "@/views/components/icons/table/Clock";
 import TrendingIcon from "@/views/components/icons/table/Trending";
 import UserIcon from "@/views/components/icons/table/User";
 import LocationIcon from "@/views/components/icons/table/Locatiion";
 import ActionIcon from "@/views/components/icons/table/Action";
-import ProfileWithOptionsIcon from "@/views/components/icons/table/ProfileWithOptions";
 import BagIcon from "@/views/components/icons/table/Bag";
 import EditIcon from "@/views/components/icons/Edit";
 import SearchComponent from "@/views/components/Search";
@@ -14,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getClientList } from '@/apis/client';
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./index.scss";
 
 type Client = {
@@ -29,18 +27,7 @@ type Client = {
   secondary_percentage: number;
 };
 
-const ClientListPage: React.FC = () => {
-  const { selectedLang } = useLang();
-  const t = translations[selectedLang];
-  const itemsPerPage = 10;
-  const [queryParams, setQueryParams] = useState({
-    page: 1,
-    pageSize: itemsPerPage,
-    search: "",
-  });
-  const navigate = useNavigate();
-
-  const ProgressBar = ({ value, isPrimary }: { value: number; isPrimary?: boolean }) => (
+export const ProgressBar = ({ value, isPrimary }: { value: number; isPrimary?: boolean }) => (
     <div
       className="progress-bar"
     >
@@ -52,26 +39,17 @@ const ClientListPage: React.FC = () => {
     </div>
   );
 
+const ClientListPage: React.FC = () => {
+  const { selectedLang } = useLang();
+  const t = translations[selectedLang];
+  const itemsPerPage = 10;
+  const [queryParams, setQueryParams] = useState({
+    page: 1,
+    pageSize: itemsPerPage,
+    search: "",
+  });
 
   const columns: ColumnDef<Client>[] = [
-    {
-      accessorKey: "id",
-      header: () => (
-        <>
-          <ProfileWithOptionsIcon /> <span className="title">{t.table.id}</span>
-        </>
-      ),
-      cell: ({ row }: any) => {
-        const { id } = row.original;
-        return <div
-          onClick={() => openEditClientPage(id)}
-          style={{ cursor: "pointer" }}
-        >
-          {id}
-        </div>;
-      },
-      size: 80
-    },
     {
       accessorKey: "client_name",
       header: () => (
@@ -81,14 +59,10 @@ const ClientListPage: React.FC = () => {
       ),
       cell: ({ row }: any) => {
         const { id, client_name } = row.original;
-        return <div>
-          <span
-            onClick={() => openEditClientPage(id)}
-            className="text-underline"
-          >
-            {client_name}
-          </span>
-        </div>;
+        return <NavLink to={`/client-list/edit-client/${id}`} className="text-underline">
+          {client_name}
+        </NavLink>
+
       },
       size: 120
     },
@@ -126,7 +100,7 @@ const ClientListPage: React.FC = () => {
           </div>
         );
       },
-      size: 250
+      size: 200
     },
     {
       accessorKey: "address",
@@ -135,16 +109,7 @@ const ClientListPage: React.FC = () => {
           <LocationIcon /> {t.table.address}
         </>
       ),
-      size: 120
-    },
-    {
-      accessorKey: "assigned_date",
-      header: () => (
-        <>
-          <ClockIcon /> {t.table.assignDate}
-        </>
-      ),
-      size: 120
+      size: 150
     },
     {
       accessorKey: "rm_name",
@@ -165,10 +130,11 @@ const ClientListPage: React.FC = () => {
       cell: ({ row }: any) => {
         const { id, project_count, client_name } = row.original;
         return <div
-          onClick={() => openClientProjectsPage(id, client_name)}
-          style={{ cursor: "pointer", textAlign: "center", width: "50%" }}
+          className="text-center"
         >
-          {project_count}
+          <NavLink to={`/client-list/projects?clientId=${id}&clientName=${client_name}`} className="text-underline">
+            {project_count}
+          </NavLink>
         </div>;
       },
       size: 80
@@ -182,43 +148,22 @@ const ClientListPage: React.FC = () => {
       ),
       cell: ({ row }: any) => {
         const { id, client_name } = row.original;
-        return <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
+        return <NavLink to={`/manage-parameters/client?clientId=${id}&clientName=${client_name}`}>
           <EditIcon
             width={18}
             height={18}
-            style={{ cursor: "pointer" }}
-            onClick={() => openManageClientParametersPage(id, client_name)}
           />
-        </div>;
+        </NavLink>;
       },
       size: 80
     },
   ];
 
   const handlePageChange = (pageIndex: number) => {
-    console.log("Page changed to:", pageIndex);
     setQueryParams((prev) => ({
       ...prev,
       page: pageIndex,
     }));
-  };
-
-
-  const openEditClientPage = (id: number) => {
-    console.log("openEditClientPage:", id);
-    navigate(
-      `/client-list/edit-client/${id}`,
-    )
-  };
-
-  const openClientProjectsPage = (id: number, name: string) => {
-    navigate(
-      `/client-list/projects?clientId=${id}&clientName=${name}`,
-    )
-  };
-
-  const openManageClientParametersPage = (id: number, clientName: string) => {
-    navigate(`/manage-parameters/client?clientId=${id}&clientName=${clientName}`)
   };
 
   const { data: clientList } = useQuery({
@@ -261,7 +206,7 @@ const ClientListPage: React.FC = () => {
   }
   return (
     <div className="client-list-page">
-      <div className="buttons">
+      <div className="header-section">
         <SearchComponent
           placeholder={`${t.buttons.search}...`}
           onSearch={(value) => {

@@ -3,7 +3,6 @@ import TrendingIcon from "@/views/components/icons/table/Trending";
 import UserIcon from "@/views/components/icons/table/User";
 import LocationIcon from "@/views/components/icons/table/Locatiion";
 import ActionIcon from "@/views/components/icons/table/Action";
-import ProfileWithOptionsIcon from "@/views/components/icons/table/ProfileWithOptions";
 import BagIcon from "@/views/components/icons/table/Bag";
 import EditIcon from "@/views/components/icons/Edit";
 import SearchComponent from "@/views/components/Search";
@@ -59,15 +58,6 @@ const ClientListPage: React.FC = () => {
 
   const columns: any = (handleEditClick: any, handleProjectsClick: any) =>
     [
-      {
-        accessorKey: "id",
-        header: () => (
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <ProfileWithOptionsIcon /> {t.table.id}
-          </div>
-        ),
-        size: 40,
-      },
       {
         accessorKey: "client_name",
         header: () => (
@@ -143,9 +133,9 @@ const ClientListPage: React.FC = () => {
       {
         accessorKey: "project_count",
         header: () => (
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <TrendingIcon /> {t.table.projects}
-          </div>
+          <>
+            <TrendingIcon /> <span className="title">{t.table.projects}</span>
+          </>
         ),
         cell: ({ row }: any) => {
           const { project_count, id } = row.original;
@@ -161,9 +151,9 @@ const ClientListPage: React.FC = () => {
       {
         id: "action",
         header: () => (
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <ActionIcon /> {t.table.action}
-          </div>
+          <>
+            <ActionIcon /> <span className="title">{t.table.action}</span>
+          </>
         ),
         cell: ({ row }: any) => {
           const { id, client_name } = row.original;
@@ -188,11 +178,9 @@ const ClientListPage: React.FC = () => {
   };
 
   const handleProjectsClick = (id: number) => {
-    console.log("handleRowClick:", id);
     navigate(`/client-list/projects/${id}`);
   };
   const handleEditClick = (id: number, clientName: string) => {
-    console.log("handleRowClick:", id);
     navigate(`/client-list/parameters?clientId=${id}&clientName=${clientName}`)
   };
 

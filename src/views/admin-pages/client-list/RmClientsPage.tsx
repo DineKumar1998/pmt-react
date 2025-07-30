@@ -1,5 +1,4 @@
 import UserIcon from "@/views/components/icons/table/User";
-import ProfileWithOptionsIcon from "@/views/components/icons/table/ProfileWithOptions";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
 import React, { useState, useEffect, useRef } from "react";
@@ -10,14 +9,13 @@ import { translations } from "@/utils/translations";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { getClientList } from '@/apis/client';
 import { getRMNames } from "@/apis/rm";
-import Button from "@/views/components/button";
-import BackArrow from "@/views/components/icons/BackArrow";
 import LocationIcon from "@/views/components/icons/table/Locatiion";
-import ClockIcon from "@/views/components/icons/table/Clock";
 import TrendingIcon from "@/views/components/icons/table/Trending";
 import ActionIcon from "@/views/components/icons/table/Action";
 import EditIcon from "@/views/components/icons/Edit";
 import DownArrow from "@/views/components/icons/DownArrow";
+import { BackButton } from "@/views/components/BackButton";
+
 import "./index.scss";
 
 type Client = {
@@ -82,15 +80,6 @@ const RmClientsPage: React.FC = () => {
 
     const columns: ColumnDef<Client>[] = [
         {
-            accessorKey: "id",
-            header: () => (
-                <>
-                    <ProfileWithOptionsIcon /> {t.table.id}
-                </>
-            ),
-            size: 40
-        },
-        {
             accessorKey: "client_name",
             header: () => (
                 <>
@@ -113,15 +102,6 @@ const RmClientsPage: React.FC = () => {
                 </>
             ),
             size: 140
-        },
-        {
-            accessorKey: "assigned_date",
-            header: () => (
-                <>
-                    <ClockIcon /> {t.table.assignDate}
-                </>
-            ),
-            size: 120
         },
         {
             accessorKey: "rm_name",
@@ -147,7 +127,7 @@ const RmClientsPage: React.FC = () => {
             ),
             cell: ({ row }: any) => {
                 const { id, project_count, client_name } = row.original;
-                return <div>
+                return <div className="text-center">
                     <NavLink to={`/client-list/projects?clientId=${id}&clientName=${client_name}`} className="text-underline">
                         {project_count}
                     </NavLink>
@@ -173,7 +153,6 @@ const RmClientsPage: React.FC = () => {
     ];
 
     const handlePageChange = (pageIndex: number) => {
-        console.log("Page changed to:", pageIndex);
         setQueryParams((prev) => ({
             ...prev,
             page: pageIndex,
@@ -222,20 +201,14 @@ const RmClientsPage: React.FC = () => {
         );
     }
 
-    const backButtonHandler = () => {
-        console.log("Back button clicked");
-        navigate(-1);
-    };
     return (
         <div className="client-list-page">
+          
             <div className="buttons">
-                <Button
-                    text={t.buttons.back}
-                    icon={<BackArrow />}
-                    onClick={backButtonHandler}
-                    className="mr-1"
-                />
-                <SearchComponent
+                <BackButton title="Back" />
+                
+                <section>
+                    <SearchComponent
                     placeholder={`${t.buttons.search}...`}
                     onSearch={(value) => {
                         setQueryParams((prev) => ({
@@ -285,6 +258,7 @@ const RmClientsPage: React.FC = () => {
                         )
                     }
                 </div>
+                </section>
             </div>
             <Table
                 columns={columns}

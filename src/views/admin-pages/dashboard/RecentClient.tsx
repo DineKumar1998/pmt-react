@@ -3,7 +3,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import React from "react";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import ProfileWithOptionsIcon from "@/views/components/icons/table/ProfileWithOptions";
 import UserIcon from "@/views/components/icons/table/User";
 import BagIcon from "@/views/components/icons/table/Bag";
 import { useQuery } from '@tanstack/react-query';
@@ -23,14 +22,6 @@ const RecentClient: React.FC = () => {
   const listLimit = 5;
 
   const columns: ColumnDef<Client>[] = [
-    {
-      accessorKey: "id",
-      header: () => (
-        <>
-          <ProfileWithOptionsIcon /> {t.table.id}
-        </>
-      ),
-    },
     {
       accessorKey: "client_name",
       header: () => (
@@ -83,7 +74,7 @@ const RecentClient: React.FC = () => {
 
   return (
     <div className="recent-added-clients-page">
-      <h2 className="section-title">{t.heading.clientRecentlyAdded}</h2>
+      <h2 className="section-title">{t.heading.memberRecentlyAdded}</h2>
       <Table
         columns={columns}
         data={updatedClientList}

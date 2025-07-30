@@ -83,7 +83,6 @@ const ManageParametersPage: React.FC = () => {
     setActiveTab((prev) => {
       return prev === key ? prev : key;
     });
-    console.log("key=", key);
   };
 
   const handleBackClick = () => {

@@ -15,14 +15,6 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
   const { selectedLang, setSelectedLang } = useLang();
   const t = translations[selectedLang];
   const [searchParams] = useSearchParams();
-  // const location = useLocation();
-
-  // console.log(location.pathname.replace(/^\//, "").replace(/-/g, " "));
-
-  // Handler to update selectedLang based on input value
-  // const handleLangChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSelectedLang(e.target.value);
-  // };
 
   // State for current date and time
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -135,7 +127,6 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
             <button
               className={selectedLang === "jp" ? "active" : ""}
               onClick={() => {
-                console.log("japanese selected");
                 setSelectedLang("jp")
               }}
             >
@@ -144,7 +135,6 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
             <button
               className={selectedLang === "en" ? "active" : ""}
               onClick={() => {
-                console.log("english selected");
                 setSelectedLang("en")
               }}
             >

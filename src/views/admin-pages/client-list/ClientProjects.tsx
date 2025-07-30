@@ -1,19 +1,18 @@
 import UserIcon from "@/views/components/icons/table/User";
-import ProfileWithOptionsIcon from "@/views/components/icons/table/ProfileWithOptions";
 import BagIcon from "@/views/components/icons/table/Bag";
 import LocationIcon from "@/views/components/icons/table/Locatiion";
 import ActionIcon from "@/views/components/icons/table/Action";
-import WeightIcon from "@/views/components/icons/table/Weight";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import { getRMClientProjects } from "@/apis/client";
-import Button from "@/views/components/button";
-import BackArrow from "@/views/components/icons/BackArrow";
+import MciIndexIcon from "@/views/components/icons/table/MCI";
+import { BackButton } from "@/views/components/BackButton";
+
 import "./index.scss";
 
 type Client = {
@@ -33,8 +32,6 @@ const ClientProjects: React.FC = () => {
     const t = translations[selectedLang];
     const [searchParams] = useSearchParams();
     const clientId = searchParams.get("clientId")
-    const clientName = searchParams.get("clientName")
-    const navigate = useNavigate()
     const itemsPerPage = 10;
     const [queryParams, setQueryParams] = useState({
         page: 1,
@@ -43,15 +40,6 @@ const ClientProjects: React.FC = () => {
     });
 
     const columns: any = [
-        {
-            accessorKey: "id",
-            header: () => (
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <ProfileWithOptionsIcon /> {t.table.projectCode}
-                </div>
-            ),
-            size: 80,
-        },
         {
             accessorKey: "name",
             header: () => (
@@ -86,25 +74,27 @@ const ClientProjects: React.FC = () => {
             id: "manageWeightage",
             header: () => (
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <ActionIcon /> {t.table.manageWeightage}
+                    <ActionIcon /> {t.table.mciIndex}
                 </div>
             ),
             size: 80,
-            cell: ({ row }: any) => (
-                <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
-                    <WeightIcon
-                        width={20}
-                        height={20}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => openClientParametersPage(row.original.industry_id, row.original.industry)}
-                    />
-                </div>
-            ),
+            cell: (info: any) => {
+                return (
+                    <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
+                        <NavLink to={`/client-list/projects/mci?clientId=${clientId}&projectId=${info.row.original.id}`}>
+                            <MciIndexIcon
+                                width={20}
+                                height={20}
+                                style={{ cursor: "pointer" }}
+                            />
+                        </NavLink>
+                    </div>
+                )
+            },
         },
     ];
 
     const handlePageChange = (pageIndex: number) => {
-        console.log("Page changed to:", pageIndex);
         setQueryParams((prev) => ({
             ...prev,
             page: pageIndex,
@@ -125,23 +115,11 @@ const ClientProjects: React.FC = () => {
         updatedProjectsList = projectsList.data;
     }
 
-    const backButtonHandler = () => {
-        console.log("Back button clicked");
-        navigate(-1);
-    };
-
-    const openClientParametersPage = (industryId: number, industryName: string) => {
-        navigate(`/manage-weightage/client?clientId=${clientId}&clientName=${clientName}&industryId=${industryId}&industryName=${industryName}`)
-    }
-
     return (
         <div className="client-list-page">
             <div className="buttons">
-                <Button
-                    text={t.buttons.back}
-                    icon={<BackArrow />}
-                    onClick={backButtonHandler}
-                    className="mr-1"
+                <BackButton 
+                    title="Back"
                 />
                 <SearchComponent
                     placeholder={`${t.buttons.search}...`}

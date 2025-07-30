@@ -14,8 +14,10 @@ import { toast } from "react-toastify";
 
 // import { AUTH } from "@/utils/constants";
 import AuthContext from "@/context/AuthContext";
-import ReCAPTCHA from 'react-google-recaptcha';
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
+// import ReCAPTCHA from 'react-google-recaptcha';
+// const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
 import "./login.scss"; // Assuming a CSS file for styling
 
 const Login = () => {
@@ -32,7 +34,6 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
     control,
-    setValue
   } = useForm<{ email?: string; password?: string; otp?: string; captcha?: string }>({
     resolver: zodResolver(dynamicLoginSchema(state.showOtpView) as any),
     defaultValues: state.showOtpView
@@ -40,11 +41,10 @@ const Login = () => {
       : { email: "", password: "", captcha: "123" },
   });
 
-  console.log("RECAPTCHA_SITE_KEY=", RECAPTCHA_SITE_KEY)
-
   const { mutateAsync: loginMutate, isPending } = useMutation({
     mutationFn: (body: { email: string; password: string }) => loginUser(body),
     onSuccess: (data: any) => {
+      console.log(data)
       if (data?.error) {
         return toast.error(data.error, {
           hideProgressBar: true,
@@ -63,27 +63,11 @@ const Login = () => {
   const { mutate: otpMutate, isPending: otpPending } = useMutation({
     mutationFn: (body: any) => verifyOtp(body),
     onSuccess: (data) => {
-      console.log("otp success data=", data);
       if (data?.error) {
         return toast.error(data.error, {
           hideProgressBar: true,
         });
       }
-
-      // localStorage.setItem(AUTH.TOKEN_KEY, data.authToken);
-      // localStorage.setItem(AUTH.USER_ID, data.user?.id);
-
-      // localStorage.setItem(
-      //   AUTH.USER_NAME,
-      //   [data.user?.first_name, data.user?.last_name].filter(Boolean).join(" ")
-      // );
-      // localStorage.setItem(AUTH.USER_TYPE, data.user?.user_type);
-
-      // if (data.user?.profile_img) {
-      //   localStorage.setItem(AUTH.PROFILE_IMG, data.user.profile_img);
-      // }
-
-
 
       login(
         data.authToken,
@@ -113,15 +97,12 @@ const Login = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       if (data.email && data.password) {
-        console.log("Email:", data.email);
-        console.log("Password:", data.password);
         setStoredEmail(data.email);
 
         //API Call
         await loginMutate({ email: data.email, password: data.password });
       } else {
         if (data.otp) {
-          console.log("Email from state:", storedEmail);
           //API Call
           otpMutate({
             email: storedEmail,
@@ -129,17 +110,16 @@ const Login = () => {
           });
         }
       }
-    } catch (error) {
-      console.error("Login error:", error);
-      // Fix for toast not working
-      alert("An error occurred during login. Please try again.");
+    } catch (error: any) {
+      return toast.error(error.message || "Something went wrong.");
     }
   };
 
-  const handleCaptchaChange = (value: string | null) => {
-    console.log("Captcha value:", value);
-    setValue("captcha", value || "");
-  };
+  // const handleCaptchaChange = (value: string | null) => {
+  //   setValue("captcha", value || "");
+  // };
+
+  console.log("Login Page")
 
   return (
     <div className="login-container">
@@ -153,7 +133,7 @@ const Login = () => {
         </p>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="login-form-section">
-        <h1 style={{ marginBottom: 35, fontSize: "2.5em" }}>P-I cube</h1>
+        <h1 style={{ marginBottom: 35, fontSize: "2.5em" }}>PI3 - PMT</h1>
 
         <p className="text-primary" style={{ fontSize: "1.5em" }}>
           Greetings
@@ -208,10 +188,10 @@ const Login = () => {
                 control={control}
               />
 
-              <ReCAPTCHA
+              {/* <ReCAPTCHA
                 sitekey={RECAPTCHA_SITE_KEY}
                 onChange={handleCaptchaChange}
-              />
+              /> */}
               {errors?.captcha && (
                 <p className="form-error">{errors.captcha.message}</p>
               )}

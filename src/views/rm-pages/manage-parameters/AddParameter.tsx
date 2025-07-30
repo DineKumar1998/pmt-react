@@ -158,7 +158,6 @@ const AddParameter = () => {
       language
     };
 
-    console.log("Formatted Payload: ", formattedData);
     if (isEditMode) {
       editParameterMutate(formattedData);
     } else {
@@ -174,7 +173,6 @@ const AddParameter = () => {
     const formattedData = {
       industry_ids: selectedIndustryIds,
     };
-    console.log("Formatted Payload: ", formattedData);
     mapParameterToIndustriesMutate(formattedData);
   }
 
@@ -182,7 +180,6 @@ const AddParameter = () => {
     useMutation({
       mutationFn: (body: any) => createParameter(body),
       onSuccess: (data) => {
-        console.log("createParameter success data=", data);
         toast.success(data?.message);
         setParameterId(data?.paramId);
         setDisableIndustryMapping(false);
@@ -202,7 +199,6 @@ const AddParameter = () => {
     useMutation({
       mutationFn: (body: any) => editParameter(editParamId || "", body),
       onSuccess: (data) => {
-        console.log("editParameter success data=", data);
         toast.success(data?.message);
       },
       onError: (error: any) => {
@@ -219,7 +215,6 @@ const AddParameter = () => {
     useMutation({
       mutationFn: (body: any) => mapParameterToIndustries(isEditMode ? editParamId : parameterId, body),
       onSuccess: (data) => {
-        console.log("mapParameterToIndustriesMutate success data=", data);
         toast.success(data?.message);
         navigate("/manage-parameters", {
           state: { showSecondary: true },
@@ -281,7 +276,6 @@ const AddParameter = () => {
     useMutation({
       mutationFn: (industryId: number) => deleteParameterIndustryMapping(editParamId || "", industryId),
       onSuccess: (data, industryId) => {
-        console.log("deleteParameterIndustryMapping success data=", data);
         const newSelected = selectedIndustryList.filter(
           (ind) => ind.id !== industryId,
         );
@@ -300,8 +294,6 @@ const AddParameter = () => {
 
   useEffect(() => {
     if (paramData) {
-      console.log("paramData loaded:", paramData);
-
       // Set industries for display
       setSelectedIndustryList([]);
       if (paramData.industries?.length) {
@@ -342,7 +334,6 @@ const AddParameter = () => {
 
     const tryScrollToItem = async () => {
       const exists = parameterList.some((param) => param.id === paramId);
-      console.log("exists =", exists);
 
       if (exists && itemRefs.current[paramId]) {
         itemRefs.current[paramId]?.scrollIntoView({
@@ -355,7 +346,6 @@ const AddParameter = () => {
 
       if (hasNextPage && !triedFetchingRef.current) {
         triedFetchingRef.current = true;
-        console.log("fetchNextPage 1");
         await fetchNextPage();
         triedFetchingRef.current = false;
       }
@@ -374,7 +364,6 @@ const AddParameter = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          console.log("fetchNextPage 2")
           fetchNextPage();
         }
       },
@@ -391,7 +380,6 @@ const AddParameter = () => {
     const newIndex = direction === "prev" ? selectedIndex - 1 : selectedIndex + 1;
 
     if (newIndex >= parameterList.length && hasNextPage && !isFetchingNextPage) {
-      console.log("fetchNextPage 3")
       fetchNextPage();
       return;
     }
@@ -447,7 +435,7 @@ const AddParameter = () => {
                       <img
                         src={CrossIcon}
                         alt="Cross Icon"
-                        style={{ marginLeft: "5px" }}
+                        style={{ marginLeft: "5px", cursor: 'pointer' }}
                         onClick={() => {
                           setSelectedIndustryToDelete(industry);
                           setShowConfirmationModal(true);

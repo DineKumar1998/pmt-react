@@ -47,14 +47,13 @@ export const rmPortalRoutes: RouteType[] = [
     label: "Dashboard",
     icon: DashboardIcon,
   },
-
   {
     path: "/client-list",
     component: ClientListPage,
     layout: "default",
     permission: "client:read",
     group: "Main",
-    label: "Client List",
+    label: "Member List",
     icon: ClientListIcon,
   },
   {

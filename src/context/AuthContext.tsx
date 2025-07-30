@@ -88,7 +88,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         };
       });
     }
-    console.log(isLoading,data,error)
     if (!isLoading && error) {
       logout();
     }

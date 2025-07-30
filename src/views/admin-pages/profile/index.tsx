@@ -55,12 +55,10 @@ const ProfilePage = () => {
   const { mutate: editRmMutate } = useMutation({
     mutationFn: (body: any) => editRM(user.user_id || "", body),
     onSuccess: (data) => {
-      console.log("editRM success data=", data);
       toast.success(data?.message);
       queryClient.invalidateQueries({ queryKey: ["validate-user"] });
     },
     onError: (error: any) => {
-      console.log("error===", error);
       const message =
         error?.response?.data?.message ||
         error?.message ||
@@ -71,13 +69,6 @@ const ProfilePage = () => {
   });
 
   const onSubmit = (data: FormValues) => {
-    // console.log("data=", data)
-    // const payload = { ...data };
-    // if (payload.password === "") {
-    //     delete payload.password;
-    // }
-    // console.log("payload=", payload)
-    // editRmMutate(payload)
     let payload: any = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       // Handle password: only append if it's not an empty string
@@ -116,7 +107,7 @@ const ProfilePage = () => {
 
       if (userData.profile_img) {
         setProfileImgPreview(
-          `${ASSETS_FOLDERS.PROFILE}/${userData.profile_img}`
+          `${ASSETS_FOLDERS.PROFILE}/profile_imgs/${userData.profile_img}`
         );
       }
     }

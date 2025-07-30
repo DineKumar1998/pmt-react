@@ -106,14 +106,12 @@ const ClientParameters: React.FC = () => {
 
     const handleTabClick = (key: string) => {
 
-        setActiveTab((prev) => {
-            const next = prev === key ? prev : key;
-            const newParams = new URLSearchParams(searchParams.toString());
-            newParams.set("tab", next);
+        setActiveTab(key);
 
-            setSearchParams(newParams, { replace: true });
-            return next;
-        });
+        // Update the URL search parameters
+        const newParams = new URLSearchParams(searchParams.toString());
+        newParams.set("tab", key);
+        setSearchParams(newParams, { replace: true });
     };
 
     const handleBackClick = () => {
@@ -149,7 +147,6 @@ const ClientParameters: React.FC = () => {
     }, [parameterList]);
 
     const handleExportParameter = () => {
-        console.log("handleExportParameter clicked")
         exportParameterMutate({
             isPrimary: queryParams.isPrimary,
             language: selectedLang,

@@ -26,7 +26,6 @@ const RecentClient: React.FC = () => {
 
 
   const handleEditClick = (id: number) => {
-    console.log("handleRowClick:", id);
     navigate(`/client-list/projects/${id}`);
   };
 
@@ -74,8 +73,6 @@ const RecentClient: React.FC = () => {
     queryFn: () =>
       getRecentlyAssignedClients({ limit: listLimit, language: selectedLang }),
   });
-
-  console.log("clientList=", clientList);
 
   let updatedClientList: Client[] = [];
   if (clientList?.length) {

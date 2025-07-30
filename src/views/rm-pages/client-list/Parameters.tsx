@@ -103,15 +103,12 @@ const ClientParameters: React.FC = () => {
   const navigate = useNavigate();
 
   const handleTabClick = (key: string) => {
+    setActiveTab(key);
 
-    setActiveTab((prev) => {
-      const next = prev === key ? prev : key;
-      const newParams = new URLSearchParams(searchParams.toString());
-      newParams.set("tab", next);
-
-      setSearchParams(newParams, { replace: true });
-      return next;
-    });
+    // Update the URL search parameters
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("tab", key);
+    setSearchParams(newParams, { replace: true });
   };
 
   const handleBackClick = () => {

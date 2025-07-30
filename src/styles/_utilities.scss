@@ -91,3 +91,17 @@ $combined-values: map.merge($position-values, $width-height);
 }
 
 @include content-alignments();
+
+$text-alignment: (
+    'text-left': left,
+    'text-center': center,
+    'text-right': right,
+    'text-justify': justify,
+    'text-nowrap': nowrap
+);
+
+@each $key, $value in $text-alignment {
+    .#{$key} {
+        text-align: $value;
+    }
+}

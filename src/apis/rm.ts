@@ -48,3 +48,8 @@ export const getRMNames = async (language: string) => {
     })
     return response.data
 }
+
+export const sendNewPassword = async (rmId: number) => {
+    const response = await api.post(`/rm/${rmId}/send-new-password`, {});
+    return response.data
+}

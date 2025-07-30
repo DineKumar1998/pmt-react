@@ -1,0 +1,126 @@
+/* index.scss */
+
+/* The root Dialog component, which acts as the main container for the modal. */
+.modal {
+
+    /* The backdrop overlay that covers the page. */
+    &__backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 102;
+        background-color: rgba(17, 24, 39, 0.6); // A semi-transparent dark background
+        backdrop-filter: blur(4px); // The blur effect
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    /* When the dialog is closed, fade out the backdrop. */
+    &[data-headlessui-state="closed"] .modal__backdrop {
+        opacity: 0;
+    }
+}
+
+/* A flex container to center the modal panel vertically and horizontally. */
+.modal__container {
+    position: absolute;
+    top: 0;
+
+    display: flex;
+    min-height: 100%;
+    min-width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modal__panel {
+    z-index: 103;
+    width: 100%;
+    max-width: 28rem; // 448px
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+
+    &[data-headlessui-state="closed"] {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+}
+
+/* The title of the modal. */
+.modal__title {
+    font-size: 1.125rem; // 18px
+    line-height: 1.75rem; // 28px
+    font-weight: 600;
+    color: #374151;
+}
+
+.modal__description {
+    margin-top: 0.5rem; // 8px
+    font-size: 0.875rem; // 14px
+    line-height: 1.5rem; // 24px
+    color: #6c757d;
+}
+
+/*
+  A general base style for all buttons.
+*/
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.375rem; // 6px
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+    &:focus {
+        outline: 2px solid #ffffff;
+        outline-offset: 2px;
+    }
+}
+
+/* A modifier class for the button that opens the dialog. */
+.btn--open-dialog {
+    background-color: #68788d;
+
+    &:hover {
+        background-color: #68788d;
+    }
+}
+
+.btn--confirm {
+    // 16px
+    background-color: #374151; // gray-700
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+
+    &:hover {
+        background-color: #4b5563; // gray-600
+    }
+
+    &[data-headlessui-state="open"] {
+        background-color: #374151; // gray-700
+    }
+}
+
+.btn--close {
+    color: #374151d4;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}

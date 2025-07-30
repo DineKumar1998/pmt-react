@@ -11,3 +11,5 @@ export const AUTH = {
     USER_NAME: "Spdf",
     USER_TYPE: "srgf"
 }
+
+export const IndustryScale = ["Startup", "Small", "Medium", "Large"]

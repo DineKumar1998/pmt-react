@@ -1,5 +1,4 @@
 import Button from "@/views/components/button";
-import ProfileWithOptionsIcon from "@/views/components/icons/table/ProfileWithOptions";
 import UserIcon from "@/views/components/icons/table/User";
 import ClockIcon from "@/views/components/icons/table/Clock";
 import LocationIcon from "@/views/components/icons/table/Locatiion";
@@ -7,14 +6,14 @@ import UserGroupIcon from "@/views/components/icons/table/UserGroup";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
 import type { ColumnDef } from "@tanstack/react-table";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddCircle from "@/views/components/icons/AddCircle";
-import BackArrow from "@/views/components/icons/BackArrow";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { getRMList } from '@/apis/rm';
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
+
 import "./index.scss";
 
 type RM = {
@@ -31,26 +30,43 @@ const RelationshipManagerPage: React.FC = () => {
   const t = translations[selectedLang];
   const itemsPerPage = 10;
 
-  //  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  //  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const initialPage = parseInt(searchParams.get('page') || '1', 10);
+
+  useEffect(() => {
+ // Create an object for new search params
+    const newSearchParams = new URLSearchParams();
+
+    if (queryParams.page > 1) {
+      newSearchParams.set('page', queryParams.page.toString());
+    }
+    if (queryParams.search) {
+      newSearchParams.set('search', queryParams.search);
+    }
+
+    setSearchParams(newSearchParams, { replace: true });
+  }, [])
+
+  useEffect(() => {
+    const urlPage = parseInt(searchParams.get('page') || '1', 10);
+
+     if (urlPage !== queryParams.page) {
+      setQueryParams(prev => ({
+        ...prev,
+        page: urlPage,
+      }));
+    }
+
+  }, [])
 
   const [queryParams, setQueryParams] = useState({
-    page: 1,
+    page: initialPage,
     pageSize: itemsPerPage,
     search: "",
   });
 
   const columns: ColumnDef<RM>[] = [
-    {
-      accessorKey: "id",
-      size: 100,
-      header: () => (
-        <>
-          <ProfileWithOptionsIcon /> {t.table.rmId}
-        </>
-      ),
-    },
     {
       accessorKey: "name",
       header: () => (
@@ -98,14 +114,16 @@ const RelationshipManagerPage: React.FC = () => {
       accessorKey: "clients_assigned_count",
       header: () => (
         <>
-          <UserGroupIcon /> <span className="title">{t.table.clientAssigned}</span>
+          <UserGroupIcon /> <span className="title">{t.table.memberAssigned}</span>
         </>
       ),
       cell: ({ row }: any) => {
         const { id, clients_assigned_count, name } = row.original;
-        return <NavLink to={`/relationship-managers/rm?rmId=${id}&rmName=${name}`} className="text-underline">
+        return <section className="text-center">
+          <NavLink to={`/relationship-managers/rm?rmId=${id}&rmName=${name}`} className="text-underline">
           {clients_assigned_count}
         </NavLink>
+        </section>
       },
     },
   ];
@@ -116,13 +134,7 @@ const RelationshipManagerPage: React.FC = () => {
     navigate("/relationship-managers/add-rm");
   };
 
-  const backButtonHandler = () => {
-    console.log("Back button clicked");
-    navigate(-1);
-  };
-
   const handlePageChange = (pageIndex: number) => {
-    console.log("Page changed to:", pageIndex);
     setQueryParams((prev) => ({
       ...prev,
       page: pageIndex,
@@ -175,11 +187,6 @@ const RelationshipManagerPage: React.FC = () => {
   return (
     <div className="relationship-manager-page">
       <div className="buttons">
-        <Button
-          text={t.buttons.back}
-          icon={<BackArrow />}
-          onClick={backButtonHandler}
-        />
         <Button text={t.buttons.addRM} icon={<AddCircle />} onClick={handleAddRM} />
 
         <SearchComponent

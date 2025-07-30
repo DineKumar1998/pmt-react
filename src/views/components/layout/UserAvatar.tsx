@@ -58,7 +58,7 @@ const AvatarDropdown = () => {
     ) {
       return (
         <img
-          src={ASSETS_FOLDERS.PROFILE + "/" + user.profile_img}
+          src={ASSETS_FOLDERS.PROFILE + "/profile_imgs/" + user.profile_img}
           alt="User Avatar"
         />
       );

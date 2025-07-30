@@ -4,7 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import React from "react";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import ProfileWithOptionsIcon from "@/views/components/icons/table/ProfileWithOptions";
 import UserIcon from "@/views/components/icons/table/User";
 import UserGroupIcon from "@/views/components/icons/table/UserGroup";
 import { useQuery } from '@tanstack/react-query';
@@ -22,18 +21,9 @@ const RecentRM: React.FC = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const listLimit = 5;
-  // const navigate = useNavigate();
 
 
   const columns: ColumnDef<RM>[] = [
-    {
-      accessorKey: "id",
-      header: () => (
-        <>
-          <ProfileWithOptionsIcon /> {t.table.rmId}
-        </>
-      )
-    },
     {
       accessorKey: "name",
       header: () => (
@@ -60,14 +50,16 @@ const RecentRM: React.FC = () => {
       accessorKey: "clients_assigned_count",
       header: () => (
         <>
-          <UserGroupIcon />  <span className="title">{t.table.clientAssigned}</span>
+          <UserGroupIcon />  <span className="title">{t.table.memberAssigned}</span>
         </>
       ),
       cell: ({ row }: any) => {
         const { id, clients_assigned_count, name } = row.original;
-        return <NavLink to={ `/relationship-managers/rm?rmId=${id}&rmName=${name}`} className={'text-underline'}>
-          {clients_assigned_count}
-        </NavLink>;
+        return <div className="text-center">
+          <NavLink to={`/relationship-managers/rm?rmId=${id}&rmName=${name}`} className={'text-underline '}>
+            {clients_assigned_count}
+          </NavLink>
+        </div>;
       },
     },
   ];
@@ -116,6 +108,7 @@ const RecentRM: React.FC = () => {
       <Table
         columns={columns}
         data={updatedRmList}
+        customColumnWidth={true}
       />
     </div>
   );
