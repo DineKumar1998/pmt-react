@@ -7,6 +7,7 @@ const cookies = new Cookies()
 
 const api = axios.create({
   baseURL: "https://pmt-api.whdev.in/api",
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
