@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { getRMClientList } from "@/apis/rm-portal/client";
 import "./index.scss";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
@@ -37,7 +37,6 @@ const ClientListPage: React.FC = () => {
     pageSize: itemsPerPage,
     search: "",
   });
-  const navigate = useNavigate();
   const {addBreadcrumb} = useBreadcrumbs()
 
   const ProgressBar = ({
@@ -180,10 +179,6 @@ const ClientListPage: React.FC = () => {
       ...prev,
       page: pageIndex,
     }));
-  };
-
-  const handleEditClick = (id: number, clientName: string) => {
-    navigate(`/members-list/parameters?clientId=${id}&clientName=${clientName}`)
   };
 
   const { data: clientList } = useQuery({

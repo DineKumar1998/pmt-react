@@ -320,6 +320,7 @@ const EditParameter = () => {
                   type="button"
                 />
                 <Button
+                onClick={() => null}
                   text={isSaving ? t.buttons.saving : t.buttons.save}
                   type="submit"
                   disabled={isPrimary || isSaving}

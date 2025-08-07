@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense } from "react";
 import { useLang } from "@/context/LangContext";
 import { useQuery } from "@tanstack/react-query";
 import { getDashboardStats } from "@/apis/dashboard";

@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getClientList } from "@/apis/client";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { NavLink, useParams, useSearchParams } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import "./index.scss";
 import Badges from "@/views/components/badges";
 import {
@@ -66,7 +66,6 @@ const ClientListPage: React.FC = () => {
   const t = translations[selectedLang];
   const itemsPerPage = 10;
 
-  const { rmName = "" } = useParams();
   const [searchParams] = useSearchParams();
 
   const [queryParams, setQueryParams] = useState({

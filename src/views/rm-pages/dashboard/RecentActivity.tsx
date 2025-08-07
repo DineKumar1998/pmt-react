@@ -9,7 +9,7 @@ import UserIcon from "@/views/components/icons/table/User";
 import { useQuery } from "@tanstack/react-query";
 import { getRecentActivityClients } from "@/apis/rm-portal/client";
 import { EditIcon } from "@/views/components/icons";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 type Client = {
@@ -24,13 +24,6 @@ const RecentActivity: React.FC = () => {
   const t = translations[selectedLang];
   const listLimit = 5;
 const {addBreadcrumb} = useBreadcrumbs()
-  const navigate = useNavigate();
-
-
-  const handleEditClick = (id: number) => {
-    // /members-list/Upsilon%20United?memberId=20
-    navigate(`/members-list/projects/${id}`);
-  };
 
   const columns: ColumnDef<Client>[] = [
     {

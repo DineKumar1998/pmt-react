@@ -35,7 +35,7 @@ const ClientProjects: React.FC = () => {
   const [searchParams] = useSearchParams();
   const memberId = searchParams.get("memberId");
   const { addBreadcrumb } = useBreadcrumbs();
-  const { memberName = "", rmName = "" } = useParams();
+  const { memberName = "" } = useParams();
 
   const itemsPerPage = 10;
   const [queryParams, setQueryParams] = useState({
@@ -84,7 +84,7 @@ const ClientProjects: React.FC = () => {
       ),
       size: 80,
       cell: (info: any) => {
-        const { name, id , client_name} = info.row.original;
+        const { name, id } = info.row.original;
         const url = preserveQueryParams(
           `/member-list/${encodeURIComponent(memberName)}/${encodeURIComponent(
             name

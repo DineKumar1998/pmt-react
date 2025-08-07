@@ -1,6 +1,4 @@
-import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { debounce } from "./methods";
 
 /**
  * Preserves existing query parameters when navigating to a new URL

@@ -34,11 +34,11 @@ const ClientParameters: React.FC = () => {
     const itemsPerPage = 10;
     const [expandedIds, setExpandedIds] = useState<number[]>([]);
     const [searchParams, setSearchParams] = useSearchParams();
-    const [selectedIds,setSelectedIds] = useState([])
+    const [selectedIds,setSelectedIds] = useState<number[]>([])
     const clientId = searchParams.get("clientId");
     const selectedTab = searchParams.get("tab");
 
-    const { rmName = "", memberName = "" } = useParams()
+    const { memberName = "" } = useParams()
 
     const [activeTab, setActiveTab] = useState(() =>
         selectedTab || TABS[0].key
@@ -322,7 +322,7 @@ const ClientParameters: React.FC = () => {
                                         <section className="parameter-details">
                                             {!param?.options?.length ?
                                                 <div className="empty-state">No options found.</div>
-                                                : param?.options?.map((option: any) => (
+                                                : param?.options?.map((option: { id: number, option_text: string}) => (
                                                     <div
                                                         key={option.id}
                                                         className={`parameter-option`}

@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getRecentlyAssignedClients } from "@/apis/rm-portal/client";
 import ClockIcon from "@/views/components/icons/table/Clock";
 import { EditIcon } from "@/views/components/icons";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 type Client = {
@@ -23,14 +23,8 @@ const RecentClient: React.FC = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const listLimit = 5;
-  const navigate = useNavigate();
-const {addBreadcrumb} = useBreadcrumbs()
 
-  const handleEditClick = (id: number) => {
-    navigate(`/members-list/projects/${id}`);
-
-
-  };
+  const {addBreadcrumb} = useBreadcrumbs()
 
   const columns: ColumnDef<Client>[] = [
     {

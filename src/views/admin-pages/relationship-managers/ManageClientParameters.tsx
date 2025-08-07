@@ -48,7 +48,7 @@ const ClientParameters: React.FC = () => {
   const showClientParameterView = !!clientId;
 
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const [queryParams, setQueryParams] = useState<{
     page: number;
@@ -343,7 +343,7 @@ const ClientParameters: React.FC = () => {
                       {!param?.options?.length ? (
                         <div className="empty-state">No options found.</div>
                       ) : (
-                        param?.options?.map((option: any) => (
+                        param?.options?.map((option: { id: number, option_text: string }) => (
                           <div key={option.id} className={`parameter-option`}>
                             <div className="checkbox-container">
                               {selectedIds.includes(option.id) ? (

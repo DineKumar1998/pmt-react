@@ -7,10 +7,8 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { NavLink, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { NavLink, useParams, useSearchParams } from "react-router-dom";
 import { getRMClientProjects } from "@/apis/rm-portal/client";
-import Button from "@/views/components/button";
-import BackArrow from "@/views/components/icons/BackArrow";
 import "./index.scss";
 import ActionIcon from "@/views/components/icons/table/Action";
 import MciIndexIcon from "@/views/components/icons/table/MCI";
@@ -40,7 +38,6 @@ const ClientProjects: React.FC = () => {
 
   const id = searchParams.get('memberId') || "";
 
-  const navigate = useNavigate()
   const itemsPerPage = 10;
   const [queryParams, setQueryParams] = useState({
     page: 1,

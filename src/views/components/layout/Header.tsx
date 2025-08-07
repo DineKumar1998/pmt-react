@@ -1,22 +1,20 @@
-import { useState, useEffect, useMemo } from "react";
 import { CalendarIcon } from "../icons";
-import { Link, useSearchParams, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import AvatarDropdown from "./UserAvatar";
 import { useLang } from "@/context/LangContext";
-import { translations } from "@/utils/translations";
-import { breadcrumbMapping } from "@/utils/breadcrumbs";
+// import { translations } from "@/utils/translations";
 import Wrapper from "../wrapper";
-import { useBreadcrumbs, type BreadcrumbItem } from "@/context/Breadcrumb";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 type HeaderProps = {
   breakcrumbPath?: string;
 };
 
-const Header = ({ breakcrumbPath }: HeaderProps) => {
+const Header = ({  }: HeaderProps) => {
   const { breadcrumbs } = useBreadcrumbs();
   const locaiton = useLocation();
   const { selectedLang, setSelectedLang } = useLang();
-  const t = translations[selectedLang];
+  // const t = translations[selectedLang];
 
   console.log(locaiton.pathname, "locaiton");
   // State for current date and time

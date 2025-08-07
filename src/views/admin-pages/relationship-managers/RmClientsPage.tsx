@@ -23,7 +23,6 @@ import { BackButton } from "@/views/components/BackButton";
 
 import "./index.scss";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
-import { breadcrumbMapping } from "@/utils/breadcrumbs";
 import { debounce } from "@/utils/methods";
 
 type Client = {

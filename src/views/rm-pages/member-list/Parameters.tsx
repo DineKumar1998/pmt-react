@@ -31,7 +31,6 @@ const ClientParameters: React.FC = () => {
   const [expandedIds, setExpandedIds] = useState<number[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const clientId = searchParams.get("clientId");
-  const clientName = searchParams.get("clientName");
 
   const { memberName = ""} = useParams(); 
 
