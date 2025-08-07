@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams, NavLink } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import Button from "@/views/components/button";
 import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
@@ -7,11 +9,11 @@ import {
 } from "@/apis/parameter";
 import { getClientParameterList } from "@/apis/rm-portal/client";
 import { selectParameterOption } from "@/apis/rm-portal/parameter";
-import { toast } from "react-toastify";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import BackArrow from "@/views/components/icons/BackArrow";
 import WhiteTick from "@/views/components/icons/WhiteTick";
+
 import "./ParameterIndex.scss";
 
 const EditParameter = () => {
@@ -19,7 +21,7 @@ const EditParameter = () => {
     const { selectedLang } = useLang();
 
     const t = translations[selectedLang];
-    const { editParamId } = useParams();
+    const { editParamId, memberName } = useParams();
     const isEditMode = !!editParamId;
 
     const itemsPerPage = 10;
@@ -27,23 +29,13 @@ const EditParameter = () => {
     const rightRef = useRef<HTMLDivElement | null>(null);
     const loadMoreRef = useRef(null);
     const itemRefs = useRef<{ [key: number]: HTMLLIElement | null }>({});
-    const location = useLocation();
-    const clientId = location.state?.clientId ?? null;
-    const clientName = location.state?.clientName ?? "";
-    const isPrimary = location.state?.isPrimary ?? false;
+
+    const [searchParams] = useSearchParams();
+
+    const clientId = searchParams.get("clientId") ?? "";
+    const isPrimary = searchParams.get("isPrimary");
+
     const [selectedOptionIds, setSelectedOptionIds] = useState<number[]>([]);
-
-
-
-    const onSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const formattedData = {
-            parameterId: parseInt(editParamId ?? "0"),
-            optionIds: selectedOptionIds
-        };
-
-        selectParameterOptionMutate(formattedData)
-    };
 
     const { data: paramData } = useQuery({
         queryKey: ["paramData", editParamId, selectedLang],
@@ -159,20 +151,12 @@ const EditParameter = () => {
         if (newIndex < 0 || newIndex >= parameterList.length) return;
 
         const nextParam = parameterList[newIndex];
-        navigate(`/client-list/edit-parameter/${nextParam.id}`, {
-            state: {
-                clientId: clientId,
-                clientName: clientName,
-                isPrimary: isPrimary,
-            },
+
+        navigate(`/members-list/${memberName}/${nextParam.id}/edit?clientId=${clientId}&isPrimary=${isPrimary}`, {
             replace: true,
         });
 
-        // Scroll into view
-        itemRefs.current[nextParam.id]?.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-        });
+
     };
 
     const toggleOption = (optionId: number) => {
@@ -195,6 +179,15 @@ const EditParameter = () => {
                 toast.error(message);
             },
         });
+
+    const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const formattedData = {
+            parameterId: parseInt(editParamId ?? "0"),
+            optionIds: selectedOptionIds
+        };
+        selectParameterOptionMutate(formattedData)
+    };
 
 
     return (
@@ -251,19 +244,14 @@ const EditParameter = () => {
                             </div>
                             <div className="actions-right">
                                 <Button
-                                    onClick={() => {
-                                        navigate(-1);
-                                    }
-                                    }
+                                    onClick={() => navigate(-1)}
                                     text={t.buttons.back}
                                     icon={<BackArrow />}
                                     type="button"
                                 />
                                 <Button
                                     text={t.buttons.save}
-                                    nextIcon={<BackArrow className="rotate-180" />}
                                     type="submit"
-                                    disabled={isPrimary}
                                     onClick={() => null}
                                 />
                             </div>
@@ -274,25 +262,13 @@ const EditParameter = () => {
                     <section className="parameters-list" ref={rightRef}>
                         <ul>
                             {parameterList.map((parameter) =>
-                                <li
+                                <NavLink
+                                    to={`/members-list/${memberName}/${parameter.id}/edit?clientId=${clientId}&isPrimary=${isPrimary}`}
                                     key={parameter.id}
-                                    ref={(el) => {
-                                        itemRefs.current[parameter.id] = el;
-                                    }}
-                                    onClick={() => {
-                                        navigate(`/client-list/edit-parameter/${parameter.id}`, {
-                                            state: {
-                                                clientId: clientId,
-                                                clientName: clientName,
-                                                isPrimary: isPrimary,
-                                            },
-                                            replace: true,
-                                        })
-                                    }}
                                     className={parameter.id === Number(editParamId) ? "selected-param" : ""}
                                 >
                                     {parameter.id}. {parameter?.question}
-                                </li>
+                                </NavLink>
                             )}
                         </ul>
                         <div ref={loadMoreRef}></div>

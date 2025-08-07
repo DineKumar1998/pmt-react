@@ -9,11 +9,13 @@ import { logoutUser } from "../../../apis/auth";
 import { toast } from "react-toastify";
 import { ASSETS_FOLDERS } from "@/utils/constants";
 import AuthContext from "@/context/AuthContext";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 const AvatarDropdown = () => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const { user, logout } = useContext(AuthContext);
+  const {addBreadcrumb}  = useBreadcrumbs()
 
   const navigate = useNavigate();
 
@@ -91,7 +93,9 @@ const AvatarDropdown = () => {
               </div>
             </li>
             <li>
-              <NavLink to="/profile" onClick={() => setOpen(false)}>
+              <NavLink to="/profile" onClick={() => {setOpen(false)
+                addBreadcrumb({ label: 'Profile', path: '/profile' })
+              }}>
                 <span>
                   <UserRoundedFillIcon />
                 </span>

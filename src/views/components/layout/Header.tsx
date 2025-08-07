@@ -1,74 +1,75 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CalendarIcon } from "../icons";
-import { matchPath, Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useLocation } from "react-router-dom";
 import AvatarDropdown from "./UserAvatar";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { breadcrumbsData } from "@utils/breadcrumbs";
+import { breadcrumbMapping } from "@/utils/breadcrumbs";
 import Wrapper from "../wrapper";
+import { useBreadcrumbs, type BreadcrumbItem } from "@/context/Breadcrumb";
 
 type HeaderProps = {
   breakcrumbPath?: string;
-}
+};
 
 const Header = ({ breakcrumbPath }: HeaderProps) => {
+  const { breadcrumbs } = useBreadcrumbs();
+  const locaiton = useLocation();
   const { selectedLang, setSelectedLang } = useLang();
   const t = translations[selectedLang];
-  const [searchParams] = useSearchParams();
 
+  console.log(locaiton.pathname, "locaiton");
   // State for current date and time
-  const [currentDateTime, setCurrentDateTime] = useState(new Date());
-  const breadcrumbs = getBreadcrumbs(breakcrumbPath);
+  const currentDateTime = new Date();
 
+  // // Generate breadcrumb paths
+  // const breadcrumbPaths = useMemo(() => {
+  //   const pathSegments = path.split("/").filter(segment => segment.length > 0);
+  //   const paths = [];
 
-  function getBreadcrumbs(pathname?: string) {
-    //Set initial breadcrumb of dashboard
-    const crumbs: { label?: string, path: string, isDisabled?: boolean }[] = [
-      { label: t.routes[breadcrumbsData[0].label], path: breadcrumbsData[0].path }
-    ];
+  //   // Always start with dashboard
+  //   let accumulatedPath = "";
 
-    let accumulatedPath = "";
-    //Set breadcrumbs for paths other than dashboard
-    if (pathname && pathname !== breadcrumbsData[0]?.path) {
-      pathname.split("/").filter(Boolean).forEach((segment) => {
-        accumulatedPath += `/${segment}`;
-        const route = breadcrumbsData.find(r => matchPath({ path: r.path, end: true }, accumulatedPath));
-        if (route) {
-          if (accumulatedPath === "/manage-weightage/industry") {
-            const industryName = searchParams.get("industryName");
-            crumbs.push({ label: industryName ?? t.routes[route.label], path: accumulatedPath });
-          }
-          else if (
-            accumulatedPath === "/manage-weightage/client" ||
-            accumulatedPath === "/client-list/parameters" ||
-            accumulatedPath === "/client-list/projects" ||
-            accumulatedPath === "/manage-parameters/client"
-          ) {
-            const clientName = searchParams.get("clientName");
-            crumbs.push({ label: clientName ?? t.routes[route.label], path: accumulatedPath, isDisabled: true });
-          }
+  //   // Build paths for each segment
+  //   for (let i = 0; i < pathSegments.length; i++) {
+  //     const segment = pathSegments[i];
+  //     accumulatedPath += `/${segment}`;
 
-          else if (accumulatedPath === "/relationship-managers/rm") {
-            const rmName = searchParams.get("rmName");
-            crumbs.push({ label: rmName ?? t.routes[route.label], path: accumulatedPath });
-          }
-          else {
-            crumbs.push({ label: t.routes[route.label], path: accumulatedPath });
-          }
-        }
-      });
-    }
+  //     // Check if this is a dynamic segment (number or UUID)
+  //     const isDynamicSegment = !isNaN(Number(segment)) || /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(segment);
 
-    return crumbs;
-  }
+  //     let displayLabel = breadcrumbMapping[segment as keyof typeof breadcrumbMapping];
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentDateTime(new Date());
-    }, 60000); // Update every minute
+  //     if (!displayLabel && isDynamicSegment && i > 0) {
+  //       const previousSegment = pathSegments[i - 1];
+  //       if (previousSegment.includes("edit") || previousSegment.includes("add")) {
+  //         displayLabel = breadcrumbMapping[previousSegment as keyof typeof breadcrumbMapping];
+  //       }
+  //     }
 
-    return () => clearInterval(timer);
-  }, []);
+  //     // If still no mapping, use the segment itself
+  //     if (!displayLabel) {
+  //       displayLabel = segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " ");
+  //     }
+
+  //     const segmentParams = new URLSearchParams();
+
+  //     for (let [key, value] of searchParams.entries()) {
+  //       segmentParams.set(key, value);
+  //     }
+
+  //     console.log(segmentParams.toString())
+
+  //     paths.push({
+  //       path: accumulatedPath + (segmentParams.toString().length > 0 && i === pathSegments.length - 1 ? `?${segmentParams.toString()}` : ""),
+  //       label: decodeURIComponent(displayLabel)
+  //     });
+  //   }
+
+  //   return paths;
+  // }, [path]);
+
+  // console.log(breadcrumbPaths)
 
   // Format the date and time for IST (current date: May 24, 2025, 05:27 PM IST)
   const formattedDate = currentDateTime.toLocaleDateString("en-US", {
@@ -77,6 +78,7 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
     year: "numeric",
     timeZone: "Asia/Kolkata",
   });
+
   const formattedTime = currentDateTime.toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
@@ -84,40 +86,40 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
     timeZone: "Asia/Kolkata",
   });
 
+  console.log(breadcrumbs);
 
   return (
     <header className="header">
       <Wrapper>
         <nav className="breadcrumbs">
-          {breadcrumbs?.length
-            ? breadcrumbs.length === 1
-              ?
-              <span className="heading">{breadcrumbs[0].label}</span>
-              : breadcrumbs.map((crumb, idx) => (
-                <span key={crumb.path}>
-                  {idx < breadcrumbs.length - 1 ? (
-                    <>
-                      {idx === 0 ? "" : " / "}
-                      <Link
-                        className={`breadcrumb-link${crumb.isDisabled ? " is-disabled" : ""}`}
-                        to={crumb.path}
-                        onClick={e => {
-                          if (crumb.isDisabled) {
-                            e.preventDefault();
-                          }
-                        }}
-                      >
-                        {crumb.label}
-                      </Link>
-                    </>
-                  ) : (
-                    <span className="breadcrumb-current-tab"> / {crumb.label}</span>
-                  )}
+          {breadcrumbs.map((breadcrumb, index) => {
+            const isHomeOrDashboard =
+              breadcrumb.path === "/" || breadcrumb.path === "/dashboard";
+            const isOnDashboard = location.pathname === "/dashboard";
+            // Skip rendering if it's the home/dashboard breadcrumb and we're already on dashboard
+            if (isHomeOrDashboard && isOnDashboard) {
+              return (
+                <span className="breadcrumb-current-tab">
+                  {breadcrumb.label}
                 </span>
-              )
-              )
-            : null
-          }
+              );
+            }
+
+            return (
+              <span key={breadcrumb.path}>
+                {index > 0 && <span> / </span>}
+                {index < breadcrumbs.length - 1 ? (
+                  <Link to={breadcrumb.path} className="breadcrumb-link">
+                    {breadcrumb.label}
+                  </Link>
+                ) : (
+                  <span className="breadcrumb-current-tab">
+                    {breadcrumb.label}
+                  </span>
+                )}
+              </span>
+            );
+          })}
         </nav>
 
         <section className="header-nav">
@@ -127,7 +129,7 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
             <button
               className={selectedLang === "jp" ? "active" : ""}
               onClick={() => {
-                setSelectedLang("jp")
+                setSelectedLang("jp");
               }}
             >
               日本語
@@ -135,7 +137,7 @@ const Header = ({ breakcrumbPath }: HeaderProps) => {
             <button
               className={selectedLang === "en" ? "active" : ""}
               onClick={() => {
-                setSelectedLang("en")
+                setSelectedLang("en");
               }}
             >
               English

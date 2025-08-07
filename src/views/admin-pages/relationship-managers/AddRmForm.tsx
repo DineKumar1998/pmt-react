@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Button from "@/views/components/button";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { createRMValidator, editRMValidator } from "@/validations/rmValidator";
 import { toast } from 'react-toastify'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -9,15 +9,17 @@ import { createRM, getRMById, editRM, sendNewPassword } from '@/apis/rm';
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import { BackButton } from "@/views/components/BackButton";
+import CustomModal from "@/views/components/modal";
 
 import "./index.scss";
-import CustomModal from "@/views/components/modal";
 
 const AddUserForm = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
 
-  const { rmId } = useParams();
+  const [searchParams] = useSearchParams();
+  const rmId = searchParams.get("rmId")
+
   const isEditMode = !!rmId;
   const navigate = useNavigate();
 
@@ -137,8 +139,6 @@ const AddUserForm = () => {
       }));
     }
   }, [rmData]);
-
-  console.log(isOpen)
 
   return (
     <div className="add-rm-form">

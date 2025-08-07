@@ -10,10 +10,11 @@ type Props = {
     cancelLabel?: string;
     onConfirm?: () => void;
     onClose: () => void;
+    isDanger?: boolean;
 }
 
 export default function CustomModal(props: Props) {
-    const { description, isOpen, onConfirm, onClose, title, cancelLabel = "Close", confirmLabel = "Confirm" } = props;
+    const { description, isOpen, onConfirm, onClose, title, cancelLabel = "Close", confirmLabel = "Confirm", isDanger = false } = props;
 
     function close() {
         if (typeof onClose === 'function') {
@@ -39,9 +40,9 @@ export default function CustomModal(props: Props) {
                         <p className="modal__description">
                             {description}
                         </p>
-                        <div className="mt-2 modal__actions">
+                        <div className="mt-1 modal__actions">
                             <Button
-                                className="btn btn--confirm"
+                                className={`btn ${isDanger ? 'btn--danger' : 'btn--confirm'}`}
                                 onClick={confirm}
                             >
                                 {confirmLabel}

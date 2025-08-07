@@ -11,8 +11,10 @@ import { translations } from "@/utils/translations";
 import { toast } from "react-toastify";
 import { ASSETS_FOLDERS } from "@/utils/constants";
 import AuthContext from "@/context/AuthContext";
-import "./index.scss";
 import { BackButton } from "@/views/components/BackButton";
+
+import "./index.scss";
+
 
 type FormValues = z.infer<typeof editRMValidator>;
 

@@ -4,7 +4,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import RedirectForward from "../../icons/RedirectForward";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -57,10 +57,6 @@ export default function TotalMemberChart({ record }: TotalMemberProps) {
     },
   };
 
-  const openClientListPage = () => {
-    navigate(`/client-list`);
-  };
-
   return (
     <div className="card total-members-chart">
       <div>
@@ -80,13 +76,13 @@ export default function TotalMemberChart({ record }: TotalMemberProps) {
       <div className="chart">
         <Pie data={data} options={options} plugins={[ChartDataLabels]} />
       </div>
-      <span
+      <NavLink 
+        to={`/members-list`}
         className="redirect-icon"
-        onClick={openClientListPage}
         style={{ bottom: "0.5rem", right: "1rem" }}
       >
         <RedirectForward width={28} height={28} />
-      </span>
+      </NavLink>
     </div>
   );
 }

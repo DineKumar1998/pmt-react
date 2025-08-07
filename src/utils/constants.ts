@@ -12,4 +12,6 @@ export const AUTH = {
     USER_TYPE: "srgf"
 }
 
-export const IndustryScale = ["Startup", "Small", "Medium", "Large"]
+export const IndustryScale = ["Startup", "Small", "Medium", "Large"];
+
+export const ClientTypes = ["Member", "Vendor"];

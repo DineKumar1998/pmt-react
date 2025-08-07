@@ -4,22 +4,33 @@ import {
   AddCircleIcon,
   DownloadIcon,
   PlusIcon,
-  Justice
+  Justice,
 } from "@/views/components/icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { getParameterList, editParameterWeightages, exportParameterList } from "@/apis/parameter";
+import {
+  getParameterList,
+  editParameterWeightages,
+  exportParameterList,
+} from "@/apis/parameter";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import BackArrow from "@/views/components/icons/BackArrow";
 import { EditIcon } from "@/views/components/icons";
 import { useForm, type FieldError, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
-import "./index.scss";
-import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+} from "@headlessui/react";
 import { IndustryScale } from "@/utils/constants";
 import DownArrow from "@/views/components/icons/DownArrow";
 
+import "./index.scss";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 type FormValues = {
   parameters: {
@@ -49,11 +60,10 @@ const ManageParametersPage: React.FC = () => {
   const industryId = searchParams.get("industryId");
   const industryName = searchParams.get("industryName");
   const selectedTab = searchParams.get("tab");
-  const scale = searchParams.get('scale');
+  const scale = searchParams.get("scale");
+  const { addBreadcrumb } = useBreadcrumbs();
 
-  const [activeTab, setActiveTab] = useState(() =>
-    selectedTab || TABS[0].key
-  );
+  const [activeTab, setActiveTab] = useState(() => selectedTab || TABS[0].key);
   const showIndustryWeightage = !!industryId;
 
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -62,7 +72,7 @@ const ManageParametersPage: React.FC = () => {
     page: 1,
     pageSize: itemsPerPage,
     isPrimary: activeTab === "primary",
-    industry_id: industryId ?? 0
+    industry_id: industryId ?? 0,
   });
 
   const [selectedScale, setSelectedScale] = useState(scale || "Startup");
@@ -89,19 +99,27 @@ const ManageParametersPage: React.FC = () => {
 
   const handleBackClick = () => {
     navigate(-1);
-  }
+  };
 
   const handleAddParameter = () => {
     navigate("/manage-parameters/add-parameter");
+    addBreadcrumb({
+      label: "Add",
+      path: "/manage-parameters/add-parameter",
+    });
   };
 
   const handleEditParameter = (paramId: number) => {
-    navigate(`/manage-parameters/edit-parameter/${paramId}`)
-  }
+    navigate(`/manage-parameters/${paramId}`);
+    addBreadcrumb({
+      label: "Edit",
+      path: `/manage-parameters/${paramId}`,
+    });
+  };
 
   const handleToggleExpand = (id: number) => {
     setExpandedIds((prev) =>
-      prev.includes(id) ? prev.filter((eid) => eid !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((eid) => eid !== id) : [...prev, id]
     );
   };
 
@@ -109,40 +127,39 @@ const ManageParametersPage: React.FC = () => {
     exportParameterMutate({
       isPrimary: queryParams.isPrimary,
       language: selectedLang,
-    })
-  }
+    });
+  };
 
   const { data: parameterList, refetch: parameterlistRefetch } = useQuery({
     queryKey: ["parameterList", queryParams, selectedLang],
     queryFn: () => getParameterList({ ...queryParams, language: selectedLang }),
   });
 
-  const { mutate: exportParameterMutate } =
-    useMutation({
-      mutationFn: (body: any) => exportParameterList(body),
-      onSuccess: (data) => {
-        const url = window.URL.createObjectURL(new Blob([data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'parameters.xlsx'); // set your filename
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        window.URL.revokeObjectURL(url);
-      },
-      onError: (error: any) => {
-        const message = error?.message;
-        console.error("exportParameterMutate error =", message);
-        toast.error(message);
-      },
-    });
+  const { mutate: exportParameterMutate } = useMutation({
+    mutationFn: (body: any) => exportParameterList(body),
+    onSuccess: (data) => {
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "parameters.xlsx"); // set your filename
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    },
+    onError: (error: any) => {
+      const message = error?.message;
+      console.error("exportParameterMutate error =", message);
+      toast.error(message);
+    },
+  });
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-    control
+    control,
   } = useForm<FormValues>({
     defaultValues: {
       parameters: [],
@@ -172,7 +189,6 @@ const ManageParametersPage: React.FC = () => {
   });
 
   const isFormChanged = useMemo(() => {
-
     return watchedParameters?.some((param, index) => {
       const initialParam = initialValues.current?.[index];
       if (!initialParam) return false;
@@ -183,56 +199,73 @@ const ManageParametersPage: React.FC = () => {
 
   const onSubmit = (data: any) => {
     const currentValues = data.parameters;
-    const changedParameters = currentValues.filter((param: any, index: number) => {
-      return param.weightage !== initialValues.current[index]?.weightage;
-    });
+    const changedParameters = currentValues.filter(
+      (param: any, index: number) => {
+        return param.weightage !== initialValues.current[index]?.weightage;
+      }
+    );
     const formattedData = {
-      weightages: changedParameters
-    }
-    editParameterWeightagesMutate(formattedData)
+      weightages: changedParameters,
+    };
+    editParameterWeightagesMutate(formattedData);
   };
 
   const onError = (errors: any) => {
     const flatErrors = Object.values(errors.parameters || {});
     if (flatErrors.length > 0) {
-      const firstError = (flatErrors[0] as { weightage?: FieldError })?.weightage?.message;
+      const firstError = (flatErrors[0] as { weightage?: FieldError })
+        ?.weightage?.message;
       if (firstError) {
         toast.error(firstError);
       }
     }
   };
 
-  const { mutate: editParameterWeightagesMutate } =
-    useMutation({
-      mutationFn: (body: any) => editParameterWeightages(body),
-      onSuccess: (_data) => {
-        toast.success("Weightage successfully updated");
-        parameterlistRefetch();
-      },
-      onError: (error: any) => {
-        const message = error?.message;
-        console.error("editParameterWeightages error =", message);
-        toast.error(message);
-      },
-    });
+  const { mutate: editParameterWeightagesMutate } = useMutation({
+    mutationFn: (body: any) => editParameterWeightages(body),
+    onSuccess: (_data) => {
+      toast.success("Weightage successfully updated");
+      parameterlistRefetch();
+    },
+    onError: (error: any) => {
+      const message = error?.message;
+      console.error("editParameterWeightages error =", message);
+      toast.error(message);
+    },
+  });
 
   return (
     <div className="manage-parameters-page">
-      {showIndustryWeightage && industryName ?
-        <div style={{ display: 'flex', justifyContent: "space-between", alignItems: 'center' }} className="mb-1">
+      {showIndustryWeightage && industryName ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+          className="mb-1"
+        >
           <div className="industry-name-view">
             <p>{industryName}</p>
           </div>
 
-          <Combobox value={selectedScale} onChange={(event) => {
-            if (event) {
-              setSelectedScale(event);
-              const scaleParam = new URLSearchParams(searchParams.toString());
-              scaleParam.set('scale', event);
-              setSearchParams(scaleParam);
-            }
-          }} as="div" className="combobox-container">
-            <ComboboxButton className="combobox-button" style={{ width: "200px"}}>
+          <Combobox
+            value={selectedScale}
+            onChange={(event) => {
+              if (event) {
+                setSelectedScale(event);
+                const scaleParam = new URLSearchParams(searchParams.toString());
+                scaleParam.set("scale", event);
+                setSearchParams(scaleParam);
+              }
+            }}
+            as="div"
+            className="combobox-container"
+          >
+            <ComboboxButton
+              className="combobox-button"
+              style={{ width: "200px" }}
+            >
               <ComboboxInput
                 className="input-field"
                 aria-label="Scale"
@@ -241,19 +274,20 @@ const ManageParametersPage: React.FC = () => {
               <DownArrow height={16} width={16} />
             </ComboboxButton>
 
-
             <ComboboxOptions anchor="bottom" className="combobox-options">
               {IndustryScale.map((scale: string, index: number) => (
-                <ComboboxOption key={index} value={scale} className="combobox-option">
+                <ComboboxOption
+                  key={index}
+                  value={scale}
+                  className="combobox-option"
+                >
                   {scale}
                 </ComboboxOption>
               ))}
             </ComboboxOptions>
           </Combobox>
         </div>
-        : null}
-
-
+      ) : null}
 
       {/* Two tabs - Primary, Secondary */}
       <div className="tabs">
@@ -262,7 +296,9 @@ const ManageParametersPage: React.FC = () => {
             <button
               key={tab.key}
               onClick={() => handleTabClick(tab.key)}
-              className={`tab-button ${tab.key} ${activeTab === tab.key ? "active" : ""}`}
+              className={`tab-button ${tab.key} ${
+                activeTab === tab.key ? "active" : ""
+              }`}
             >
               {tab.label}
             </button>
@@ -270,8 +306,7 @@ const ManageParametersPage: React.FC = () => {
         </section>
 
         <div className="actions-container">
-          {showIndustryWeightage
-            ?
+          {showIndustryWeightage ? (
             <div className="weightage-actions">
               <div className="weightage-view">
                 <Justice />
@@ -283,7 +318,8 @@ const ManageParametersPage: React.FC = () => {
                 onClick={handleBackClick}
               />
             </div>
-            : <div className="manage-actions">
+          ) : (
+            <div className="manage-actions">
               {activeTab === "secondary" && (
                 <Button
                   text={t.heading.addParameter}
@@ -295,7 +331,8 @@ const ManageParametersPage: React.FC = () => {
               <button onClick={handleExportParameter} className="export-button">
                 <DownloadIcon />
               </button>
-            </div>}
+            </div>
+          )}
         </div>
       </div>
 
@@ -309,21 +346,25 @@ const ManageParametersPage: React.FC = () => {
               {parameterList?.data?.map((param: any, index: number) => (
                 <li
                   key={param.id}
-                  className={`parameter-item${expandedIds.includes(param.id) ? " expanded" : ""}`}
+                  className={`parameter-item${
+                    expandedIds.includes(param.id) ? " expanded" : ""
+                  }`}
                 >
                   <header
                     className="parameter-header"
                     onClick={() => handleToggleExpand(param.id)}
                   >
                     <div className="parameter-title">
-                      <p>{param.id}. {param.question}</p>
+                      <p>
+                        {param.id}. {param.question}
+                      </p>
                       {activeTab === "secondary" && !showIndustryWeightage && (
                         <span
                           className="edit-icon"
                           onClick={(event) => {
+                            console.log("cliekc");
                             event.stopPropagation();
                             handleEditParameter(param.id);
-
                           }}
                         >
                           <EditIcon />
@@ -332,14 +373,18 @@ const ManageParametersPage: React.FC = () => {
                     </div>
                     <div className="parameter-action">
                       {showIndustryWeightage && (
-                        <div className="parameter-weightage" >
+                        <div className="parameter-weightage">
                           <input
                             type="number"
                             step="0.1"
                             min="0"
                             max="100"
                             onClick={(e) => e.stopPropagation()}
-                            className={errors.parameters?.[index]?.weightage ? "border-danger" : ""}
+                            className={
+                              errors.parameters?.[index]?.weightage
+                                ? "border-danger"
+                                : ""
+                            }
                             {...register(`parameters.${index}.weightage`, {
                               required: "Weightage is required",
                               valueAsNumber: true,
@@ -356,7 +401,9 @@ const ManageParametersPage: React.FC = () => {
                         </div>
                       )}
                       <span
-                        className={`expand-icon ${expandedIds.includes(param.id) ? "expanded" : ""}`}
+                        className={`expand-icon ${
+                          expandedIds.includes(param.id) ? "expanded" : ""
+                        }`}
                       >
                         <PlusIcon />
                       </span>
@@ -364,23 +411,25 @@ const ManageParametersPage: React.FC = () => {
                   </header>
                   {expandedIds.includes(param.id) && (
                     <section className="parameter-details">
-                      {!param?.options?.length ?
+                      {!param?.options?.length ? (
                         <div className="empty-state">No options found.</div>
-                        : param?.options?.map((option: any, index: number) => (
+                      ) : (
+                        param?.options?.map((option: any, index: number) => (
                           <p key={option.id} className="parameter-option">
-                            {String.fromCharCode(65 + index)}. {option.option_text}
+                            {String.fromCharCode(65 + index)}.{" "}
+                            {option.option_text}
                           </p>
-                        ))}
+                        ))
+                      )}
                     </section>
                   )}
                 </li>
               ))}
             </ul>
-
           </>
         )}
-        {showIndustryWeightage && parameterList?.data?.length
-          ? <div className="bottom-action">
+        {showIndustryWeightage && parameterList?.data?.length ? (
+          <div className="bottom-action">
             <Button
               text={t.buttons.save}
               type="submit"
@@ -393,7 +442,7 @@ const ManageParametersPage: React.FC = () => {
               onClick={() => null}
             />
           </div>
-          : null}
+        ) : null}
       </section>
 
       {/* Pagination Controls */}
@@ -414,7 +463,7 @@ const ManageParametersPage: React.FC = () => {
             </button>
             <span className="pagination-pages">
               {Array.from({ length: totalPages }, (_, i) => {
-                let index = i + 1
+                let index = i + 1;
                 return (
                   <button
                     key={index}
@@ -424,12 +473,14 @@ const ManageParametersPage: React.FC = () => {
                         page: index,
                       }));
                     }}
-                    className={`pagination-page-number${queryParams.page === index ? " active" : ""}`}
+                    className={`pagination-page-number${
+                      queryParams.page === index ? " active" : ""
+                    }`}
                     disabled={queryParams.page === index}
                   >
                     {index}
                   </button>
-                )
+                );
               })}
             </span>
             <button

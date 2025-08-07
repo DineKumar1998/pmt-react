@@ -9,7 +9,8 @@ import UserIcon from "@/views/components/icons/table/User";
 import { useQuery } from "@tanstack/react-query";
 import { getRecentActivityClients } from "@/apis/rm-portal/client";
 import { EditIcon } from "@/views/components/icons";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 type Client = {
   id: number;
@@ -22,23 +23,16 @@ const RecentActivity: React.FC = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const listLimit = 5;
-
+const {addBreadcrumb} = useBreadcrumbs()
   const navigate = useNavigate();
 
 
   const handleEditClick = (id: number) => {
-    navigate(`/client-list/projects/${id}`);
+    // /members-list/Upsilon%20United?memberId=20
+    navigate(`/members-list/projects/${id}`);
   };
 
   const columns: ColumnDef<Client>[] = [
-    {
-      accessorKey: "id",
-      header: () => (
-        <>
-          <ProfileWithOptionsIcon /> {t.table.id}
-        </>
-      ),
-    },
     {
       accessorKey: "client_name",
       header: () => (
@@ -55,17 +49,33 @@ const RecentActivity: React.FC = () => {
         </>
       ),
       cell: ({ row }: any) => {
-        const { id, last_parameter_update } = row.original;
-        return <div className="date_view">
+        const { last_parameter_update } = row.original;
+        return <div className="date_view" style={{ marginLeft: '1rem'}}>
           <p>{last_parameter_update}</p>
-          <EditIcon
-            onClick={() => handleEditClick(id)}
-            width={18}
-            height={18}
-            style={{ cursor: "pointer" }}
-          />
         </div>;
       },
+    },
+    {
+      accessorKey: "actions",
+      header: () => (
+        <>
+          <ProfileWithOptionsIcon /> <span className="title">{t.table.action}</span>
+        </>
+      ),
+      size: 80,
+      cell: ({ row }: any) => {
+        const { id, client_name } = row.original;
+        return <NavLink to={`/members-list/${encodeURIComponent(client_name)}?memberId=${id}`} 
+        onClick={()=>{
+          addBreadcrumb({label: client_name, path: `/members-list/${encodeURIComponent(client_name)}?memberId=${id}`})
+        }}
+        >
+          <EditIcon
+          width={18}
+          height={18}
+        />
+        </NavLink>
+      }
     },
   ];
 
@@ -104,7 +114,7 @@ const RecentActivity: React.FC = () => {
   return (
     <div className="recent-added-clients-page">
       <h2 className="section-title">{t.heading.clientRecentActivity}</h2>
-      <Table columns={columns} data={updatedClientList} />
+      <Table columns={columns} data={updatedClientList} customColumnWidth={true} />
     </div>
   );
 };

@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
   getPaginationRowModel,
   flexRender,
+  type SortingState,
   type ColumnDef,
 } from "@tanstack/react-table";
-import { SortIcon } from "../icons";
+import SortAscIcon from "../icons/table/SortAsc";
+import SortDescIcon from "../icons/table/SortDesc";
 import BackArrow from "../icons/BackArrow";
-import "./table.scss";
 import { TableHeaderWrapper } from "./TableHeaderWrapper";
+
+
+import "./table.scss";
+
 
 // Define a base type that requires an 'id' property
 interface WithId {
@@ -24,6 +29,7 @@ interface CommonTableProps<T extends WithId> {
   itemsPerPage?: number;
   total_rms?: number;
   hasNextPage?: boolean;
+  onSortChange?: (sorting: SortingState) => void;
   onPageChange?: (pageIndex: number) => void;
   onRowClick?: (id: number) => void;
   customColumnWidth?: boolean;
@@ -41,9 +47,10 @@ function Table<T extends WithId>({
   onRowClick,
   customColumnWidth,
   enableTableScroll,
+  onSortChange,
   isRowClickable
 }: CommonTableProps<T>) {
-  const [sorting, setSorting] = React.useState<import("@tanstack/react-table").SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
@@ -73,6 +80,17 @@ function Table<T extends WithId>({
     }
   }, [pagination.pageIndex]);
 
+   React.useEffect(() => {
+    if (onSortChange) {
+      onSortChange(sorting);
+    }
+  }, [sorting, onSortChange]);
+
+  const renderSortIcon = useCallback((dir: string | boolean) => {
+    if (dir === 'asc') { return <SortAscIcon height={16} width={16} />; }
+    if (dir === 'desc') { return <SortDescIcon height={16} width={16} />; }
+  }, [])
+
   return (
     <div className="table-container">
       {/* Table Container */}
@@ -84,26 +102,22 @@ function Table<T extends WithId>({
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    onClick={header.column.getToggleSortingHandler()}
-                    className={header.column.getIsSorted() ? "sorted" : ""}
+                    className={header.column.getIsSorted() ? "sorted-column" : ""}
                     style={{
                       cursor: header.column.getCanSort()
                         ? "pointer"
                         : undefined,
-                      ...(customColumnWidth
-                        ? {
-                          width: header.getSize(),
-                          minWidth: header.getSize(),
-                          maxWidth: header.getSize(),
-                        }
-                        : {}),
+                      width: customColumnWidth ? header.getSize() : 'auto',
                     }}
                   >
-                    <TableHeaderWrapper children={flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
-                    )} />
-                    {header.column.getIsSorted() ? <SortIcon /> : ""}
+                    {/* This div is now the flex container, not the th */}
+                    <div className="th-content" onClick={header.column.getToggleSortingHandler()}>
+                      <TableHeaderWrapper children={flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )} />
+                      {renderSortIcon(header.column.getIsSorted())}
+                    </div>
                   </th>
                 ))}
               </tr>

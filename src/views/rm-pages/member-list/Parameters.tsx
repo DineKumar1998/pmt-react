@@ -3,7 +3,7 @@ import Button from "@/views/components/button";
 import {
   PlusIcon,
 } from "@/views/components/icons";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getClientParameterList } from "@/apis/rm-portal/client";
 import { useLang } from "@/context/LangContext";
@@ -32,6 +32,9 @@ const ClientParameters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const clientId = searchParams.get("clientId");
   const clientName = searchParams.get("clientName");
+
+  const { memberName = ""} = useParams(); 
+
   const selectedTab = searchParams.get("tab");
   const [activeTab, setActiveTab] = useState(() =>
     selectedTab || TABS[0].key
@@ -116,12 +119,8 @@ const ClientParameters: React.FC = () => {
   };
 
   const handleEditParameter = (param: any) => {
-    navigate(`/client-list/edit-parameter/${param.id}`, {
-      state: {
-        clientId: clientId,
-        clientName: clientName,
-        isPrimary: activeTab === "primary",
-      }
+    navigate(`/members-list/${encodeURIComponent(memberName)}/${param.id}/edit?clientId=${clientId}&isPrimary=${activeTab === "primary"}`, {
+      replace: true
     })
   }
 

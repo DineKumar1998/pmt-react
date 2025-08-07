@@ -60,6 +60,12 @@ export const getClientParameterList = async (id: string | number, params: any) =
     })
     return response.data
 }
+export const getClientSelectedParameters = async (id: string | number, params?: any) => {
+    const response = await api.get(`/rm-portal/client/parameters/${id}/selected`, {
+        params
+    })
+    return response.data
+}
 
 export const selectParameterOption = async (data: any) => {
     const response = await api.patch(`/rm-portal/client/edit/parameter`, data)

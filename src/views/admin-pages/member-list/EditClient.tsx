@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react'
 import Button from "@/views/components/button";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useLang } from "@/context/LangContext";
 import { getClientById, assignRmToClient } from "@/apis/client";
@@ -10,6 +10,7 @@ import { translations } from "@/utils/translations";
 import { toast } from 'react-toastify'
 import { ProgressBar } from ".";
 import { BackButton } from "@/views/components/BackButton";
+import { preserveQueryParams } from "@/utils/queryParams";
 
 import "./index.scss";
 
@@ -23,14 +24,17 @@ const EditClient = () => {
   const { selectedLang } = useLang();
   const navigate = useNavigate();
   const t = translations[selectedLang];
-  const { clientId } = useParams();
+
+  const [searchParams] = useSearchParams();
+
+  const memberId = searchParams.get('memberId') || '';
 
   const [selectedRm, setSelectedRm] = useState(null);
   const [query, setQuery] = useState('');
 
   const { data: clientData, } = useQuery({
-    queryKey: ['clientData', clientId, selectedLang],
-    queryFn: () => getClientById(clientId || "", selectedLang),
+    queryKey: ['clientData', memberId, selectedLang],
+    queryFn: () => getClientById(memberId || "", selectedLang),
   });
 
   const { data: rmList, isFetching } = useQuery({
@@ -48,7 +52,7 @@ const EditClient = () => {
   }, [clientData, rmList]);
 
   const { mutate: assignRmMutate, isPending } = useMutation({
-    mutationFn: (body: any) => assignRmToClient(clientId || "", body),
+    mutationFn: (body: any) => assignRmToClient(memberId || "", body),
     onSuccess: (data) => {
       toast.success(data?.message);
     },
@@ -71,7 +75,9 @@ const EditClient = () => {
     };
     assignRmMutate(formattedData);
 
-    navigate(-1);
+    // Navigate back to member list while preserving query parameters
+    const url = preserveQueryParams('/member-list', searchParams);
+    navigate(url);
   };
 
   // 4. Filter the RM list based on the user's input query
@@ -120,7 +126,7 @@ const EditClient = () => {
   return (
     <div>
       <div className="d-flex">
-        <BackButton /> {' '}  <h4> CLIENT ID: #{clientId}</h4>
+        <BackButton />  <h4> CLIENT ID: #{memberId}</h4>
       </div>
       <div className="edit-client-page mt-1">
         <dl className="details-list">
@@ -138,11 +144,7 @@ const EditClient = () => {
           <dd>{clientData?.address}</dd>
 
           <dt>{t.formLabel.projectCount}</dt>
-          <dd>
-            <NavLink to={`/client-list/projects?clientId=${clientId}&clientName=${clientData?.client_name}`}>
-              {clientData?.project_count} ➚
-            </NavLink>
-          </dd>
+          <dd>{clientData?.project_count}</dd>
 
           <dt>{t.formLabel.email}</dt>
           <dd>{clientData?.email}</dd>
@@ -162,53 +164,53 @@ const EditClient = () => {
           </dd>
         </dl>
 
-<form onSubmit={handleSave} className="edit-client-form">
-            <div className="form-field-group mt-1">
-              <label className="label">{t.formLabel.updatedRM}</label>
+        <form onSubmit={handleSave} className="edit-client-form">
+          <div className="form-field-group mt-1">
+            <label className="label">{t.formLabel.updatedRM}</label>
 
-              <Combobox value={selectedRm} onChange={(data) => {
-                setSelectedRm(data)
-              }} as="div" className="combobox-container">
-                <ComboboxButton className="combobox-button">
-                  <ComboboxInput
-                    className="input-field"
-                    onChange={(event) => {
-                      setQuery(event.target.value)
-                    }}
-                    displayValue={(rm: RmData) => rm ? `${rm.first_name} ${rm.last_name ?? ''}`.trim() : ''}
-                    placeholder={t.text.selectRm}
-                  />
-                </ComboboxButton>
+            <Combobox value={selectedRm} onChange={(data) => {
+              setSelectedRm(data)
+            }} as="div" className="combobox-container">
+              <ComboboxButton className="combobox-button">
+                <ComboboxInput
+                  className="input-field"
+                  onChange={(event) => {
+                    setQuery(event.target.value)
+                  }}
+                  displayValue={(rm: RmData) => rm ? `${rm.first_name} ${rm.last_name ?? ''}`.trim() : ''}
+                  placeholder={t.text.selectRm}
+                />
+              </ComboboxButton>
 
-                <ComboboxOptions className="combobox-options">
+              <ComboboxOptions className="combobox-options">
 
-                  {filteredRmList.length === 0 && query !== '' ? (
-                    // If true, render a non-selectable message
-                    <div className="combobox-no-results">
-                      No results found.
-                    </div>
-                  ) : (
-                    // Otherwise, render the list of options as before
-                    filteredRmList.map((rm: RmData) => (
-                      <ComboboxOption key={rm.id} value={rm} className="combobox-option">
-                        {`${rm.first_name} ${rm.last_name ?? ''}`.trim()}
-                      </ComboboxOption>
-                    ))
-                  )}
+                {filteredRmList.length === 0 && query !== '' ? (
+                  // If true, render a non-selectable message
+                  <div className="combobox-no-results">
+                    No results found.
+                  </div>
+                ) : (
+                  // Otherwise, render the list of options as before
+                  filteredRmList.map((rm: RmData) => (
+                    <ComboboxOption key={rm.id} value={rm} className="combobox-option">
+                      {`${rm.first_name} ${rm.last_name ?? ''}`.trim()}
+                    </ComboboxOption>
+                  ))
+                )}
 
-                </ComboboxOptions>
-              </Combobox>
-            </div>
+              </ComboboxOptions>
+            </Combobox>
+          </div>
 
-            <div className="form-actions mt-2">
-              <Button
-                type="submit"
-                onClick={() => null}
-                text={t.buttons.save}
-                disabled={!selectedRm || isPending}
-              />
-            </div>
-          </form>
+          <div className="form-actions mt-2">
+            <Button
+              type="submit"
+              onClick={() => null}
+              text={t.buttons.save}
+              disabled={!selectedRm || isPending}
+            />
+          </div>
+        </form>
       </div>
     </div>
   );

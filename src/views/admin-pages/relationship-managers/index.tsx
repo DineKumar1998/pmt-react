@@ -5,8 +5,8 @@ import LocationIcon from "@/views/components/icons/table/Locatiion";
 import UserGroupIcon from "@/views/components/icons/table/UserGroup";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
-import type { ColumnDef } from "@tanstack/react-table";
-import React, { useEffect, useState } from "react";
+import type { ColumnDef, SortingState } from "@tanstack/react-table";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import AddCircle from "@/views/components/icons/AddCircle";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
@@ -15,6 +15,8 @@ import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 
 import "./index.scss";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
+import { debounce } from "@/utils/methods";
 
 type RM = {
   id: number;
@@ -26,6 +28,7 @@ type RM = {
 };
 
 const RelationshipManagerPage: React.FC = () => {
+  const { addBreadcrumb } = useBreadcrumbs()
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const itemsPerPage = 10;
@@ -35,7 +38,7 @@ const RelationshipManagerPage: React.FC = () => {
   const initialPage = parseInt(searchParams.get('page') || '1', 10);
 
   useEffect(() => {
- // Create an object for new search params
+    // Create an object for new search params
     const newSearchParams = new URLSearchParams();
 
     if (queryParams.page > 1) {
@@ -51,7 +54,7 @@ const RelationshipManagerPage: React.FC = () => {
   useEffect(() => {
     const urlPage = parseInt(searchParams.get('page') || '1', 10);
 
-     if (urlPage !== queryParams.page) {
+    if (urlPage !== queryParams.page) {
       setQueryParams(prev => ({
         ...prev,
         page: urlPage,
@@ -64,6 +67,7 @@ const RelationshipManagerPage: React.FC = () => {
     page: initialPage,
     pageSize: itemsPerPage,
     search: "",
+    sortDir: null,
   });
 
   const columns: ColumnDef<RM>[] = [
@@ -78,8 +82,9 @@ const RelationshipManagerPage: React.FC = () => {
         const { id, name } = row.original;
         return <div>
           <NavLink
-            to={`/relationship-managers/edit-rm/${id}`}
+            to={`/relationship-managers/edit?rmId=${id}`}
             className="text-underline"
+            onClick={() => addBreadcrumb({ label: 'Edit', path: `/relationship-managers/edit?rmId=${id}` })}
           >
             {name}
           </NavLink>
@@ -120,9 +125,12 @@ const RelationshipManagerPage: React.FC = () => {
       cell: ({ row }: any) => {
         const { id, clients_assigned_count, name } = row.original;
         return <section className="text-center">
-          <NavLink to={`/relationship-managers/rm?rmId=${id}&rmName=${name}`} className="text-underline">
-          {clients_assigned_count}
-        </NavLink>
+          <NavLink
+            to={`/relationship-managers/${encodeURIComponent(name)}?rmId=${id}`}
+            onClick={() => addBreadcrumb({ label: name, path: `/relationship-managers/${encodeURIComponent(name)}?rmId=${id}` })}
+            className="text-underline">
+            {clients_assigned_count}
+          </NavLink>
         </section>
       },
     },
@@ -131,7 +139,11 @@ const RelationshipManagerPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleAddRM = () => {
-    navigate("/relationship-managers/add-rm");
+    navigate("/relationship-managers/add");
+    addBreadcrumb({
+      label: "Add",
+      path: "/relationship-managers/add",
+    })
   };
 
   const handlePageChange = (pageIndex: number) => {
@@ -184,6 +196,32 @@ const RelationshipManagerPage: React.FC = () => {
     );
   }
 
+  const sortFn = useCallback((dir: SortingState) => {
+    const sort = dir[0];
+
+    const dirLabel = sort ? (sort.desc ? 'desc' : 'asc') : null;
+
+    setQueryParams((prev) => {
+      if (prev.sortDir === dirLabel) {
+        return prev; 
+      }
+      return { ...prev, sort: dirLabel };
+    });
+  }, []); 
+
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        setQueryParams((prev) => ({
+          ...prev,
+          page: 1,
+          search: value ?? "",
+        }));
+      }, 500),
+    []
+  );
+
+
   return (
     <div className="relationship-manager-page">
       <div className="buttons">
@@ -191,19 +229,14 @@ const RelationshipManagerPage: React.FC = () => {
 
         <SearchComponent
           placeholder={`${t.buttons.search}...`}
-          onSearch={(value) => {
-            setQueryParams((prev) => ({
-              ...prev,
-              page: 1,
-              search: value ?? "",
-            }));
-          }}
+          onSearch={(value) => debouncedSearch(value || '')}
         />
 
       </div>
       <Table
         columns={columns}
         data={updatedRmList}
+        onSortChange={sortFn}
         itemsPerPage={itemsPerPage}
         total_rms={total_rms}
         hasNextPage={rmList?.hasNextPage ?? false}

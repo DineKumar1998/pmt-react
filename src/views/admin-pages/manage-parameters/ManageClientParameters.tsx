@@ -13,8 +13,10 @@ import BackArrow from "@/views/components/icons/BackArrow";
 import DownArrow from "@/views/components/icons/DownArrow";
 import { EditIcon } from "@/views/components/icons";
 import EyeIcon from "@/views/components/icons/Eye";
-import "./ManageClientParameters.scss";
 import { toast } from "react-toastify";
+
+import "./ManageClientParameters.scss";
+
 
 const ClientParameters: React.FC = () => {
     const { selectedLang } = useLang();
@@ -287,7 +289,6 @@ const ClientParameters: React.FC = () => {
                                                     onClick={(event) => {
                                                         event.stopPropagation();
                                                         handleEditParameter(param);
-
                                                     }}
                                                 >
                                                     <EyeIcon />

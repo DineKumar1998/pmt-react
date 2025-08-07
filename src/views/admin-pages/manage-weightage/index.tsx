@@ -2,12 +2,13 @@ import SearchComponent from "@/views/components/Search";
 import React, { useState } from "react";
 import { EditIcon, RedirectIcon } from "@/views/components/icons";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query";
 import { getIndustryList } from "@/apis/industry";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import "./index.scss";
 
+import "./index.scss";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 const ManageWeightagePage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,11 +17,18 @@ const ManageWeightagePage: React.FC = () => {
   const [queryParams, setQueryParams] = useState({
     search: "",
   });
+  const { addBreadcrumb } = useBreadcrumbs();
 
-  const openIndustryParametersPage = (industryId: number, industryName: string) => {
-    navigate(`/manage-weightage/industry?industryId=${industryId}&industryName=${industryName}`)
-  }
-
+  const openIndustryParametersPage = (
+    industryId: number,
+    industryName: string
+  ) => {
+    navigate(
+      `/manage-weightage/${encodeURIComponent(
+        industryName
+      )}?industryId=${industryId}`
+    );
+  };
 
   const { data: industryList } = useQuery({
     queryKey: ["industryList", queryParams, selectedLang],
@@ -44,32 +52,64 @@ const ManageWeightagePage: React.FC = () => {
       </div>
 
       <section className="industries-list">
-        {industryList?.length
-          ? industryList.map((industry: any) => (
+        {industryList?.length ? (
+          industryList.map((industry: any) => (
             <div key={industry.id} className="industry-item">
               <div className="industry-name">
                 <div className="main-container">
                   <h2>{industry.name}</h2>
                   <div className="percentages">
-                    <span className="prim">Prim: {industry.primaryPercentage}%</span>
-                    <span className="sec">Sec: {industry.secondaryPercentage}%</span>
+                    <span className="prim">
+                      Prim: {industry.primaryPercentage}%
+                    </span>
+                    <span className="sec">
+                      Sec: {industry.secondaryPercentage}%
+                    </span>
                   </div>
                 </div>
                 <div className="action-container">
-                  <NavLink style={{ textDecoration: 'none' }} to={`/manage-weightage/industry?industryId=${industry.id}&industryName=${industry.name}`} className="redirect-icon" >
+                  <NavLink
+                    style={{ textDecoration: "none" }}
+                    to={`/manage-weightage/${encodeURIComponent(
+                      industry.name
+                    )}?industryId=${industry.id}`}
+                    className="redirect-icon"
+                    onClick={() => {
+                      addBreadcrumb({
+                        label: industry.name,
+                        path: `/manage-weightage/${encodeURIComponent(
+                          industry.name
+                        )}?industryId=${industry.id}`,
+                      });
+                    }}
+                  >
                     <RedirectIcon />
                   </NavLink>
-                  {industry.totalWeightage !== 1000 ?
-                    <span className="edit-icon" onClick={() => openIndustryParametersPage(industry.id, industry.name)}>
+                  {industry.totalWeightage !== 1000 ? (
+                    <NavLink
+                      to={`/manage-weightage/${encodeURIComponent(
+                        industry.name
+                      )}?industryId=${industry.id}`}
+                      onClick={() => {
+                        addBreadcrumb({
+                          label: industry.name,
+                          path: `/manage-weightage/${encodeURIComponent(
+                            industry.name
+                          )}?industryId=${industry.id}`,
+                        });
+                      }}
+                      className="edit-icon"
+                    >
                       <EditIcon fill={"#e46363"} width={18} height={18} />
-                    </span>
-                    : null}
+                    </NavLink>
+                  ) : null}
                 </div>
               </div>
             </div>
           ))
-          : <div className="empty-state">No industries found.</div>
-        }
+        ) : (
+          <div className="empty-state">No industries found.</div>
+        )}
       </section>
     </div>
   );

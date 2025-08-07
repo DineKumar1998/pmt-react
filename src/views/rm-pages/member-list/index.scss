@@ -1,9 +1,10 @@
 @use "../../../styles/variables" as *;
 
-.client-list-page {
+.member-list-page {
     .buttons {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 1rem;
     }
 }
@@ -80,4 +81,27 @@
     }
 
     // .buttons {}
+}
+
+.project-mci-page {
+    .mci-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; // Responsive grid
+        gap: 1rem; // Space between grid items
+        margin-top: 1rem; // Add some space below the title
+
+        
+
+        .mci-grid-item {
+            display: flex;
+            justify-content: space-between;
+
+            border: 1px solid #ddd; // Example border
+            border-radius: 8px; // Rounded corners
+            padding: 1rem; // Inner padding
+            background-color: white; // Light background
+        }
+
+
+    }
 }

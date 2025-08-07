@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getTop5RM } from "@/apis/rm"
 import RedirectForward from "../icons/RedirectForward";
 import { useNavigate } from "react-router-dom";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -16,6 +17,7 @@ export default function RelationshipManagersChart() {
   const t = translations[selectedLang];
   const listLimit = 5;
   const navigate = useNavigate();
+  const {addBreadcrumb} = useBreadcrumbs()
 
 
   const { data: rmList } = useQuery({
@@ -94,6 +96,11 @@ export default function RelationshipManagersChart() {
 
   const openRmPage = () => {
     navigate(`/relationship-managers`)
+    addBreadcrumb({
+      label: "Relationship Managers",
+      path: `/relationship-managers`,
+    });
+
   }
 
   return (

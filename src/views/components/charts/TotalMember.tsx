@@ -5,6 +5,7 @@ import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import RedirectForward from "../icons/RedirectForward";
 import { useNavigate } from "react-router-dom";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -21,6 +22,7 @@ export default function TotalMemberChart({ membersData }: TotalMemberProps) {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const navigate = useNavigate();
+  const {addBreadcrumb} = useBreadcrumbs()
 
   const data = {
     labels: [t.text.clients, t.text.partners],
@@ -32,6 +34,7 @@ export default function TotalMemberChart({ membersData }: TotalMemberProps) {
       },
     ],
   };
+  
 
   const options: any = {
     // layout: {
@@ -58,7 +61,11 @@ export default function TotalMemberChart({ membersData }: TotalMemberProps) {
   };
 
   const openClientListPage = () => {
-    navigate(`/client-list`)
+    navigate(`/member-list`)
+    addBreadcrumb({
+      label: "Member List",
+      path: "/member-list"
+    })
   }
 
   return (

@@ -11,9 +11,10 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { getRMClientList } from "@/apis/rm-portal/client";
 import "./index.scss";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 type Client = {
   id: number;
@@ -37,6 +38,7 @@ const ClientListPage: React.FC = () => {
     search: "",
   });
   const navigate = useNavigate();
+  const {addBreadcrumb} = useBreadcrumbs()
 
   const ProgressBar = ({
     value,
@@ -56,7 +58,7 @@ const ClientListPage: React.FC = () => {
     </div>
   );
 
-  const columns: any = (handleEditClick: any, handleProjectsClick: any) =>
+  const columns: any = () =>
     [
       {
         accessorKey: "client_name",
@@ -138,13 +140,14 @@ const ClientListPage: React.FC = () => {
           </>
         ),
         cell: ({ row }: any) => {
-          const { project_count, id } = row.original;
-          return <div
-            onClick={() => handleProjectsClick(id)}
-            style={{ cursor: "pointer", textAlign: "center", width: "50%" }}
+          const { project_count, id, client_name } = row.original;
+          return <NavLink to={`/members-list/${client_name}?memberId=${id}`} className={'text-underline'}
+          onClick={()=>{
+            addBreadcrumb({label: client_name, path: `/members-list/${encodeURIComponent(client_name)}?memberId=${id}`})
+          }}
           >
             {project_count}
-          </div>;
+          </NavLink>;
         },
         size: 80,
       },
@@ -157,14 +160,16 @@ const ClientListPage: React.FC = () => {
         ),
         cell: ({ row }: any) => {
           const { id, client_name } = row.original;
-          return <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
+          return <NavLink to={`/members-list/${client_name}/parameters?clientId=${id}`}
+           onClick={()=>{
+            addBreadcrumb({label: client_name, path: `/members-list/${encodeURIComponent(client_name)}/parameters?clientId=${id}`})
+           }}
+           className={'text-underline'}>
             <EditIcon
-              onClick={() => handleEditClick(id, client_name)}
               width={18}
               height={18}
-              style={{ cursor: "pointer" }}
             />
-          </div>;
+          </NavLink>;
         },
         size: 80,
       },
@@ -177,11 +182,8 @@ const ClientListPage: React.FC = () => {
     }));
   };
 
-  const handleProjectsClick = (id: number) => {
-    navigate(`/client-list/projects/${id}`);
-  };
   const handleEditClick = (id: number, clientName: string) => {
-    navigate(`/client-list/parameters?clientId=${id}&clientName=${clientName}`)
+    navigate(`/members-list/parameters?clientId=${id}&clientName=${clientName}`)
   };
 
   const { data: clientList } = useQuery({
@@ -222,7 +224,7 @@ const ClientListPage: React.FC = () => {
     );
   }
   return (
-    <div className="client-list-page">
+    <div className="member-list-page">
       <div className="buttons">
         <SearchComponent
           placeholder={`${t.buttons.search}...`}
@@ -236,7 +238,7 @@ const ClientListPage: React.FC = () => {
         />
       </div>
       <Table
-        columns={columns(handleEditClick, handleProjectsClick)}
+        columns={columns()}
         data={updatedClientList}
         itemsPerPage={itemsPerPage}
         total_rms={total_clients}

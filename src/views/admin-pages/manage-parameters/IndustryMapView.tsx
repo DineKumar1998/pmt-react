@@ -6,11 +6,13 @@ import { BackButton } from "@/views/components/BackButton";
 import Button from "@/views/components/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import "./index.scss";
 import { useEffect } from "react";
+
+import "./index.scss";
+
 
 
 type FormValues = {
@@ -24,6 +26,11 @@ const IndustryMapView = () => {
     const t = translations[selectedLang];
 
     const { parameterId } = useParams();
+    const [ searchParams ] = useSearchParams();
+
+    const parameterName = searchParams.get("parameterName") || "";
+
+    console.log(searchParams)
 
     // 1. Initialize React Hook Form
     const {
@@ -84,9 +91,9 @@ const IndustryMapView = () => {
     }
 
     return <div className="industry-mapping-view">
-        <div className="d-flex">
+        <div className="d-flex mb-2">
             <BackButton />
-            <p>{t.text.chooseIndustry}</p>
+            <h3><span>Parameter: </span> {parameterName}</h3>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>

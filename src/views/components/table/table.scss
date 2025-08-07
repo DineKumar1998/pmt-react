@@ -8,10 +8,6 @@
     .table.table-scroll {
         width: 100%;
         overflow-x: auto;
-
-        table {
-            min-width: 900px;
-        }
     }
 
     table {
@@ -21,40 +17,41 @@
         background-color: $white;
         color: $black;
         table-layout: fixed;
+        /* This is correct! */
 
         thead {
             background-color: $primary;
             color: $white;
 
             th {
-                height: 3.25rem ;
+                height: 3.25rem;
                 box-sizing: border-box;
                 padding: 0.5rem 1rem;
                 text-align: left;
                 font-weight: normal;
-                /* width: 1%; */
-                white-space: normal;
-                word-break: break-word;
 
-                >.table-header {
-                    max-width: 150px;
+                // The th itself is no longer a flex container
+                .th-content {
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+
+                .table-header {
+                    // The wrapper for the title and icon
                     display: flex;
                     align-items: center;
                     gap: 0.5rem;
-
-                    svg {
-                        flex-shrink: 0;
-                    }
+                    overflow: hidden; // Hide overflow within the header text
 
                     span.title {
                         white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                     }
                 }
-            }
-
-            .sorted {
-                display: flex;
-                align-items: center;
             }
         }
 
@@ -62,7 +59,6 @@
             .empty-state {
                 text-align: center;
                 padding: 1rem;
-
                 color: gray;
             }
 
@@ -70,10 +66,14 @@
                 td.table-cell {
                     padding: 0.5rem 1rem;
                     border-bottom: 1px solid $border-color-light;
-                    width: 1%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
 
-                    white-space: normal;
-                    word-break: break-word;
+                    &.address-cell {
+                        white-space: normal;
+                        word-break: break-word;
+                    }
 
                     a {
                         text-decoration: none;
@@ -81,8 +81,6 @@
                     }
                 }
             }
-
-
         }
     }
 
@@ -134,7 +132,6 @@
             svg {
                 height: 20px;
                 width: 16px;
-                margin-top: 4px;
                 object-fit: contain;
                 fill: currentColor;
             }

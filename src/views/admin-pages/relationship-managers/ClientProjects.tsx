@@ -8,10 +8,11 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { NavLink, useSearchParams } from "react-router-dom";
+import { NavLink, useParams, useSearchParams } from "react-router-dom";
 import { getRMClientProjects } from "@/apis/client";
 import MciIndexIcon from "@/views/components/icons/table/MCI";
 import { BackButton } from "@/views/components/BackButton";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 import "./index.scss";
 
@@ -28,10 +29,14 @@ type Client = {
 };
 
 const ClientProjects: React.FC = () => {
+    const { addBreadcrumb } = useBreadcrumbs();
     const { selectedLang } = useLang();
     const t = translations[selectedLang];
     const [searchParams] = useSearchParams();
-    const clientId = searchParams.get("clientId")
+    const memberId = searchParams.get("memberId");
+
+    const { memberName = '', rmName = '' } = useParams();
+
     const itemsPerPage = 10;
     const [queryParams, setQueryParams] = useState({
         page: 1,
@@ -79,9 +84,11 @@ const ClientProjects: React.FC = () => {
             ),
             size: 80,
             cell: (info: any) => {
+                const { name, id } = info.row.original;
                 return (
                     <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
-                        <NavLink to={`/client-list/projects/mci?clientId=${clientId}&projectId=${info.row.original.id}`}>
+                        <NavLink onClick={() => addBreadcrumb({ label: name, path: `/relationship-managers/${encodeURIComponent(rmName)}/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?clientId=${memberId}&projectId=${id}` })}
+                            to={`/relationship-managers/${encodeURIComponent(rmName)}/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?clientId=${memberId}&projectId=${id}`}>
                             <MciIndexIcon
                                 width={20}
                                 height={20}
@@ -94,6 +101,8 @@ const ClientProjects: React.FC = () => {
         },
     ];
 
+    // /member-list/:memberName/:projectName
+
     const handlePageChange = (pageIndex: number) => {
         setQueryParams((prev) => ({
             ...prev,
@@ -104,8 +113,8 @@ const ClientProjects: React.FC = () => {
     const { data: projectsList } = useQuery({
         queryKey: ["projectsList", queryParams, selectedLang],
         queryFn: () =>
-            getRMClientProjects(+clientId!, { ...queryParams, language: selectedLang }),
-        enabled: !!clientId,
+            getRMClientProjects(+memberId!, { ...queryParams, language: selectedLang }),
+        enabled: !!memberId,
     });
 
     const total_projects = projectsList?.totalCount ?? 0;
@@ -116,11 +125,12 @@ const ClientProjects: React.FC = () => {
     }
 
     return (
-        <div className="client-list-page">
+        <div className="rm-projects-list-page">
             <div className="buttons">
-                <BackButton 
-                    title="Back"
-                />
+                <div className="d-flex">
+                    <BackButton title="Back" />
+                    <h4>Project list</h4>
+                </div>
                 <SearchComponent
                     placeholder={`${t.buttons.search}...`}
                     onSearch={(value) => {

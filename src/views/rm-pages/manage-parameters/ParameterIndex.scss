@@ -246,7 +246,6 @@
 .add-parameter-form {
     background-color: $white;
     border-radius: 0.5rem;
-    min-height: 400px;
 
     h2 {
         color: $black;
@@ -355,8 +354,7 @@
             .outer-container {
                 display: flex;
                 flex-direction: column;
-                // height: 100%;
-                min-height: 400px;
+                height: 100%;
             }
 
             .form-container {
@@ -445,7 +443,6 @@
                         svg {
                             height: 25px;
                             width: 25px;
-                            margin-top: 5px;
                             object-fit: contain;
                             fill: currentColor;
                         }
@@ -506,12 +503,11 @@
                     font-weight: 700;
                 }
 
-                li {
+                a {
+                    text-decoration: none;
+                    color: $primary;
+                    display: block;
                     margin-top: 0.5rem;
-                }
-
-                li:hover {
-                    cursor: pointer;
                 }
             }
         }

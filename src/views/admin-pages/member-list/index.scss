@@ -1,0 +1,269 @@
+@use "../../../styles/variables" as *;
+
+.member-list-page {
+    .header-section {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        .combobox-container .input-field {
+            border-color: white;
+            padding: 0.75rem;
+            border-radius: 1.5rem;
+            box-shadow: 0px 0px 14px 0px rgba(104, 120, 141, 0.1411764706);
+        }
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        section {
+            display: flex;
+        }
+    }
+
+    .parameter-dropdown-container {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin-left: 1rem;
+
+        .parameter-dropdown-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            width: 12rem;
+            height: 40px;
+            padding: 0.3rem 1.3rem;
+            border-radius: 100px;
+            box-shadow: 0px 0px 8px 0px $border-color-light;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            color: $primary;
+            font-weight: 700;
+            font-size: 14px;
+            background-color: $white;
+
+            svg {
+                margin-top: 0.5rem;
+            }
+        }
+
+        .dropdown-view {
+            position: absolute;
+            z-index: 500;
+            top: 2.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+
+
+            .parameter-dropdown-button {
+                margin-bottom: 0.3rem;
+            }
+        }
+    }
+}
+
+.progress-bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    // flex-direction: column;
+    // align-items: flex-start;
+
+    .progress-bar-container {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+}
+
+.progress-bar {
+    background-color: $progress-bar-bg;
+    width: 60px;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+
+    .progress-bar-fill {
+        height: 100%;
+        background-color: $white;
+    }
+
+    .primary-fill {
+        background-color: $progress-primary-fill;
+    }
+
+    .secondary-fill {
+        background-color: $progress-secondary-fill;
+    }
+}
+
+/* Edit Client */
+.edit-client-page {
+    background-color: $white;
+    border-radius: 1.5rem;
+    padding: clamp(1rem, 4vw, 2rem) clamp(0.75rem, 4vw, 1.5rem);
+
+    h2 {
+        color: $primary;
+    }
+
+    .details-list {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 1rem;
+
+        dd {
+            color: $gray-600;
+
+            a {
+                color: $primary;
+                text-decoration: none;
+            }
+        }
+
+    }
+
+    .edit-client-form {
+
+        .form-field-group {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .combobox-container {
+            margin-inline-start: 2rem;
+        }
+
+        .input-field {
+            padding: 0.7rem 0.75rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            color: $gray-600;
+            max-width: 300px;
+            box-sizing: border-box;
+            background-color: #fafafa;
+            border: 1px solid #f0f0f0;
+        }
+    }
+
+}
+
+.project-mci-page {
+    .mci-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; // Responsive grid
+        gap: 1rem; // Space between grid items
+        margin-top: 1rem; // Add some space below the title
+
+        
+
+        .mci-grid-item {
+            display: flex;
+            justify-content: space-between;
+
+            border: 1px solid #ddd; // Example border
+            border-radius: 8px; // Rounded corners
+            padding: 1rem; // Inner padding
+            background-color: white; // Light background
+
+            .mci-info {
+
+                // Style the MCI name section
+                .d-flex.align-items-center:first-child {
+                    // Target the first flex container (MCI name)
+                    margin-bottom: 0.75rem; // Space below MCI name
+                    font-weight: bold; // Make MCI name bold
+                }
+
+
+                .form-control {
+                    width: 80px; // Set a fixed width for the input
+                    padding: 0.5rem 0.75rem; // Adjust padding
+                    font-size: 0.9rem; // Adjust font size
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    color: #5a6674;
+
+                    &:focus {
+                        border-color: #5a6674; // Highlight border on focus (use your primary color)
+                        outline: 0;
+                        box-shadow: 0 0 0 0.2rem #5a667432; // Add focus ring (adjust color)
+                    }
+
+                    &.is-invalid {
+                        border-color: #dc3545; // Red border for invalid input
+
+                        &:focus {
+                            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25); // Red focus ring
+                        }
+                    }
+                }
+
+
+
+                span.ml-1 {
+                    // Style the '%' sign
+                    margin-left: 0.25rem !important; // Reduce space before %
+                }
+
+
+            }
+
+            .mci-handler-buttons {
+
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+
+                .buttons button {
+                    background-color: transparent;
+                    border: none;
+                    font-size: 20px;
+                    cursor: pointer;
+                    color: gray;
+                    width: 30px;
+                    text-align: center;
+                    height: 30px;
+                    border-radius: 0.5rem;
+
+                    &:hover {
+                        background-color: #f0f0f0;
+                    }
+
+                    &:focus {
+                        background-color: rgba(0, 0, 0, 0.03);
+                    }
+                }
+
+                h2 {
+                    color: #5a6674;
+                    text-align: center;
+                }
+
+
+            }
+        }
+
+
+    }
+
+    .invalid-feedback {
+            display: block; // Ensure error message is displayed
+            width: 100%; // Take full width
+            margin-top: 0.25rem; // Space above error message
+            font-size: 0.75rem; // Smaller font size
+            color: #dc3545; // Red text color
+        }
+}

@@ -80,6 +80,76 @@
     }
 }
 
+.rm-member-list-page, .rm-projects-list-page {
+    .header-section {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        .combobox-container .input-field {
+            border-color: white;
+            padding: 0.75rem;
+            border-radius: 1.5rem;
+            box-shadow: 0px 0px 14px 0px rgba(104, 120, 141, 0.1411764706);
+        }
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        section {
+            display: flex;
+        }
+    }
+
+    .parameter-dropdown-container {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin-left: 1rem;
+
+        .parameter-dropdown-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            width: 12rem;
+            height: 40px;
+            padding: 0.3rem 1.3rem;
+            border-radius: 100px;
+            box-shadow: 0px 0px 8px 0px $border-color-light;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            color: $primary;
+            font-weight: 700;
+            font-size: 14px;
+            background-color: $white;
+
+            svg {
+                margin-top: 0.5rem;
+            }
+        }
+
+        .dropdown-view {
+            position: absolute;
+            z-index: 500;
+            top: 2.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+
+
+            .parameter-dropdown-button {
+                margin-bottom: 0.3rem;
+            }
+        }
+    }
+}
+
 @media (max-width: 768px) {
     .add-rm-form form {
         grid-template-columns: 1fr !important;

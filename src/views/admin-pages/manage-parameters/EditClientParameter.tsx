@@ -12,6 +12,8 @@ import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import BackArrow from "@/views/components/icons/BackArrow";
 import WhiteTick from "@/views/components/icons/WhiteTick";
+
+
 import "./EditClientParameter.scss";
 
 const EditParameter = () => {
@@ -23,8 +25,6 @@ const EditParameter = () => {
     const isEditMode = !!editParamId;
 
     const itemsPerPage = 10;
-    const leftRef = useRef<HTMLDivElement | null>(null);
-    const rightRef = useRef<HTMLDivElement | null>(null);
     const loadMoreRef = useRef(null);
     const itemRefs = useRef<{ [key: number]: HTMLLIElement | null }>({});
     const location = useLocation();
@@ -91,12 +91,6 @@ const EditParameter = () => {
     const triedFetchingRef = useRef(false);
 
     useEffect(() => {
-        // Match height of parameter listing view to form view
-        if (leftRef.current && rightRef.current) {
-            const height = leftRef.current.offsetHeight;
-            rightRef.current.style.height = `${height}px`;
-        }
-
         if (!editParamId || hasScrolledRef.current) return;
 
         const paramId = Number(editParamId);
@@ -196,12 +190,10 @@ const EditParameter = () => {
             },
         });
 
-
     return (
-        <div className="add-parameter-form">
-
+        <div className="edit-client-parameter-page">
             <div className="parent-section">
-                <section className="left-section" ref={leftRef}>
+                <section className="left-section">
                     <form onSubmit={onSubmit} className="outer-container">
                         <div className="form-container">
                             <h2>{`${paramData?.id}. ${paramData?.question}`}</h2>
@@ -215,7 +207,6 @@ const EditParameter = () => {
                                     >
 
                                         <div className="checkbox-container">
-
                                             {selectedOptionIds.includes(option.id) && (
                                                 <WhiteTick width={17} height={17} />
                                             )}
@@ -261,7 +252,6 @@ const EditParameter = () => {
                                 />
                                 <Button
                                     text={t.buttons.save}
-                                    nextIcon={<BackArrow className="rotate-180" />}
                                     type="submit"
                                     disabled={isPrimary}
                                     onClick={() => null}
@@ -271,7 +261,7 @@ const EditParameter = () => {
                     </form>
                 </section>
                 {parameterList.length ?
-                    <section className="parameters-list" ref={rightRef}>
+                    <section className="parameters-list">
                         <ul>
                             {parameterList.map((parameter) =>
                                 <li
@@ -298,9 +288,6 @@ const EditParameter = () => {
                         <div ref={loadMoreRef}></div>
                     </section> : null}
             </div>
-
-
-
         </div>
     );
 };

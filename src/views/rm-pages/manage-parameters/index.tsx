@@ -16,6 +16,7 @@ import { EditIcon } from "@/views/components/icons";
 import { useForm, type FieldError } from "react-hook-form";
 import { toast } from "react-toastify";
 import "./ParameterIndex.scss";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 
 type FormValues = {
@@ -48,6 +49,7 @@ const ManageParametersPage: React.FC = () => {
   const industryId = searchParams.get("industryId");
   const industryName = searchParams.get("industryName");
   const showIndustryWeightage = !!industryId;
+  const {addBreadcrumb} = useBreadcrumbs()
 
   const [totalPages, setTotalPages] = useState<number>(0);
 
@@ -91,10 +93,18 @@ const ManageParametersPage: React.FC = () => {
 
   const handleAddParameter = () => {
     navigate("/manage-parameters/add-parameter");
+    addBreadcrumb({
+      label: "Add",
+      path: "/manage-parameters/add-parameter",
+    });
   };
 
   const handleEditParameter = (paramId: number) => {
     navigate(`/manage-parameters/edit-parameter/${paramId}`)
+    addBreadcrumb({
+      label: "Edit",
+      path: `/manage-parameters/edit-parameter/${paramId}`,
+    });
   }
 
   const handleToggleExpand = (id: number) => {

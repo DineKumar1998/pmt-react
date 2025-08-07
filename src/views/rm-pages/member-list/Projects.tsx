@@ -7,11 +7,15 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { getRMClientProjects } from "@/apis/rm-portal/client";
 import Button from "@/views/components/button";
 import BackArrow from "@/views/components/icons/BackArrow";
 import "./index.scss";
+import ActionIcon from "@/views/components/icons/table/Action";
+import MciIndexIcon from "@/views/components/icons/table/MCI";
+import { BackButton } from "@/views/components/BackButton";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 type Client = {
   id: number;
@@ -28,7 +32,14 @@ type Client = {
 const ClientProjects: React.FC = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
-  const { id } = useParams();
+  const {addBreadcrumb} = useBreadcrumbs()
+ 
+  const { memberName = "" } = useParams();
+
+  const [searchParams] = useSearchParams();
+
+  const id = searchParams.get('memberId') || "";
+
   const navigate = useNavigate()
   const itemsPerPage = 10;
   const [queryParams, setQueryParams] = useState({
@@ -77,6 +88,33 @@ const ClientProjects: React.FC = () => {
         return <div>{row.original.status?.toUpperCase()}</div>;
       },
     },
+    {
+      id: "manageWeightage",
+      header: () => (
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <ActionIcon /> {t.table.mciIndex}
+        </div>
+      ),
+      size: 80,
+      cell: (info: any) => {
+        const { name, id } = info.row.original;
+        return (
+          <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
+            <NavLink to={`/members-list/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?projectId=${id}`}
+              onClick={() => {
+                addBreadcrumb({label: name, path: `/members-list/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?projectId=${id}`})
+              }}
+            >
+              <MciIndexIcon
+                width={20}
+                height={20}
+                style={{ cursor: "pointer" }}
+              />
+            </NavLink>
+          </div>
+        )
+      },
+    },
   ];
 
   const handlePageChange = (pageIndex: number) => {
@@ -98,46 +136,15 @@ const ClientProjects: React.FC = () => {
   let updatedClientList: Client[] = [];
   if (clientList?.data?.length) {
     updatedClientList = clientList.data;
-    // .map(
-    //   ({
-    //     name,
-    //     rm_last_name,
-    //     assigned_date,
-    //     stats,
-    //     ...rest
-    //   }: {
-    //     name: string;
-    //     assigned_date: string | null;
-    //     stats: any | null;
-    //     [key: string]: any;
-    //   }) => ({
-    //     ...rest,
-    //     rm_name: `${project_name} ${(rm_last_name ?? "").trim()}`.trim(),
-    //     assigned_date: assigned_date
-    //       ? new Date(assigned_date).toLocaleString("en-GB", {
-    //           day: "2-digit",
-    //           month: "short",
-    //           year: "numeric",
-    //         })
-    //       : null,
-    //     primary_percentage: stats?.[0]?.primaryPercentage ?? 0,
-    //     secondary_percentage: stats?.[0]?.secondaryPercentage ?? 0,
-    //   })
-    // );
   }
 
-  const backButtonHandler = () => {
-    navigate(-1);
-  };
+
   return (
-    <div className="client-list-page">
+    <div className="member-list-page">
+
       <div className="buttons">
-        <Button
-          text={t.buttons.back}
-          icon={<BackArrow />}
-          onClick={backButtonHandler}
-          className="mr-1"
-        />
+        <BackButton title="Back" />
+
         <SearchComponent
           placeholder={`${t.buttons.search}...`}
           onSearch={(value) => {

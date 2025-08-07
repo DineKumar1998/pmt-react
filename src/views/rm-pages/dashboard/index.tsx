@@ -19,7 +19,7 @@ import "./dashboard.scss";
 
 const Dashboard = () => {
   const { selectedLang } = useLang();
-
+console.log('dashboard')
   const { data: dashboardStats } = useQuery({
     queryKey: ["rm-portal-dashboard", selectedLang],
     queryFn: () => getRMDashboardStats({ language: selectedLang }),

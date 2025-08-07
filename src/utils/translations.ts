@@ -9,6 +9,7 @@ export const translations: any = {
       addParameter: "Add Parameter",
       parameter: "Parameter",
       options: "Options",
+      memberList: "Member List",
       rating: "Rating",
       profileInfo: "Profile Info",
       rmRecentActivity: "Relationship Managers - Recent Activity",
@@ -27,6 +28,8 @@ export const translations: any = {
       id: "ID",
       industry: "Industry",
       address: "Address",
+      type: "Type",
+      level: "Level",
       assignDate: "Assign Date",
       rmAssigned: "RM Assigned",
       projects: "Projects",
@@ -48,7 +51,9 @@ export const translations: any = {
       reverseToIndustryDefault: "Reverse to Industry Default",
       primary: "Primary",
       secondary: "Secondary",
-      cancel: "Cancel"
+      cancel: "Cancel",
+      updateWeights: "Update Weights",
+      updating: "Updating..."
     },
     text: {
       chooseIndustry: "Please choose your Industry",
@@ -120,6 +125,7 @@ export const translations: any = {
       industry: "業界",
       industries: "産業",
       editParameter: "パラメータの編集",
+      memberList: "パラメータの追加",
       addParameter: "パラメータの追加",
       parameter: "パラメータ",
       options: "オプション",
@@ -141,6 +147,8 @@ export const translations: any = {
       id: "ID",
       industry: "業界",
       address: "住所",
+      type: "タイプ",
+      level: "レベル",
       assignDate: "割り当て日",
       rmAssigned: "担当者",
       projects: "プロジェクト数",
@@ -163,7 +171,9 @@ export const translations: any = {
       reverseToIndustryDefault: "業界デフォルトへの逆戻り",
       primary: "主要な",
       secondary: "二次",
-      cancel: "キャンセル"
+      cancel: "キャンセル",
+      updateWeights: "Update Weights",
+      updating: "Updating..."
     },
     text: {
       chooseIndustry: "あなたの業界を選択してください",

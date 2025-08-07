@@ -11,6 +11,7 @@ import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import RedirectForward from "../icons/RedirectForward";
 import { useNavigate } from "react-router-dom";
+import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
@@ -34,6 +35,7 @@ export default function CompletionStatusChart({ industriesStats }: ChartProps) {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const navigate = useNavigate();
+  const {addBreadcrumb} = useBreadcrumbs()
 
   const labels: string[] = [];
   const primaryData: number[] = [];
@@ -131,6 +133,10 @@ export default function CompletionStatusChart({ industriesStats }: ChartProps) {
 
   const openManageWeightagePage = () => {
     navigate(`/manage-weightage`)
+    addBreadcrumb({
+      label: "Manage Weightage",
+      path: "/manage-weightage"
+    })
   }
 
   return (
