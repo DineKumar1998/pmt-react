@@ -1,9 +1,12 @@
 import { AUTH } from "@/utils/constants";
 import axios, { AxiosError } from "axios";
-const API_URL = import.meta.env.VITE_API_BASE_URL;
+// import { Cookies } from "react-cookie";
+// const API_URL = import.meta.env.VITE_API_BASE_URL;
+
+// const cookies = new Cookies()
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: "https://pmt-api.whdev.in/api",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -12,6 +15,7 @@ const api = axios.create({
 
 api.interceptors.response.use(
   (response) => {
+
     return response
   },
   (error) => {
