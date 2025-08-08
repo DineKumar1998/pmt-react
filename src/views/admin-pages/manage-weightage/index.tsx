@@ -1,6 +1,6 @@
 import SearchComponent from "@/views/components/Search";
 import React, { useState } from "react";
-import { EditIcon, RedirectIcon } from "@/views/components/icons";
+import {  RedirectIcon } from "@/views/components/icons";
 import { NavLink } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getIndustryList } from "@/apis/industry";
@@ -11,12 +11,24 @@ import "./index.scss";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 const ManageWeightagePage: React.FC = () => {
+  // const navigate = useNavigate();
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const [queryParams, setQueryParams] = useState({
     search: "",
   });
   const { addBreadcrumb } = useBreadcrumbs();
+
+  // const openIndustryParametersPage = (
+  //   industryId: number,
+  //   industryName: string
+  // ) => {
+  //   navigate(
+  //     `/manage-weightage/${encodeURIComponent(
+  //       industryName
+  //     )}?industryId=${industryId}`
+  //   );
+  // };
 
   const { data: industryList } = useQuery({
     queryKey: ["industryList", queryParams, selectedLang],
@@ -73,7 +85,7 @@ const ManageWeightagePage: React.FC = () => {
                   >
                     <RedirectIcon />
                   </NavLink>
-                  {industry.totalWeightage !== 1000 ? (
+                  {/* {industry.totalWeightage !== 1000 ? (
                     <NavLink
                       to={`/manage-weightage/${encodeURIComponent(
                         industry.name
@@ -90,7 +102,7 @@ const ManageWeightagePage: React.FC = () => {
                     >
                       <EditIcon fill={"#e46363"} width={18} height={18} />
                     </NavLink>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>

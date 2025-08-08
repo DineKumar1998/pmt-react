@@ -358,7 +358,7 @@ const ManageParametersPage: React.FC = () => {
                       <p>
                         {param.id}. {param.question}
                       </p>
-                      {activeTab === "secondary" && !showIndustryWeightage && (
+                      {/* {activeTab === "secondary" && !showIndustryWeightage && ( */}
                         <span
                           className="edit-icon"
                           onClick={(event) => {
@@ -369,7 +369,7 @@ const ManageParametersPage: React.FC = () => {
                         >
                           <EditIcon />
                         </span>
-                      )}
+                      {/* )} */}
                     </div>
                     <div className="parameter-action">
                       {showIndustryWeightage && (

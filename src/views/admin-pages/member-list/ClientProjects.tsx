@@ -4,7 +4,7 @@ import LocationIcon from "@/views/components/icons/table/Locatiion";
 import ActionIcon from "@/views/components/icons/table/Action";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
@@ -16,6 +16,7 @@ import { preserveQueryParams } from "@/utils/queryParams";
 
 import "./index.scss";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
+import type { SortingState } from "@tanstack/react-table";
 
 type Client = {
   id: number;
@@ -42,6 +43,7 @@ const ClientProjects: React.FC = () => {
     page: 1,
     pageSize: itemsPerPage,
     search: "",
+    sortDir:''
   });
 
   const columns: any = [
@@ -141,6 +143,18 @@ const ClientProjects: React.FC = () => {
     updatedProjectsList = projectsList.data;
   }
 
+  const sortFn = useCallback((dir: SortingState) => {
+    const sort = dir[0];
+
+    const dirLabel = sort ? (sort.desc ? "desc" : "asc") : null;
+
+    setQueryParams((prev) => {
+      if (prev.sortDir === dirLabel) {
+        return prev;
+      }
+      return { ...prev, sort: dir[0]?.id?  `${dir[0]?.id}:${dirLabel}` :"" };
+    });
+  }, []);
   return (
     <div className="member-list-page">
       <div className="buttons">
@@ -160,6 +174,7 @@ const ClientProjects: React.FC = () => {
         />
       </div>
       <Table
+        onSortChange={sortFn}
         columns={columns}
         data={updatedProjectsList}
         itemsPerPage={itemsPerPage}

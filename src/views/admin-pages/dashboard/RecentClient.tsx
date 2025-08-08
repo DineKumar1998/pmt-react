@@ -24,6 +24,7 @@ const RecentClient: React.FC = () => {
   const columns: ColumnDef<Client>[] = [
     {
       accessorKey: "client_name",
+      enableSorting:false,
       header: () => (
         <>
           <UserIcon /> {t.table.name}
@@ -32,6 +33,7 @@ const RecentClient: React.FC = () => {
     },
     {
       accessorKey: "industry_name",
+      enableSorting:false,
       header: () => (
         <>
           <BagIcon /> {t.table.industry}
@@ -40,6 +42,7 @@ const RecentClient: React.FC = () => {
     },
     {
       accessorKey: "rm_name",
+      enableSorting:false,
       header: () => (
         <>
           <UserIcon /> {t.table.rm}

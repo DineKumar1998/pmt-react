@@ -8,20 +8,34 @@ import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./context/AuthContext";
 import { CookiesProvider } from "react-cookie";
 import { BreadcrumbProvider } from "./context/Breadcrumb";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+      retry: 1,
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 5,
+    },
+  },
+});
 // ** From Master
 const App = memo(function App() {
   return (
-    <CookiesProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <BreadcrumbProvider>
-            <Router />
-            <ToastContainer hideProgressBar={true} />
-          </BreadcrumbProvider>
-        </BrowserRouter>
-      </AuthProvider>
-    </CookiesProvider>
+    <QueryClientProvider client={queryClient}>
+      <CookiesProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <BreadcrumbProvider>
+              <Router />
+              <ToastContainer hideProgressBar={true} />
+            </BreadcrumbProvider>
+          </BrowserRouter>
+        </AuthProvider>
+      </CookiesProvider>
+    </QueryClientProvider>
   );
 });
 

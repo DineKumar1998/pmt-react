@@ -27,6 +27,7 @@ interface ParameterFormProps {
   disableParamEditing: boolean;
   language: "en" | "jp";
   actions: React.ReactNode; // Pass the action buttons as a prop
+  isPrimary?:boolean
 }
 
 export const ParameterForm = ({
@@ -35,6 +36,7 @@ export const ParameterForm = ({
   disableParamEditing,
   language,
   actions,
+  isPrimary=false
 }: ParameterFormProps) => {
   const t = translations[language];
 
@@ -98,12 +100,13 @@ export const ParameterForm = ({
             control={control}
             name="parameter"
             rules={{ required: true }}
+            disabled={isPrimary}
             render={({ field }) => (
               <ParameterField
                 {...field}
                 placeholder={t.text.enterParameter}
                 className={errors.parameter ? "border-danger" : ""}
-                disabled={disableParamEditing}
+                disabled={disableParamEditing || isPrimary}
                 showDeleteIcon={false}
               />
             )}
@@ -115,7 +118,7 @@ export const ParameterForm = ({
             <div className="outer-label">
               <div className="options-label">
                 <h4>{t.heading.options}</h4>
-                {!disableParamEditing && (
+                {!disableParamEditing || !isPrimary && (
                   <span
                     className="add-option-button"
                     onClick={() =>
@@ -134,10 +137,12 @@ export const ParameterForm = ({
               <h4 className="rating-label">{t.heading.rating}</h4>
             </div>
 
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          {
+            !isPrimary ?  <DndContext   sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
               <SortableContext items={fields.map((f) => f.id)} strategy={verticalListSortingStrategy}>
                 {fields.map((option, index) => (
                   <ParameterSortableItem
+                  isPrimary={isPrimary}
                     key={option.id}
                     id={option.id}
                     index={index}
@@ -150,7 +155,25 @@ export const ParameterForm = ({
                   />
                 ))}
               </SortableContext>
-            </DndContext>
+            </DndContext>  : <div>
+              <SortableContext items={fields.map((f) => f.id)} strategy={verticalListSortingStrategy}>
+                {fields.map((option, index) => (
+                  <ParameterSortableItem
+                  isPrimary={isPrimary}
+                    key={option.id}
+                    id={option.id}
+                    index={index}
+                    control={control}
+                    register={register}
+                    errors={errors}
+                    remove={remove}
+                    disabled={disableParamEditing}
+                    enableDrag={!disableParamEditing}
+                  />
+                ))}
+              </SortableContext>
+            </div>
+          }  
           </div>
         </div>
       </div>

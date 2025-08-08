@@ -84,13 +84,14 @@
 }
 
 .project-mci-page {
+    
     .mci-grid {
         display: grid;
         grid-template-columns: 1fr 1fr; // Responsive grid
         gap: 1rem; // Space between grid items
         margin-top: 1rem; // Add some space below the title
 
-        
+       
 
         .mci-grid-item {
             display: flex;
@@ -100,6 +101,13 @@
             border-radius: 8px; // Rounded corners
             padding: 1rem; // Inner padding
             background-color: white; // Light background
+
+            .mci-info{
+                display: flex;
+                width: 100%;
+                align-items: center;
+                justify-content: space-between;
+            }
         }
 
 

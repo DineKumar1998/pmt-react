@@ -322,14 +322,14 @@ const ClientParameters: React.FC = () => {
                                         <section className="parameter-details">
                                             {!param?.options?.length ?
                                                 <div className="empty-state">No options found.</div>
-                                                : param?.options?.map((option: { id: number, option_text: string}) => (
+                                                : param?.options?.map((option: any) => (
                                                     <div
                                                         key={option.id}
                                                         className={`parameter-option`}
                                                     >
 
                                                         <div className="checkbox-container">
-                                                            {selectedIds.includes(option.id)
+                                                            {selectedIds.includes(Number(option.id))
                                                                 ? <div className="checkbox-filled" />
                                                                 : null}
                                                         </div>

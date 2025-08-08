@@ -27,6 +27,7 @@ const RecentRM: React.FC = () => {
   const columns: ColumnDef<RM>[] = [
     {
       accessorKey: "name",
+      enableSorting:false,
       header: () => (
         <>
           <UserIcon /> {t.table.name}
@@ -47,6 +48,7 @@ const RecentRM: React.FC = () => {
     },
     {
       accessorKey: "last_login",
+      enableSorting:false,
       header: () => (
         <>
           <ClockIcon /> {t.table.lastLogin}
@@ -55,6 +57,7 @@ const RecentRM: React.FC = () => {
     },
     {
       accessorKey: "clients_assigned_count",
+      enableSorting:false,
       header: () => (
         <>
           <UserGroupIcon />{" "}

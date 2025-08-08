@@ -502,6 +502,10 @@
             margin-right: 10px;
         }
     }
+    .industry-list-view.disabled {
+        opacity: 0.5;
+       background-color: rgba(239, 239, 239, 0.3);
+    }
 
 }
 

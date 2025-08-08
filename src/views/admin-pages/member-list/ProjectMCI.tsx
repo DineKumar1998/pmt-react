@@ -130,13 +130,13 @@ const ProjectMCIs: React.FC = () => {
                 <BackButton />
                 <h4>{projectName} - #{projectId}</h4>
             </div>
-
+<span className="note">Note* : Total Maximum weightage should be 100</span>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mci-grid">
                     {fields.map((field, index) => (
                         <div key={field.id} className="mci-grid-item">
                             <div className="mci-info">
-                                <div className="d-flex mb-1">
+                                <div className="d-flex ">
                                     <span><strong>{field.criterion.name}</strong></span>
                                 </div>
 
@@ -163,7 +163,7 @@ const ProjectMCIs: React.FC = () => {
                                 )}
                             </div>
 
-                            <div className="mci-handler-buttons">
+                            {/* <div className="mci-handler-buttons">
                                 <section className="buttons">
                                     <button
                                         type="button"
@@ -197,7 +197,7 @@ const ProjectMCIs: React.FC = () => {
                                     </button>
                                 </section>
                                 <h2>{isNaN(watch().mcis[index]?.weight) ? 0 : watch().mcis[index]?.weight}</h2>
-                            </div>
+                            </div> */}
                         </div>
                     ))}
                 </div>

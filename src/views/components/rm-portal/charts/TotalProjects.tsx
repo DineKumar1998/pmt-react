@@ -4,7 +4,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import RedirectForward from "../../icons/RedirectForward";
-import { NavLink } from "react-router-dom";
+import { NavLink} from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -20,6 +20,7 @@ type TotalMemberProps = {
 export default function TotalMemberChart({ record }: TotalMemberProps) {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
+  // const navigate = useNavigate();
 
   const data = {
     labels: [t.text.active, t.text.closed],

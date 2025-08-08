@@ -9,8 +9,8 @@ import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import AddCircle from "@/views/components/icons/AddCircle";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
-import { useQuery } from '@tanstack/react-query';
-import { getRMList } from '@/apis/rm';
+import { useQuery } from "@tanstack/react-query";
+import { getRMList } from "@/apis/rm";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 
@@ -28,40 +28,39 @@ type RM = {
 };
 
 const RelationshipManagerPage: React.FC = () => {
-  const { addBreadcrumb } = useBreadcrumbs()
+  const { addBreadcrumb } = useBreadcrumbs();
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const itemsPerPage = 10;
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const initialPage = parseInt(searchParams.get('page') || '1', 10);
+  const initialPage = parseInt(searchParams.get("page") || "1", 10);
 
   useEffect(() => {
     // Create an object for new search params
     const newSearchParams = new URLSearchParams();
 
     if (queryParams.page > 1) {
-      newSearchParams.set('page', queryParams.page.toString());
+      newSearchParams.set("page", queryParams.page.toString());
     }
     if (queryParams.search) {
-      newSearchParams.set('search', queryParams.search);
+      newSearchParams.set("search", queryParams.search);
     }
 
     setSearchParams(newSearchParams, { replace: true });
-  }, [])
+  }, []);
 
   useEffect(() => {
-    const urlPage = parseInt(searchParams.get('page') || '1', 10);
+    const urlPage = parseInt(searchParams.get("page") || "1", 10);
 
     if (urlPage !== queryParams.page) {
-      setQueryParams(prev => ({
+      setQueryParams((prev) => ({
         ...prev,
         page: urlPage,
       }));
     }
-
-  }, [])
+  }, []);
 
   const [queryParams, setQueryParams] = useState({
     page: initialPage,
@@ -72,23 +71,30 @@ const RelationshipManagerPage: React.FC = () => {
 
   const columns: ColumnDef<RM>[] = [
     {
-      accessorKey: "name",
+      accessorKey: "first_name",
       header: () => (
         <>
-          <UserIcon />  <span className="title">{t.table.name}</span>
+          <UserIcon /> <span className="title">{t.table.name}</span>
         </>
       ),
       cell: ({ row }: any) => {
         const { id, name } = row.original;
-        return <div>
-          <NavLink
-            to={`/relationship-managers/edit?rmId=${id}`}
-            className="text-underline"
-            onClick={() => addBreadcrumb({ label: 'Edit', path: `/relationship-managers/edit?rmId=${id}` })}
-          >
-            {name}
-          </NavLink>
-        </div>;
+        return (
+          <div>
+            <NavLink
+              to={`/relationship-managers/edit?rmId=${id}`}
+              className="text-underline"
+              onClick={() =>
+                addBreadcrumb({
+                  label: "Edit",
+                  path: `/relationship-managers/edit?rmId=${id}`,
+                })
+              }
+            >
+              {name}
+            </NavLink>
+          </div>
+        );
       },
     },
     {
@@ -119,19 +125,32 @@ const RelationshipManagerPage: React.FC = () => {
       accessorKey: "clients_assigned_count",
       header: () => (
         <>
-          <UserGroupIcon /> <span className="title">{t.table.memberAssigned}</span>
+          <UserGroupIcon />{" "}
+          <span className="title">{t.table.memberAssigned}</span>
         </>
       ),
       cell: ({ row }: any) => {
         const { id, clients_assigned_count, name } = row.original;
-        return <section className="text-center">
-          <NavLink
-            to={`/relationship-managers/${encodeURIComponent(name)}?rmId=${id}`}
-            onClick={() => addBreadcrumb({ label: name, path: `/relationship-managers/${encodeURIComponent(name)}?rmId=${id}` })}
-            className="text-underline">
-            {clients_assigned_count}
-          </NavLink>
-        </section>
+        return (
+          <section className="text-center">
+            <NavLink
+              to={`/relationship-managers/${encodeURIComponent(
+                name
+              )}?rmId=${id}`}
+              onClick={() =>
+                addBreadcrumb({
+                  label: name,
+                  path: `/relationship-managers/${encodeURIComponent(
+                    name
+                  )}?rmId=${id}`,
+                })
+              }
+              className="text-underline"
+            >
+              {clients_assigned_count}
+            </NavLink>
+          </section>
+        );
       },
     },
   ];
@@ -143,7 +162,7 @@ const RelationshipManagerPage: React.FC = () => {
     addBreadcrumb({
       label: "Add",
       path: "/relationship-managers/add",
-    })
+    });
   };
 
   const handlePageChange = (pageIndex: number) => {
@@ -154,9 +173,8 @@ const RelationshipManagerPage: React.FC = () => {
   };
 
   const { data: rmList } = useQuery({
-    queryKey: ['rmList', queryParams, selectedLang],
-    queryFn: () =>
-      getRMList({ ...queryParams, language: selectedLang }),
+    queryKey: ["rmList", queryParams, selectedLang],
+    queryFn: () => getRMList({ ...queryParams, language: selectedLang }),
   });
 
   const total_rms = rmList?.totalCount ?? 0;
@@ -180,18 +198,21 @@ const RelationshipManagerPage: React.FC = () => {
         [key: string]: any;
       }) => ({
         ...rest,
-        name: `${first_name} ${(last_name ?? '').trim()}`.trim(),
+        name: `${first_name} ${(last_name ?? "").trim()}`.trim(),
         last_login: last_login
-          ? new Date(last_login).toLocaleString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-          })
+          ? new Date(last_login).toLocaleString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })
           : null,
-        phone: country_code?.trim() && phone?.trim() ? `${country_code}${phone}` : ""
+        phone:
+          country_code?.trim() && phone?.trim()
+            ? `${country_code}${phone}`
+            : "",
       })
     );
   }
@@ -199,15 +220,15 @@ const RelationshipManagerPage: React.FC = () => {
   const sortFn = useCallback((dir: SortingState) => {
     const sort = dir[0];
 
-    const dirLabel = sort ? (sort.desc ? 'desc' : 'asc') : null;
+    const dirLabel = sort ? (sort.desc ? "desc" : "asc") : null;
 
     setQueryParams((prev) => {
       if (prev.sortDir === dirLabel) {
-        return prev; 
+        return prev;
       }
-      return { ...prev, sort: dirLabel };
+      return { ...prev, sort:  dir[0]?.id?  `${dir[0]?.id}:${dirLabel}` :""};
     });
-  }, []); 
+  }, []);
 
   const debouncedSearch = useMemo(
     () =>
@@ -221,17 +242,19 @@ const RelationshipManagerPage: React.FC = () => {
     []
   );
 
-
   return (
     <div className="relationship-manager-page">
       <div className="buttons">
-        <Button text={t.buttons.addRM} icon={<AddCircle />} onClick={handleAddRM} />
+        <Button
+          text={t.buttons.addRM}
+          icon={<AddCircle />}
+          onClick={handleAddRM}
+        />
 
         <SearchComponent
           placeholder={`${t.buttons.search}...`}
-          onSearch={(value) => debouncedSearch(value || '')}
+          onSearch={(value) => debouncedSearch(value || "")}
         />
-
       </div>
       <Table
         columns={columns}

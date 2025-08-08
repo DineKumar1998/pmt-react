@@ -1,9 +1,9 @@
 import UserIcon from "@/views/components/icons/table/User";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import {
@@ -23,6 +23,7 @@ import { BackButton } from "@/views/components/BackButton";
 
 import "./index.scss";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
+// import { breadcrumbMapping } from "@/utils/breadcrumbs";
 import { debounce } from "@/utils/methods";
 
 type Client = {
@@ -53,10 +54,12 @@ const RmClientsPage: React.FC = () => {
     pageSize: itemsPerPage,
     rmId: rmId ?? "",
     search: "",
+    sortDir:''
   });
   const navigate = useNavigate();
   const [openRmSearchDropdown, setOpenRmSearchDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
 
   useEffect(() => {
     setQueryParams((prev) => ({
@@ -264,6 +267,18 @@ const RmClientsPage: React.FC = () => {
       }, 500),
     []
   );
+  const sortFn = useCallback((dir: SortingState) => {
+    const sort = dir[0];
+
+    const dirLabel = sort ? (sort.desc ? "desc" : "asc") : null;
+
+    setQueryParams((prev) => {
+      if (prev.sortDir === dirLabel) {
+        return prev;
+      }
+      return { ...prev, sort:  dir[0]?.id?  `${dir[0]?.id}:${dirLabel}` :"" };
+    });
+  }, []);
 
   return (
     <div className="rm-member-list-page">
@@ -323,6 +338,7 @@ const RmClientsPage: React.FC = () => {
         </section>
       </div>
       <Table
+      onSortChange={sortFn}
         columns={columns}
         data={updatedClientList}
         itemsPerPage={itemsPerPage}

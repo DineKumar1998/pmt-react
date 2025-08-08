@@ -103,12 +103,13 @@ const EditParameter = () => {
 
     const onSubmit = (data: FormValues) => {
         const formattedData = {
-            question: data.parameter,
+            question: data.parameter || paramData.question,
             options: data.options,
             language,
         };
         editParameterMutate(formattedData);
     };
+    console.log(paramData,'d')
 
     // Memoize initial values to prevent unnecessary re-renders of the form
     const initialValues = useMemo(() => {
@@ -223,7 +224,7 @@ const EditParameter = () => {
                     {selectedIndustryList?.length > 0 && (
                         <div className="mt-1">
                             <p>{t.heading.industry}</p>
-                            <div className="industry-list-view">
+                            <div className={`industry-list-view ${paramData?.is_primary && 'disabled'}`}>
                                 <img
                                     src={FilterIcon}
                                     alt="Filter Icon"
@@ -232,14 +233,14 @@ const EditParameter = () => {
                                 {selectedIndustryList?.map((industry: any) => (
                                     <div className="industry-item" key={industry.id}>
                                         <p>{industry.name}</p>
-                                        <img
+                                        {!paramData?.is_primary &&<img
                                             src={CrossIcon}
                                             alt="Cross Icon"
                                             style={{ marginLeft: "5px", cursor: 'pointer' }}
                                             onClick={() => {
                                                 setState(() => ({ selectedIndustryId: industry.id, isOpen: true }))
                                             }}
-                                        />
+                                        />}
                                     </div>
                                 ))}
                             </div>
@@ -247,6 +248,9 @@ const EditParameter = () => {
                     )}
 
                     <ParameterForm
+                    isPrimary={
+                        paramData?.is_primary
+                    }
                         onSubmit={onSubmit}
                         isEditMode={true}
                         initialValues={initialValues}

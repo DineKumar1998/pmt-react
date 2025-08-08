@@ -38,6 +38,7 @@ const ClientProjects: React.FC = () => {
 
   const id = searchParams.get('memberId') || "";
 
+  // const navigate = useNavigate()
   const itemsPerPage = 10;
   const [queryParams, setQueryParams] = useState({
     page: 1,

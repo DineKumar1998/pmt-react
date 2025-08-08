@@ -25,7 +25,7 @@ const ParameterField = ({
 }: ParameterFieldType) => {
   return (
     <div className="parameter-field">
-      {isShuffleIcon && (
+      {isShuffleIcon && !disabled && (
         <span className="shuffle-icon" {...dragHandleProps}>
           <ShuffleIcon height={22} width={22} />
         </span>

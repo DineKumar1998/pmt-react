@@ -6,8 +6,8 @@ import BagIcon from "@/views/components/icons/table/Bag";
 import EditIcon from "@/views/components/icons/Edit";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
-import type { ColumnDef } from "@tanstack/react-table";
-import React, { useMemo, useState } from "react";
+import type { ColumnDef, SortingState } from "@tanstack/react-table";
+import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getClientList } from "@/apis/client";
 import { useLang } from "@/context/LangContext";
@@ -66,6 +66,7 @@ const ClientListPage: React.FC = () => {
   const t = translations[selectedLang];
   const itemsPerPage = 10;
 
+  // const { rmName = "" } = useParams();
   const [searchParams] = useSearchParams();
 
   const [queryParams, setQueryParams] = useState({
@@ -73,6 +74,7 @@ const ClientListPage: React.FC = () => {
     pageSize: itemsPerPage,
     search: "",
     clientType: "All",
+    sortDir: "",
   });
 
   const columns: ColumnDef<Client>[] = [
@@ -312,7 +314,7 @@ const ClientListPage: React.FC = () => {
     );
   }
 
-const debouncedSearch = useMemo(
+  const debouncedSearch = useMemo(
     () =>
       debounce((value: string) => {
         setQueryParams((prev) => ({
@@ -323,7 +325,18 @@ const debouncedSearch = useMemo(
       }, 500),
     []
   );
+  const sortFn = useCallback((dir: SortingState) => {
+    const sort = dir[0];
 
+    const dirLabel = sort ? (sort.desc ? "desc" : "asc") : null;
+
+    setQueryParams((prev) => {
+      if (prev.sortDir === dirLabel) {
+        return prev;
+      }
+      return { ...prev, sort:  dir[0]?.id?  `${dir[0]?.id}:${dirLabel}` :""};
+    });
+  }, []);
   return (
     <div className="member-list-page">
       <div className="header-section">
@@ -366,10 +379,11 @@ const debouncedSearch = useMemo(
         </Combobox>
         <SearchComponent
           placeholder={`${t.buttons.search}...`}
-          onSearch={(value) => debouncedSearch(value || '')}
+          onSearch={(value) => debouncedSearch(value || "")}
         />
       </div>
       <Table
+        onSortChange={sortFn}
         columns={columns}
         data={updatedClientList}
         itemsPerPage={itemsPerPage}

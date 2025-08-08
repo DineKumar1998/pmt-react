@@ -37,6 +37,7 @@ const ClientListPage: React.FC = () => {
     pageSize: itemsPerPage,
     search: "",
   });
+  // const navigate = useNavigate();
   const {addBreadcrumb} = useBreadcrumbs()
 
   const ProgressBar = ({
@@ -180,6 +181,10 @@ const ClientListPage: React.FC = () => {
       page: pageIndex,
     }));
   };
+
+  // const handleEditClick = (id: number, clientName: string) => {
+  //   navigate(`/members-list/parameters?clientId=${id}&clientName=${clientName}`)
+  // };
 
   const { data: clientList } = useQuery({
     queryKey: ["clientList", queryParams, selectedLang],

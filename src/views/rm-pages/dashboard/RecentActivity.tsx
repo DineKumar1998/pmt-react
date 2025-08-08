@@ -24,6 +24,13 @@ const RecentActivity: React.FC = () => {
   const t = translations[selectedLang];
   const listLimit = 5;
 const {addBreadcrumb} = useBreadcrumbs()
+  // const navigate = useNavigate();
+
+
+  // const handleEditClick = (id: number) => {
+  //   // /members-list/Upsilon%20United?memberId=20
+  //   navigate(`/members-list/projects/${id}`);
+  // };
 
   const columns: ColumnDef<Client>[] = [
     {

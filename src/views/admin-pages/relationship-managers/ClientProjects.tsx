@@ -4,7 +4,7 @@ import LocationIcon from "@/views/components/icons/table/Locatiion";
 import ActionIcon from "@/views/components/icons/table/Action";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
@@ -15,6 +15,7 @@ import { BackButton } from "@/views/components/BackButton";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 import "./index.scss";
+import type { SortingState } from "@tanstack/react-table";
 
 type Client = {
     id: number;
@@ -42,7 +43,21 @@ const ClientProjects: React.FC = () => {
         page: 1,
         pageSize: itemsPerPage,
         search: "",
+        sortDir:""
     });
+
+    const sortFn = useCallback((dir: SortingState) => {
+        const sort = dir[0];
+    
+        const dirLabel = sort ? (sort.desc ? "desc" : "asc") : null;
+    
+        setQueryParams((prev) => {
+          if (prev.sortDir === dirLabel) {
+            return prev;
+          }
+          return { ...prev, sort: dir[0]?.id?  `${dir[0]?.id}:${dirLabel}` :""};
+        });
+      }, []);
 
     const columns: any = [
         {
@@ -144,6 +159,7 @@ const ClientProjects: React.FC = () => {
             </div>
             <Table
                 columns={columns}
+                onSortChange={sortFn}
                 data={updatedProjectsList}
                 itemsPerPage={itemsPerPage}
                 total_rms={total_projects}

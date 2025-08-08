@@ -10,8 +10,8 @@ import Footer from "./Footer";
 
 import "./layout.scss";
 
-
-const Layout: React.FC<LayoutProps> = ({ children, route }) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  // const Layout: React.FC<LayoutProps> = ({ children, route }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -26,21 +26,20 @@ const Layout: React.FC<LayoutProps> = ({ children, route }) => {
 
         {/* Main Layout */}
         {/* Sidebar */}
-        <aside>
-          <LayoutSidebar />
-        </aside>
+
+        <LayoutSidebar />
 
         {/* Main Content */}
         <main className="main-container">
           {/* Header */}
-          <Header breakcrumbPath={route} />
+          {/* <Header breakcrumbPath={route} /> */}
+          <Header />
 
           <Wrapper>
             <div className="main-content">{children}</div>
           </Wrapper>
 
           <Footer />
-
         </main>
 
         {/* Footer */}

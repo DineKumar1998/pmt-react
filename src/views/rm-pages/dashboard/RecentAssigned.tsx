@@ -23,8 +23,14 @@ const RecentClient: React.FC = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const listLimit = 5;
+  // const navigate = useNavigate();
+const {addBreadcrumb} = useBreadcrumbs()
 
-  const {addBreadcrumb} = useBreadcrumbs()
+  // const handleEditClick = (id: number) => {
+  //   navigate(`/members-list/projects/${id}`);
+
+
+  // };
 
   const columns: ColumnDef<Client>[] = [
     {

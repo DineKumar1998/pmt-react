@@ -16,9 +16,10 @@ type ParameterSortableItemProps = {
     remove: (index: number) => void;
     disabled?: boolean;
     enableDrag?: boolean;
+    isPrimary?:boolean
 };
 
-export const ParameterSortableItem = ({ id, index, control, register, errors, remove, disabled, enableDrag }: ParameterSortableItemProps) => {
+export const ParameterSortableItem = ({ id, index, control, register, errors, remove, disabled, enableDrag,isPrimary }: ParameterSortableItemProps) => {
     const {
         attributes,
         listeners,
@@ -50,6 +51,7 @@ export const ParameterSortableItem = ({ id, index, control, register, errors, re
                 control={control}
                 name={`options.${index}.option_text`}
                 rules={{ required: true }}
+                disabled={isPrimary}
                 render={({ field }) => (
                     <ParameterField
                         {...field}
@@ -58,7 +60,7 @@ export const ParameterSortableItem = ({ id, index, control, register, errors, re
                         className={errors.options?.[index]?.option_text ? "border-danger" : ""}
                         removeParameter={() => remove(index)}
                         dragHandleProps={listeners} // 👈 Pass drag handle here
-                        disabled={disabled}
+                        disabled={disabled || isPrimary}
                     />
                 )}
             />

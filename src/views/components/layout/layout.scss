@@ -1,5 +1,7 @@
 @use "../../../styles/variables" as *;
 
+@use "../../../styles/variables" as *;
+
 .main-layout {
     height: 100vh;
     display: grid;
@@ -7,30 +9,71 @@
 
     /* Sidebar */
     .sidebar {
-        width: 100%;
+        width: 280px;
         background-color: $white;
         height: 100%;
         overflow-y: auto;
+        position: relative;
+        transition: width 0.3s ease;
+
+        &.sidebar-collapsed {
+            width: 70px;
+
+            .sidebar-item {
+                justify-content: center;
+            }
+        }
+
+        /* Sidebar Header */
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            height: 90px;
+            box-sizing: border-box;
+            border-bottom: 1px solid $border-color-light;
+        }
 
         /* Sidebar Logo */
         .sidebar-logo {
             text-decoration: none;
             color: $black;
             display: block;
-            padding: 20px;
-            height: 90px;
-            box-sizing: border-box;
 
             h1 {
                 margin-left: 20px;
                 line-height: 1.8;
                 font-size: 2rem;
+                white-space: nowrap;
             }
-
-            border-bottom: 1px solid $border-color-light;
         }
 
-        /* Sideba List */
+        .sidebar-logo-collapsed {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            
+            span {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: $black;
+            }
+        }
+
+        /* Sidebar Toggle Button */
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: $primary;
+            padding: 5px;
+            margin-left: 10px;
+        }
+
+        /* Sidebar List */
         .sidebar-list {
             padding: 0;
             margin-top: 25px;
@@ -62,18 +105,26 @@
                 }
             }
 
-            /* Sidebar List */
+            /* Sidebar Item */
             .sidebar-item {
                 list-style-type: none;
                 padding: 0;
                 margin: 0;
-
                 display: flex;
                 align-items: center;
                 gap: 10px;
+                white-space: nowrap;
+                overflow: hidden;
+
+                svg {
+                    min-width: 24px;
+                }
             }
         }
     }
+
+    // ... rest of your existing SCSS remains the same ...
+
 
     .main-container {
         display: grid;

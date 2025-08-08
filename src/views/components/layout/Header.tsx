@@ -1,16 +1,19 @@
+// import { useState, useEffect, useMemo } from "react";
 import { CalendarIcon } from "../icons";
 import { Link, useLocation } from "react-router-dom";
 import AvatarDropdown from "./UserAvatar";
 import { useLang } from "@/context/LangContext";
 // import { translations } from "@/utils/translations";
+// import { breadcrumbMapping } from "@/utils/breadcrumbs";
 import Wrapper from "../wrapper";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
 
-type HeaderProps = {
-  breakcrumbPath?: string;
-};
+// type HeaderProps = {
+//   breakcrumbPath?: string;
+// };
 
-const Header = ({  }: HeaderProps) => {
+const Header = () => {
+// const Header = ({ breakcrumbPath }: HeaderProps) => {
   const { breadcrumbs } = useBreadcrumbs();
   const locaiton = useLocation();
   const { selectedLang, setSelectedLang } = useLang();
