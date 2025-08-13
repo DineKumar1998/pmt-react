@@ -137,7 +137,7 @@ const RecentRM: React.FC = () => {
     <div className="relationship-manager-page">
       <h2 className="section-title">{t.heading.rmRecentActivity}</h2>
 
-      <Table columns={columns} data={updatedRmList} customColumnWidth={true} />
+      <Table pageIndex={1} columns={columns} data={updatedRmList} customColumnWidth={true} />
     </div>
   );
 };

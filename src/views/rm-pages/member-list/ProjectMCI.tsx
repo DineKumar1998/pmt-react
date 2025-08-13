@@ -57,7 +57,6 @@ const ProjectMCIs: React.FC = () => {
     });
     useEffect(() => {
         if (mcisData?.mcis) {
-            console.log(mcisData.mcis)
             reset({ mcis: mcisData.mcis });
         }
     }, [mcisData, reset]);

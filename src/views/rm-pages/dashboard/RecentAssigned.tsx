@@ -118,7 +118,7 @@ const {addBreadcrumb} = useBreadcrumbs()
 
   return <div className="recent-added-clients-page">
     <h2 className="section-title">{t.heading.clientRecentlyAssigned}</h2>
-    <Table columns={columns} data={updatedClientList} customColumnWidth={true} />
+    <Table pageIndex={1} columns={columns} data={updatedClientList} customColumnWidth={true} />
   </div>
 };
 

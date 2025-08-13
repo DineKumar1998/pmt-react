@@ -35,18 +35,18 @@ const RelationshipManagerPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initialParams = {
-  page: parseInt(searchParams.get("page") || "1", 10),
-  pageSize: parseInt(searchParams.get("pageSize") || itemsPerPage.toString(), 10),
-  search: searchParams.get("search") || "",
-  sort: searchParams.get("sort") || "",
-};
-
-
-
+    page: parseInt(searchParams.get("page") || "1", 10),
+    pageSize: parseInt(
+      searchParams.get("pageSize") || itemsPerPage.toString(),
+      10
+    ),
+    search: searchParams.get("search") || "",
+    sort: searchParams.get("sort") || "",
+  };
 
   // const initialPage = parseInt(searchParams.get("page") || "1", 10);
   const [queryParams, setQueryParams] = useState(initialParams);
-  const [search,setSearch] = useState(queryParams.search)
+  const [search, setSearch] = useState(queryParams.search);
 
   // useEffect(() => {
   //   // Create an object for new search params
@@ -72,47 +72,49 @@ const RelationshipManagerPage: React.FC = () => {
   //     }));
   //   }
   // }, []);
-// Sync state from URL whenever searchParams changes
-useEffect(() => {
-  const paramsFromUrl = {
-    page: parseInt(searchParams.get("page") || "1", 10),
-    pageSize: parseInt(searchParams.get("pageSize") || itemsPerPage.toString(), 10),
-    search: searchParams.get("search") || "",
-    sort: searchParams.get("sort") || "",
-  };
+  // Sync state from URL whenever searchParams changes
+  useEffect(() => {
+    const paramsFromUrl = {
+      page: parseInt(searchParams.get("page") || "1", 10),
+      pageSize: parseInt(
+        searchParams.get("pageSize") || itemsPerPage.toString(),
+        10
+      ),
+      search: searchParams.get("search") || "",
+      sort: searchParams.get("sort") || "",
+    };
 
-  setQueryParams((prev) => {
-    // Only update if something actually changed
-    const changed = Object.entries(paramsFromUrl).some(
-      ([key, value]) => String(prev[key as keyof typeof prev]) !== String(value)
-    );
-    return changed ? { ...prev, ...paramsFromUrl } : prev;
-  });
-}, [searchParams]);
+    setQueryParams((prev) => {
+      // Only update if something actually changed
+      const changed = Object.entries(paramsFromUrl).some(
+        ([key, value]) =>
+          String(prev[key as keyof typeof prev]) !== String(value)
+      );
+      return changed ? { ...prev, ...paramsFromUrl } : prev;
+    });
+  }, [searchParams]);
 
-// Sync state → URL whenever queryParams changes
-useEffect(() => {
-  const newSearchParams = new URLSearchParams();
-  Object.entries(queryParams).forEach(([key, value]) => {
-    if (value !== "" && value !== null && value !== undefined) {
-      newSearchParams.set(key, String(value));
+  // Sync state → URL whenever queryParams changes
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams();
+    Object.entries(queryParams).forEach(([key, value]) => {
+      if (value !== "" && value !== null && value !== undefined) {
+        newSearchParams.set(key, String(value));
+      }
+    });
+    setSearchParams(newSearchParams, { replace: true });
+  }, [queryParams, setSearchParams]);
+
+  useEffect(() => {
+    const urlPage = parseInt(searchParams.get("page") || "1", 10);
+
+    if (urlPage !== queryParams.page) {
+      setQueryParams((prev) => ({
+        ...prev,
+        page: urlPage,
+      }));
     }
-  });
-  setSearchParams(newSearchParams, { replace: true });
-}, [queryParams, setSearchParams]);
-
-
-useEffect(() => {
-  const urlPage = parseInt(searchParams.get("page") || "1", 10);
-
-  if (urlPage !== queryParams.page) {
-    setQueryParams((prev) => ({
-      ...prev,
-      page: urlPage,
-    }));
-  }
-}, []);
-
+  }, []);
 
   const columns: ColumnDef<RM>[] = [
     {
@@ -184,7 +186,7 @@ useEffect(() => {
               )}?rmId=${id}`}
               onClick={() =>
                 addBreadcrumb({
-                  label: name ||'NA',
+                  label: name || "NA",
                   path: `/relationship-managers/${encodeURIComponent(
                     name
                   )}?rmId=${id}`,
@@ -271,7 +273,7 @@ useEffect(() => {
       if (prev.sort === dirLabel) {
         return prev;
       }
-      return { ...prev, sort:  dir[0]?.id?  `${dir[0]?.id}:${dirLabel}` :""};
+      return { ...prev, sort: dir[0]?.id ? `${dir[0]?.id}:${dirLabel}` : "" };
     });
   }, []);
 
@@ -297,15 +299,17 @@ useEffect(() => {
         />
 
         <SearchComponent
-         value={search}
+          value={search}
           placeholder={`${t.buttons.search}...`}
           onSearch={(value) => {
-            setSearch(value || '')
-            debouncedSearch(value || "")}}
+            setSearch(value || "");
+            debouncedSearch(value || "");
+          }}
         />
       </div>
       <Table
         columns={columns}
+        pageIndex={queryParams.page}
         data={updatedRmList}
         onSortChange={sortFn}
         itemsPerPage={itemsPerPage}

@@ -82,6 +82,7 @@ const RecentClient: React.FC = () => {
     <div className="recent-added-clients-page">
       <h2 className="section-title">{t.heading.memberRecentlyAdded}</h2>
       <Table
+      pageIndex={1}
         columns={columns}
         data={updatedClientList}
       />

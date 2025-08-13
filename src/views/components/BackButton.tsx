@@ -11,14 +11,13 @@ type Props = {
 }
 
 export const BackButton = (props: Props) => {
-    const { title, backHandler, backUrl, replace = true } = props;
+    const { title, backHandler, backUrl } = props;
     const navigate = useNavigate();
     
     const handler = () => {
         if (backHandler) {
             backHandler();
         } else if (backUrl) {
-            console.log(backUrl, replace)
             navigate(backUrl);
         } else {
             navigate(-1);

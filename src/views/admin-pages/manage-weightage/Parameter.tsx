@@ -459,13 +459,6 @@ const WeightageParameterPage: React.FC = () => {
                                 // Calculate what the new total would be
                                 const newTotal =
                                   totalWeightage - currentValue + newValue;
-                                // setTotalWeightage(newTotal)
-                                console.log(
-                                  newValue,
-                                  currentValue,
-                                  newTotal,
-                                  totalWeightage
-                                );
                                 // Return true if valid, error message if invalid
                                 return (
                                   newTotal <= 1000 ||

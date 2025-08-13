@@ -35,6 +35,7 @@ interface CommonTableProps<T extends WithId> {
   customColumnWidth?: boolean;
   enableTableScroll?: boolean;
   isRowClickable?: boolean;
+  pageIndex:number
 }
 
 function Table<T extends WithId>({
@@ -48,12 +49,13 @@ function Table<T extends WithId>({
   customColumnWidth,
   enableTableScroll,
   onSortChange,
-  isRowClickable
+  isRowClickable,
+  pageIndex
 }: CommonTableProps<T>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [pagination, setPagination] = React.useState({
-    pageIndex: 0,
+    pageIndex: pageIndex-1,
     pageSize: itemsPerPage || 10,
   });
 

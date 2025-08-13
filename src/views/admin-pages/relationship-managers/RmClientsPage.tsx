@@ -402,6 +402,7 @@ const RmClientsPage: React.FC = () => {
         </section>
       </div>
       <Table
+      pageIndex={queryParams.page}
         onSortChange={sortFn}
         columns={columns}
         data={updatedClientList}

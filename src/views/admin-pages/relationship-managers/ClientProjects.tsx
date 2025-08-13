@@ -158,6 +158,7 @@ const ClientProjects: React.FC = () => {
                 />
             </div>
             <Table
+            pageIndex={queryParams.page}
                 columns={columns}
                 onSortChange={sortFn}
                 data={updatedProjectsList}

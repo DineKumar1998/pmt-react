@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         user_type: userType,
       }),
 
-      { path: "/", expires: new Date(Date.now() + 24 * 60 * 60 * 1000) }
+      { path: "/", expires: new Date(Date.now() + 24 * 60 * 60 * 1000) ,sameSite:'none', httpOnly:true}
     );
   };
 

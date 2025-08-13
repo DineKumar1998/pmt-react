@@ -91,7 +91,6 @@ export const ParameterForm = ({
     }
   };
 
-  console.log(disableParamEditing , !isPrimary)
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="form-container">

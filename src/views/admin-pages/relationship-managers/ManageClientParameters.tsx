@@ -206,7 +206,6 @@ const ClientParameters: React.FC = () => {
       toast.error(message);
     },
   });
-  console.log('lo')
   return (
     <div className="manage-parameters-page">
       <div className="manage-parameters-page__header">

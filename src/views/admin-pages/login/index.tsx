@@ -44,7 +44,6 @@ const Login = () => {
   const { mutateAsync: loginMutate, isPending } = useMutation({
     mutationFn: (body: { email: string; password: string }) => loginUser(body),
     onSuccess: (data: any) => {
-      console.log(data)
       if (data?.error) {
         return toast.error(data.error, {
           hideProgressBar: true,
@@ -119,7 +118,6 @@ const Login = () => {
   //   setValue("captcha", value || "");
   // };
 
-  console.log("Login Page")
 
   return (
     <div className="login-container">

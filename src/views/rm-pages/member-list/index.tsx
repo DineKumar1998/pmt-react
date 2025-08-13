@@ -238,6 +238,7 @@ const ClientListPage: React.FC = () => {
         />
       </div>
       <Table
+      pageIndex={queryParams.page}
         columns={columns()}
         data={updatedClientList}
         itemsPerPage={itemsPerPage}

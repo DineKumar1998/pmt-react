@@ -311,8 +311,8 @@ const ClientListPage: React.FC = () => {
               year: "numeric",
             })
           : null,
-        primary_percentage: stats?.[0]?.primaryPercentage ?? 0,
-        secondary_percentage: stats?.[0]?.secondaryPercentage ?? 0,
+        primary_percentage: stats?.primaryPercentage ?? 0,
+        secondary_percentage: stats?.secondaryPercentage ?? 0,
       })
     );
   }
@@ -336,7 +336,7 @@ const ClientListPage: React.FC = () => {
         10
       ),
       search: searchParams.get("search") || "",
-      sort: searchParams.get("sort") || "",
+      sort: searchParams.get("sort") || queryParams.sort || '',
       clientType: searchParams.get("clientType") || "All",
     };
     setSearch(searchParams.get('search') || '')
@@ -426,6 +426,8 @@ const ClientListPage: React.FC = () => {
         columns={columns}
         data={updatedClientList}
         itemsPerPage={itemsPerPage}
+        pageIndex={queryParams.page}
+        
         total_rms={total_clients}
         hasNextPage={clientList?.hasNextPage ?? false}
         onPageChange={handlePageChange}

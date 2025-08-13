@@ -156,6 +156,7 @@ const ClientProjects: React.FC = () => {
       </div>
       <Table
         columns={columns}
+        pageIndex={queryParams.page}
         data={updatedClientList}
         itemsPerPage={itemsPerPage}
         total_rms={total_clients}
