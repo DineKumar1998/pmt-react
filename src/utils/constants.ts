@@ -14,4 +14,4 @@ export const AUTH = {
 
 export const IndustryScale = ["Startup", "Small", "Medium", "Large"];
 
-export const ClientTypes = ["Member", "Vendor"];
+export const ClientTypes = ["Member", "Client", "Partner"];
