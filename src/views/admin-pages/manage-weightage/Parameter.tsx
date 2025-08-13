@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import Button from "@/views/components/button";
 import {
-  AddCircleIcon,
-  DownloadIcon,
   PlusIcon,
   Justice,
 } from "@/views/components/icons";
@@ -11,7 +9,8 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   getParameterList,
   editParameterWeightages,
-  exportParameterList,
+  // exportParameterList,
+  getParameterWeightages,
 } from "@/apis/parameter";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
@@ -31,6 +30,7 @@ import DownArrow from "@/views/components/icons/DownArrow";
 
 import "./parameter.scss";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
+import { BackButton } from "@/views/components/BackButton";
 
 type FormValues = {
   parameters: {
@@ -58,11 +58,10 @@ const WeightageParameterPage: React.FC = () => {
   const [expandedIds, setExpandedIds] = useState<number[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const industryId = searchParams.get("industryId");
- const {industryName} = useParams()
+  const { industryName } = useParams();
   const selectedTab = searchParams.get("tab");
   const scale = searchParams.get("scale");
   const { addBreadcrumb } = useBreadcrumbs();
-
 
   const [activeTab, setActiveTab] = useState(() => selectedTab || TABS[0].key);
   const showIndustryWeightage = !!industryId;
@@ -76,7 +75,7 @@ const WeightageParameterPage: React.FC = () => {
     industry_id: industryId ?? 0,
   });
 
-  const [selectedScale, setSelectedScale] = useState(scale || "Startup");
+  const [selectedScale, setSelectedScale] = useState(scale || "Medium");
 
   useEffect(() => {
     setQueryParams((prev) => ({
@@ -98,17 +97,17 @@ const WeightageParameterPage: React.FC = () => {
     setSearchParams(newParams, { replace: true });
   };
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
+  // const handleBackClick = () => {
+  //   navigate(-1);
+  // };
 
-  const handleAddParameter = () => {
-    navigate("/manage-parameters/add-parameter");
-    addBreadcrumb({
-      label: "Add",
-      path: "/manage-parameters/add-parameter",
-    });
-  };
+  // const handleAddParameter = () => {
+  //   navigate("/manage-parameters/add-parameter");
+  //   addBreadcrumb({
+  //     label: "Add",
+  //     path: "/manage-parameters/add-parameter",
+  //   });
+  // };
 
   const handleEditParameter = (paramId: number) => {
     navigate(`/manage-parameters/${paramId}`);
@@ -124,36 +123,46 @@ const WeightageParameterPage: React.FC = () => {
     );
   };
 
-  const handleExportParameter = () => {
-    exportParameterMutate({
-      isPrimary: queryParams.isPrimary,
-      language: selectedLang,
-    });
-  };
+  // const handleExportParameter = () => {
+  //   exportParameterMutate({
+  //     isPrimary: queryParams.isPrimary,
+  //     language: selectedLang,
+  //   });
+  // };
 
   const { data: parameterList, refetch: parameterlistRefetch } = useQuery({
-    queryKey: ["parameterList", queryParams, selectedLang],
-    queryFn: () => getParameterList({ ...queryParams, language: selectedLang }),
+    queryKey: ["parameterList", queryParams, selectedLang, selectedScale],
+    queryFn: () =>
+      getParameterList({
+        ...queryParams,
+        language: selectedLang,
+        scale: selectedScale,
+      }),
+  });
+  const { data: weightages } = useQuery({
+    queryKey: ["parameterList", queryParams.industry_id, selectedScale],
+    queryFn: () =>
+      getParameterWeightages(+queryParams.industry_id, selectedScale),
+    enabled: !!queryParams.industry_id,
   });
 
-  const { mutate: exportParameterMutate } = useMutation({
-    mutationFn: (body: any) => exportParameterList(body),
-    onSuccess: (data) => {
-      const url = window.URL.createObjectURL(new Blob([data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "parameters.xlsx"); // set your filename
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    },
-    onError: (error: any) => {
-      const message = error?.message;
-      console.error("exportParameterMutate error =", message);
-      toast.error(message);
-    },
-  });
+  // const { mutate: exportParameterMutate } = useMutation({
+  //   mutationFn: (body: any) => exportParameterList(body),
+  //   onSuccess: (data) => {
+  //     const url = window.URL.createObjectURL(new Blob([data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", "parameters.xlsx"); // set your filename
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     link.remove();
+  //     window.URL.revokeObjectURL(url);
+  //   },
+  //   onError: (error: any) => {
+  //     const message = error?.message;
+  //     toast.error(message);
+  //   },
+  // });
 
   const {
     register,
@@ -168,6 +177,9 @@ const WeightageParameterPage: React.FC = () => {
   });
 
   const initialValues = useRef<{ id: number; weightage: number }[]>([]);
+  const [originalWeightages, setOriginalWeightages] = useState<
+    Record<number, number>
+  >({});
   useEffect(() => {
     if (parameterList?.data.length) {
       const params = parameterList.data.map((param: any) => ({
@@ -176,9 +188,27 @@ const WeightageParameterPage: React.FC = () => {
       }));
       reset({ parameters: params });
       initialValues.current = params;
+      setTotalWeightage(parameterList.totalWeightage);
       setTotalPages(Math.ceil(parameterList.totalCount / parameterList.limit));
     }
   }, [parameterList, reset]);
+
+  useEffect(() => {
+    if (weightages?.result?.length) {
+      const originalValues: Record<number, number> = {};
+      // const params = weightages.result.map((param: any) => {
+      //   originalValues[param.id] = param.weightage;
+      //   return {
+      //     id: param.id,
+      //     weightage: param.weightage ?? 0,
+      //   };
+      // });
+
+      setOriginalWeightages(originalValues);
+      // reset({ parameters: params });
+      setTotalWeightage(weightages.totalWeightage);
+    }
+  }, [weightages, reset]);
 
   // const getParameterNumber = (index: number) => {
   //   return ((queryParams.page - 1) * itemsPerPage) + (index + 1)
@@ -188,7 +218,16 @@ const WeightageParameterPage: React.FC = () => {
     name: "parameters",
     control,
   });
-
+  const [totalWeightage, setTotalWeightage] = useState<number>(0);
+  // useEffect(() => {
+  //   if (watchedParameters) {
+  //     const sum = watchedParameters.reduce(
+  //       (total, param) => total + (param.weightage || 0),
+  //       0
+  //     );
+  //     setTotalWeightage(sum);
+  //   }
+  // }, [watchedParameters]);
   const isFormChanged = useMemo(() => {
     return watchedParameters?.some((param, index) => {
       const initialParam = initialValues.current?.[index];
@@ -199,6 +238,10 @@ const WeightageParameterPage: React.FC = () => {
   }, [watchedParameters]);
 
   const onSubmit = (data: any) => {
+    if (totalWeightage > 1000) {
+      toast.error("Total weightage cannot exceed 1000");
+      return;
+    }
     const currentValues = data.parameters;
     const changedParameters = currentValues.filter(
       (param: any, index: number) => {
@@ -207,6 +250,8 @@ const WeightageParameterPage: React.FC = () => {
     );
     const formattedData = {
       weightages: changedParameters,
+      scale: selectedScale,
+      industryId,
     };
     editParameterWeightagesMutate(formattedData);
   };
@@ -237,58 +282,57 @@ const WeightageParameterPage: React.FC = () => {
 
   return (
     <div className="manage-parameters-page">
-      {showIndustryWeightage && industryName ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-          className="mb-1"
-        >
-          <div className="industry-name-view">
-            <p>{industryName}</p>
-          </div>
-
-          <Combobox
-            value={selectedScale}
-            onChange={(event) => {
-              if (event) {
-                setSelectedScale(event);
-                const scaleParam = new URLSearchParams(searchParams.toString());
-                scaleParam.set("scale", event);
-                setSearchParams(scaleParam);
-              }
-            }}
-            as="div"
-            className="combobox-container"
-          >
-            <ComboboxButton
-              className="combobox-button"
-              style={{ width: "200px" }}
-            >
-              <ComboboxInput
-                className="input-field"
-                aria-label="Scale"
-                placeholder="Select a scale"
-              />
-              <DownArrow height={16} width={16} />
-            </ComboboxButton>
-
-            <ComboboxOptions anchor="bottom" className="combobox-options">
-              {IndustryScale.map((scale: string, index: number) => (
-                <ComboboxOption
-                  key={index}
-                  value={scale}
-                  className="combobox-option"
-                >
-                  {scale}
-                </ComboboxOption>
-              ))}
-            </ComboboxOptions>
-          </Combobox>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+        className="mb-1"
+      >
+        <div className="d-flex ">
+          <BackButton backUrl="/manage-weightage" />
+          <h3>{industryName}</h3>
         </div>
-      ) : null}
+
+        <Combobox
+          value={selectedScale}
+          onChange={(event) => {
+            if (event) {
+              setSelectedScale(event);
+              const scaleParam = new URLSearchParams(searchParams.toString());
+              scaleParam.set("scale", event);
+              setSearchParams(scaleParam);
+            }
+          }}
+          as="div"
+          className="combobox-container"
+        >
+          <ComboboxButton
+            className="combobox-button"
+            style={{ width: "200px" }}
+          >
+            <ComboboxInput
+              className="input-field"
+              aria-label="Scale"
+              placeholder="Select a scale"
+            />
+            <DownArrow height={16} width={16} />
+          </ComboboxButton>
+
+          <ComboboxOptions anchor="bottom" className="combobox-options">
+            {IndustryScale.map((scale: string, index: number) => (
+              <ComboboxOption
+                key={index}
+                value={scale}
+                className="combobox-option"
+              >
+                {scale}
+              </ComboboxOption>
+            ))}
+          </ComboboxOptions>
+        </Combobox>
+      </div>
 
       {/* Two tabs - Primary, Secondary */}
       <div className="tabs">
@@ -307,33 +351,12 @@ const WeightageParameterPage: React.FC = () => {
         </section>
 
         <div className="actions-container">
-          {showIndustryWeightage ? (
-            <div className="weightage-actions">
-              <div className="weightage-view">
-                <Justice />
-                <p>{parameterList?.totalWeightage ?? 0}</p>
-              </div>
-              <Button
-                text={t.buttons.back}
-                icon={<BackArrow />}
-                onClick={handleBackClick}
-              />
+          <div className="weightage-actions">
+            <div className="weightage-view">
+              <Justice />
+              <p>{totalWeightage}</p>
             </div>
-          ) : (
-            <div className="manage-actions">
-              {activeTab === "secondary" && (
-                <Button
-                  text={t.heading.addParameter}
-                  icon={<AddCircleIcon />}
-                  onClick={handleAddParameter}
-                  className="add-parameter-button"
-                />
-              )}
-              <button onClick={handleExportParameter} className="export-button">
-                <DownloadIcon />
-              </button>
-            </div>
-          )}
+          </div>
         </div>
       </div>
 
@@ -376,7 +399,7 @@ const WeightageParameterPage: React.FC = () => {
                         <div className="parameter-weightage">
                           <input
                             type="number"
-                            step="0.1"
+                            step="1"
                             min="0"
                             max="100"
                             onClick={(e) => e.stopPropagation()}
@@ -393,8 +416,61 @@ const WeightageParameterPage: React.FC = () => {
                                 message: "Weightage must be at least 0",
                               },
                               max: {
-                                value: 100,
-                                message: "Weightage must not exceed 100",
+                                value: 1000,
+                                message: "Weightage must not exceed 1000",
+                              },
+                              // Replace the existing onChange handler in your input field with this:
+                              onChange: (e) => {
+                                const newValue = Math.max(
+                                  0,
+                                  Number(e.target.value || 0)
+                                );
+                                const paramId = parameterList.data[index].id;
+                                const originalValue =
+                                  originalWeightages[paramId] || 0;
+
+                                // if (newValue < originalValue) {
+                                //   // subtract the difference
+                                //   const diff = originalValue - newValue;
+                                //   setTotalWeightage((prevTotal) => {
+                                //     // Subtract original value and add new value
+                                //     return prevTotal - diff;
+                                //   });
+                                // }
+
+                                setTotalWeightage((prevTotal) => {
+                                  // Subtract original value and add new value
+                                  return prevTotal - originalValue + newValue;
+                                });
+
+                                // Update the original value tracker
+                                setOriginalWeightages((prev) => ({
+                                  ...prev,
+                                  [paramId]: newValue,
+                                }));
+
+                                return newValue;
+                              },
+                              validate: (value) => {
+                                // Convert to number (in case it's a string)
+                                const newValue = Number(value) || 0;
+                                const currentValue = param.weightage || 0;
+
+                                // Calculate what the new total would be
+                                const newTotal =
+                                  totalWeightage - currentValue + newValue;
+                                // setTotalWeightage(newTotal)
+                                console.log(
+                                  newValue,
+                                  currentValue,
+                                  newTotal,
+                                  totalWeightage
+                                );
+                                // Return true if valid, error message if invalid
+                                return (
+                                  newTotal <= 1000 ||
+                                  "Total weightage would exceed 1000"
+                                );
                               },
                             })}
                           />

@@ -21,5 +21,10 @@
 
 .badge-info {
   background-color: rgba(0,0,0, 0.1);
-  color: black;
+  color: rgba(0,0,0, 0.8);
+}
+
+.badge-warning {
+  background-color: #f7dc6f;
+  color: rgba(0,0,0, 0.8);
 }

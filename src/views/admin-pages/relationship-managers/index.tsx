@@ -32,42 +32,87 @@ const RelationshipManagerPage: React.FC = () => {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const itemsPerPage = 10;
-
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const initialPage = parseInt(searchParams.get("page") || "1", 10);
+  const initialParams = {
+  page: parseInt(searchParams.get("page") || "1", 10),
+  pageSize: parseInt(searchParams.get("pageSize") || itemsPerPage.toString(), 10),
+  search: searchParams.get("search") || "",
+  sort: searchParams.get("sort") || "",
+};
 
-  useEffect(() => {
-    // Create an object for new search params
-    const newSearchParams = new URLSearchParams();
 
-    if (queryParams.page > 1) {
-      newSearchParams.set("page", queryParams.page.toString());
-    }
-    if (queryParams.search) {
-      newSearchParams.set("search", queryParams.search);
-    }
 
-    setSearchParams(newSearchParams, { replace: true });
-  }, []);
 
-  useEffect(() => {
-    const urlPage = parseInt(searchParams.get("page") || "1", 10);
+  // const initialPage = parseInt(searchParams.get("page") || "1", 10);
+  const [queryParams, setQueryParams] = useState(initialParams);
+  const [search,setSearch] = useState(queryParams.search)
 
-    if (urlPage !== queryParams.page) {
-      setQueryParams((prev) => ({
-        ...prev,
-        page: urlPage,
-      }));
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Create an object for new search params
+  //   const newSearchParams = new URLSearchParams();
 
-  const [queryParams, setQueryParams] = useState({
-    page: initialPage,
-    pageSize: itemsPerPage,
-    search: "",
-    sortDir: null,
+  //   if (queryParams.page > 1) {
+  //     newSearchParams.set("page", queryParams.page.toString());
+  //   }
+  //   if (queryParams.search) {
+  //     newSearchParams.set("search", queryParams.search);
+  //   }
+
+  //   setSearchParams(newSearchParams, { replace: true });
+  // }, []);
+
+  // useEffect(() => {
+  //   const urlPage = parseInt(searchParams.get("page") || "1", 10);
+
+  //   if (urlPage !== queryParams.page) {
+  //     setQueryParams((prev) => ({
+  //       ...prev,
+  //       page: urlPage,
+  //     }));
+  //   }
+  // }, []);
+// Sync state from URL whenever searchParams changes
+useEffect(() => {
+  const paramsFromUrl = {
+    page: parseInt(searchParams.get("page") || "1", 10),
+    pageSize: parseInt(searchParams.get("pageSize") || itemsPerPage.toString(), 10),
+    search: searchParams.get("search") || "",
+    sort: searchParams.get("sort") || "",
+  };
+
+  setQueryParams((prev) => {
+    // Only update if something actually changed
+    const changed = Object.entries(paramsFromUrl).some(
+      ([key, value]) => String(prev[key as keyof typeof prev]) !== String(value)
+    );
+    return changed ? { ...prev, ...paramsFromUrl } : prev;
   });
+}, [searchParams]);
+
+// Sync state → URL whenever queryParams changes
+useEffect(() => {
+  const newSearchParams = new URLSearchParams();
+  Object.entries(queryParams).forEach(([key, value]) => {
+    if (value !== "" && value !== null && value !== undefined) {
+      newSearchParams.set(key, String(value));
+    }
+  });
+  setSearchParams(newSearchParams, { replace: true });
+}, [queryParams, setSearchParams]);
+
+
+useEffect(() => {
+  const urlPage = parseInt(searchParams.get("page") || "1", 10);
+
+  if (urlPage !== queryParams.page) {
+    setQueryParams((prev) => ({
+      ...prev,
+      page: urlPage,
+    }));
+  }
+}, []);
+
 
   const columns: ColumnDef<RM>[] = [
     {
@@ -139,7 +184,7 @@ const RelationshipManagerPage: React.FC = () => {
               )}?rmId=${id}`}
               onClick={() =>
                 addBreadcrumb({
-                  label: name,
+                  label: name ||'NA',
                   path: `/relationship-managers/${encodeURIComponent(
                     name
                   )}?rmId=${id}`,
@@ -223,7 +268,7 @@ const RelationshipManagerPage: React.FC = () => {
     const dirLabel = sort ? (sort.desc ? "desc" : "asc") : null;
 
     setQueryParams((prev) => {
-      if (prev.sortDir === dirLabel) {
+      if (prev.sort === dirLabel) {
         return prev;
       }
       return { ...prev, sort:  dir[0]?.id?  `${dir[0]?.id}:${dirLabel}` :""};
@@ -252,8 +297,11 @@ const RelationshipManagerPage: React.FC = () => {
         />
 
         <SearchComponent
+         value={search}
           placeholder={`${t.buttons.search}...`}
-          onSearch={(value) => debouncedSearch(value || "")}
+          onSearch={(value) => {
+            setSearch(value || '')
+            debouncedSearch(value || "")}}
         />
       </div>
       <Table

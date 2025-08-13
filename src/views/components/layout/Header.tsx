@@ -1,25 +1,18 @@
 // import { useState, useEffect, useMemo } from "react";
 import { CalendarIcon } from "../icons";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AvatarDropdown from "./UserAvatar";
 import { useLang } from "@/context/LangContext";
-// import { translations } from "@/utils/translations";
-// import { breadcrumbMapping } from "@/utils/breadcrumbs";
 import Wrapper from "../wrapper";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
 
-// type HeaderProps = {
-//   breakcrumbPath?: string;
-// };
-
 const Header = () => {
-// const Header = ({ breakcrumbPath }: HeaderProps) => {
+  // const Header = ({ breakcrumbPath }: HeaderProps) => {
   const { breadcrumbs } = useBreadcrumbs();
-  const locaiton = useLocation();
+  // const locaiton = useLocation();
   const { selectedLang, setSelectedLang } = useLang();
   // const t = translations[selectedLang];
 
-  console.log(locaiton.pathname, "locaiton");
   // State for current date and time
   const currentDateTime = new Date();
 
@@ -87,76 +80,76 @@ const Header = () => {
     timeZone: "Asia/Kolkata",
   });
 
-  console.log(breadcrumbs);
-
   return (
     <header className="header">
       <Wrapper>
-        <nav className="breadcrumbs">
-          {breadcrumbs.map((breadcrumb, index) => {
-            const isHomeOrDashboard =
-              breadcrumb.path === "/" || breadcrumb.path === "/dashboard";
-            const isOnDashboard = location.pathname === "/dashboard";
-            // Skip rendering if it's the home/dashboard breadcrumb and we're already on dashboard
-            if (isHomeOrDashboard && isOnDashboard) {
-              return (
-                <span className="breadcrumb-current-tab">
-                  {breadcrumb.label}
-                </span>
-              );
-            }
-
-            return (
-              <span key={breadcrumb.path}>
-                {index > 0 && <span> / </span>}
-                {index < breadcrumbs.length - 1 ? (
-                  <Link to={breadcrumb.path} className="breadcrumb-link">
-                    {breadcrumb.label}
-                  </Link>
-                ) : (
-                  <span className="breadcrumb-current-tab">
+        <div className="header-container">
+          <nav className="breadcrumbs">
+            {breadcrumbs.map((breadcrumb, index) => {
+              const isHomeOrDashboard =
+                breadcrumb.path === "/" || breadcrumb.path === "/dashboard";
+              const isOnDashboard = location.pathname === "/dashboard";
+              // Skip rendering if it's the home/dashboard breadcrumb and we're already on dashboard
+              if (isHomeOrDashboard && isOnDashboard) {
+                return (
+                  <span key={index} className="breadcrumb-current-tab">
                     {breadcrumb.label}
                   </span>
-                )}
-              </span>
-            );
-          })}
-        </nav>
+                );
+              }
 
-        <section className="header-nav">
-          <div className="language-toggle">
-            <div className={`active-pill ${selectedLang}`} />
+              return (
+                <span key={breadcrumb.path}>
+                  {index > 0 && <span> / </span>}
+                  {index < breadcrumbs.length - 1 ? (
+                    <Link to={breadcrumb.path} className="breadcrumb-link">
+                      {breadcrumb.label}
+                    </Link>
+                  ) : (
+                    <span className="breadcrumb-current-tab">
+                      {breadcrumb.label}
+                    </span>
+                  )}
+                </span>
+              );
+            })}
+          </nav>
 
-            <button
-              className={selectedLang === "jp" ? "active" : ""}
-              onClick={() => {
-                setSelectedLang("jp");
-              }}
-            >
-              日本語
-            </button>
-            <button
-              className={selectedLang === "en" ? "active" : ""}
-              onClick={() => {
-                setSelectedLang("en");
-              }}
-            >
-              English
-            </button>
-          </div>
+          <section className="header-nav">
+            <div className="language-toggle">
+              <div className={`active-pill ${selectedLang}`} />
 
-          {/* Right side */}
-          <div className="right-section">
-            <CalendarIcon />
-            <p className="datetime">
-              <span>{formattedDate}</span>, <span>{formattedTime}</span>
-            </p>
+              <button
+                className={selectedLang === "jp" ? "active" : ""}
+                onClick={() => {
+                  setSelectedLang("jp");
+                }}
+              >
+                日本語
+              </button>
+              <button
+                className={selectedLang === "en" ? "active" : ""}
+                onClick={() => {
+                  setSelectedLang("en");
+                }}
+              >
+                English
+              </button>
+            </div>
 
-            {/* <BellIcon /> */}
+            {/* Right side */}
+            <div className="right-section">
+              <CalendarIcon />
+              <p className="datetime">
+                <span>{formattedDate}</span>, <span>{formattedTime}</span>
+              </p>
 
-            <AvatarDropdown />
-          </div>
-        </section>
+              {/* <BellIcon /> */}
+
+              <AvatarDropdown />
+            </div>
+          </section>
+        </div>
       </Wrapper>
     </header>
   );

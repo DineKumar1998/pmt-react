@@ -14,9 +14,11 @@ const Badge = ({ children, className = "" }: BadgeProps) => {
 const Success = (props: BadgeProps) => <Badge {...props} className="badge-success" />;
 const Danger = (props: BadgeProps) => <Badge {...props} className="badge-danger" />;
 const Info = (props: BadgeProps) => <Badge {...props} className="badge-info" />;
+const Warning = (props: BadgeProps) => <Badge {...props} className="badge-warning" />;
 
 export default Object.assign(Badge, {
   Success,
   Danger,
-  Info
+  Info,
+  Warning
 });

@@ -47,6 +47,7 @@ const ProjectMCIs: React.FC = () => {
         setError,
         register,
         clearErrors,
+        setValue,
         watch,
         formState: { errors, isSubmitting },
         reset
@@ -80,7 +81,6 @@ const ProjectMCIs: React.FC = () => {
 
     useEffect(() => {
         if (mcisData?.mcis) {
-            console.log(mcisData.mcis)
             reset({ mcis: mcisData.mcis });
         }
     }, [mcisData, reset]);
@@ -123,14 +123,20 @@ const ProjectMCIs: React.FC = () => {
             </div>
         );
     }
-
+ const handleWeightChange = (index: number, value: number) => {
+        // Ensure value is not negative
+        const newValue = Math.max(0, value);
+        // Ensure value doesn't exceed 100
+        const clampedValue = Math.min(100, newValue);
+        setValue(`mcis.${index}.weight`, clampedValue);
+    };
     return (
         <div className="project-mci-page">
             <div className="d-flex mb-1 align-items-center">
                 <BackButton />
                 <h4>{projectName} - #{projectId}</h4>
             </div>
-<span className="note">Note* : Total Maximum weightage should be 100</span>
+<span className="note">*Note : Total Maximum weightage should be 100</span>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mci-grid">
                     {fields.map((field, index) => (
@@ -149,6 +155,10 @@ const ProjectMCIs: React.FC = () => {
                                                 min: { value: 0, message: "Weight must be at least 0" },
                                                 max: { value: 100, message: "Weight must be 100 or less" },
                                                 required: true,
+                                                onChange: (e) => {
+                                                const value = parseFloat(e.target.value);
+                                                handleWeightChange(index, isNaN(value) ? 0 : value);
+                                            }
                                             })}
                                         className={`form-control`}
                                         step="1"
@@ -156,12 +166,13 @@ const ProjectMCIs: React.FC = () => {
                                     />
 
                                 </div>
-                                {errors.mcis?.[index]?.weight && (
+                                
+                            </div>
+                            {errors.mcis?.[index]?.weight && (
                                     <div id={`weight-error-${index}`} className="invalid-feedback">
                                         {errors.mcis[index]?.weight?.message}
                                     </div>
                                 )}
-                            </div>
 
                             {/* <div className="mci-handler-buttons">
                                 <section className="buttons">

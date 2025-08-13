@@ -12,7 +12,6 @@ import { NavLink, useParams, useSearchParams } from "react-router-dom";
 import { getRMClientProjects } from "@/apis/client";
 import MciIndexIcon from "@/views/components/icons/table/MCI";
 import { BackButton } from "@/views/components/BackButton";
-import { preserveQueryParams } from "@/utils/queryParams";
 
 import "./index.scss";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
@@ -87,16 +86,7 @@ const ClientProjects: React.FC = () => {
       size: 80,
       cell: (info: any) => {
         const { name, id } = info.row.original;
-        const url = preserveQueryParams(
-          `/member-list/${encodeURIComponent(memberName)}/${encodeURIComponent(
-            name
-          )}`,
-          searchParams,
-          {
-            clientId: memberId ?? "",
-            projectId: id.toString(),
-          }
-        );
+        const url = `/member-list/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?memberId=${memberId}&projectId=${id.toString()}`;
         return (
           <div
             style={{ display: "flex", justifyContent: "center", width: "50%" }}
@@ -159,7 +149,7 @@ const ClientProjects: React.FC = () => {
     <div className="member-list-page">
       <div className="buttons">
         <div className="d-flex">
-          <BackButton backUrl="/member-list" title="Back" />
+          <BackButton />
           <h4>Project list</h4>
         </div>
         <SearchComponent

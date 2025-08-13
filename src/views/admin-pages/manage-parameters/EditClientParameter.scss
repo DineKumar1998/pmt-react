@@ -266,71 +266,71 @@
         }
     }
 
-    .industry-mapping-view {
-        padding: 2rem;
-        color: $primary;
+    // .industry-mapping-view {
+    //     padding: 1.5rem;
+    //     color: $primary;
 
-        .industry-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 16px 24px;
-            margin: 1rem 0;
-        }
+    //     .industry-grid {
+    //         display: grid;
+    //         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    //         gap: 16px 24px;
+    //         margin: 1rem 0;
+    //     }
 
-        .industry-checkbox {
-            display: flex;
-            align-items: center;
-            min-width: 0;
-            white-space: nowrap;
-            padding: 4px 0;
-            cursor: pointer;
+    //     .industry-checkbox {
+    //         display: flex;
+    //         align-items: center;
+    //         min-width: 0;
+    //         white-space: nowrap;
+    //         padding: 4px 0;
+    //         cursor: pointer;
 
-            input[type="checkbox"] {
-                appearance: none;
-                -webkit-appearance: none;
-                width: 17px;
-                height: 17px;
-                border: 1px solid $primary;
-                border-radius: 4px;
-                display: inline-block;
-                position: relative;
-                cursor: pointer;
-                margin-right: 8px;
-            }
+    //         input[type="checkbox"] {
+    //             appearance: none;
+    //             -webkit-appearance: none;
+    //             width: 17px;
+    //             height: 17px;
+    //             border: 1px solid $primary;
+    //             border-radius: 4px;
+    //             display: inline-block;
+    //             position: relative;
+    //             cursor: pointer;
+    //             margin-right: 8px;
+    //         }
 
-            input[type="checkbox"]::before {
-                content: "\2713"; // Unicode tick
-                color: $primary;
-                position: absolute;
-                left: 3px;
-                top: 0;
-                font-size: 12px;
-                display: none;
-            }
+    //         input[type="checkbox"]::before {
+    //             content: "\2713"; // Unicode tick
+    //             color: $primary;
+    //             position: absolute;
+    //             left: 3px;
+    //             top: 0;
+    //             font-size: 12px;
+    //             display: none;
+    //         }
 
-            input[type="checkbox"]:checked::before {
-                display: block;
-            }
-        }
-    }
+    //         input[type="checkbox"]:checked::before {
+    //             display: block;
+    //         }
+    //     }
+    // }
 
-    .industry-list-view {
-        border: 1px solid $secondary;
-        border-radius: 10px;
-        display: flex;
-        flex-wrap: wrap;
-        padding: 8px 15px;
-        margin-top: 5px;
+    // .industry-list-view {
+    //     border: 1px solid $secondary;
+    //     border-radius: 10px;
+    //     display: flex;
+    //     flex-wrap: wrap;
+    //     padding: 8px 15px;
+    //     margin-top: 5px;
 
 
-        .industry-item {
-            color: $primary;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            margin-right: 10px;
-        }
-    }
+    //     .industry-item {
+    //         color: $primary;
+    //         font-size: 13px;
+    //         font-weight: 600;
+    //         display: flex;
+    //         margin-right: 10px;
+    //     }
+    // }
     
 
 }

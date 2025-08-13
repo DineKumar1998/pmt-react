@@ -37,8 +37,8 @@ http://localhost:5173/manage-weightage
 export const breadcrumbMapping = Object.seal({
     'dashboard': 'Dashboard',
     'relationship-managers': "Relationship Managers",
-    'member-list': "Member List",
-    'members-list': "Members List",
+    'member-list': "Company List",
+    'members-list': "Companies List",
     'member-edit': "Edit",
     'edit': "Edit",
     'add': "Add",

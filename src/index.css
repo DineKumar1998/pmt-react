@@ -22,7 +22,7 @@ ul {
   line-height: 28px;
 }
 
-input:disabled{
+input:disabled {
   cursor: not-allowed;
 }
 
@@ -55,7 +55,7 @@ input:disabled{
 
 .combobox-container .input-field {
   padding: 0.5rem;
-  border-radius: 5px;
+  border-radius: 1rem;
   font-size: 0.9rem;
   font-family: inherit;
   outline: none;
@@ -69,18 +69,17 @@ input:disabled{
 .combobox-options {
   position: absolute;
   z-index: 100;
-
-  min-width: 200px;
+  width: 200px;
   margin-top: 4px;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   max-height: 200px;
   overflow-y: auto;
   list-style: none;
   padding: 0;
 }
+
+
 
 .combobox-options .combobox-no-results {
   padding: 0.5rem 0.75rem;
@@ -91,6 +90,7 @@ input:disabled{
 
 .combobox-option {
   padding: 0.5rem 0.75rem;
+  background-color: white;
   cursor: pointer;
   color: #68788d;
   font-size: 0.9rem;

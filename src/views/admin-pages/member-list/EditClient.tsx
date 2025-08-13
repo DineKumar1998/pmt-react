@@ -10,7 +10,6 @@ import { translations } from "@/utils/translations";
 import { toast } from 'react-toastify'
 import { ProgressBar } from ".";
 import { BackButton } from "@/views/components/BackButton";
-import { preserveQueryParams } from "@/utils/queryParams";
 
 import "./index.scss";
 
@@ -75,9 +74,7 @@ const EditClient = () => {
     };
     assignRmMutate(formattedData);
 
-    // Navigate back to member list while preserving query parameters
-    const url = preserveQueryParams('/member-list', searchParams);
-    navigate(url);
+    navigate('/member-list', { replace: true });
   };
 
   // 4. Filter the RM list based on the user's input query

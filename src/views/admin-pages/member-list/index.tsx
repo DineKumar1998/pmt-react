@@ -7,7 +7,7 @@ import EditIcon from "@/views/components/icons/Edit";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getClientList } from "@/apis/client";
 import { useLang } from "@/context/LangContext";
@@ -27,6 +27,7 @@ import { ClientTypes } from "@/utils/constants";
 import { preserveQueryParams } from "@/utils/queryParams";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
 import { debounce } from "@/utils/methods";
+import { MemebrType } from "@/views/components/ui/MemberType";
 
 type Client = {
   id: number;
@@ -67,19 +68,24 @@ const ClientListPage: React.FC = () => {
   const itemsPerPage = 10;
 
   // const { rmName = "" } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search,setSearch] = useState('')
+  const initialParams = {
+    page: parseInt(searchParams.get("page") || "1", 10),
+    pageSize: parseInt(
+      searchParams.get("pageSize") || itemsPerPage.toString(),
+      10
+    ),
+    search: searchParams.get("search") || "",
+    sort: searchParams.get("sort") || "",
+    clientType: searchParams.get("clientType") || "All",
+  };
 
-  const [queryParams, setQueryParams] = useState({
-    page: 1,
-    pageSize: itemsPerPage,
-    search: "",
-    clientType: "All",
-    sortDir: "",
-  });
+  const [queryParams, setQueryParams] = useState(initialParams);
 
   const columns: ColumnDef<Client>[] = [
     {
-      accessorKey: "client_name",
+      accessorKey: "name",
       header: () => (
         <>
           <UserIcon /> {t.table.name}
@@ -101,7 +107,7 @@ const ClientListPage: React.FC = () => {
               })
             }
           >
-            {client_name}
+            {client_name || "NAN"}
           </NavLink>
         );
       },
@@ -109,32 +115,25 @@ const ClientListPage: React.FC = () => {
     },
     {
       accessorKey: "type",
+      enableSorting: false,
       header: () => (
         <>
           <UserIcon /> {t.table.type}
         </>
       ),
-      size: 150,
-      cell: ({ row }: any) => {
-        const { type } = row.original;
-
-        if (type === "Member") {
-          return <Badges.Danger>{type}</Badges.Danger>;
-        } else if (type === "Vendor") {
-          return <Badges.Success>{type}</Badges.Success>;
-        }
-
-        return "--";
-      },
+      size: 80,
+      cell: ({ row }: any) => <MemebrType type={row.original.type} />,
     },
     {
       accessorKey: "level",
+      enableSorting: false,
+
       header: () => (
         <>
           <LocationIcon /> {t.table.level}
         </>
       ),
-      size: 150,
+      size: 100,
       cell: ({ row }: any) => {
         const { level } = row.original;
         if (level != null) {
@@ -151,6 +150,7 @@ const ClientListPage: React.FC = () => {
         </>
       ),
       size: 130,
+      // enableSorting: false,
       cell: ({ row }: any) => {
         const { industry_name } = row.original;
         return <span>{industry_name}</span>;
@@ -158,6 +158,7 @@ const ClientListPage: React.FC = () => {
     },
     {
       id: "status",
+      enableSorting: false,
       header: () => (
         <>
           <LocationIcon /> {t.formLabel.status}
@@ -185,6 +186,7 @@ const ClientListPage: React.FC = () => {
     },
     {
       accessorKey: "address",
+      enableSorting: false,
       header: () => (
         <>
           <LocationIcon /> {t.table.address}
@@ -199,19 +201,20 @@ const ClientListPage: React.FC = () => {
           <UserIcon /> <span className="title"> {t.table.rmAssigned}</span>
         </>
       ),
-      size: 120,
+      size: 100,
     },
     {
       accessorKey: "project_count",
       header: () => (
         <>
-          <TrendingIcon /> <span className="title">{t.table.projects}</span>
+          <TrendingIcon />{" "}
+          <span className="title">{t.table.activeProjects}</span>
         </>
       ),
       cell: ({ row }: any) => {
         const { id, project_count, client_name } = row.original;
         const url = preserveQueryParams(
-          `/member-list/${encodeURIComponent(client_name)}`,
+          `/member-list/${encodeURIComponent(client_name || "NAN")}`,
           searchParams,
           { memberId: id.toString() }
         );
@@ -220,7 +223,7 @@ const ClientListPage: React.FC = () => {
             <NavLink
               onClick={() =>
                 addBreadcrumb({
-                  label: client_name,
+                  label: client_name || "NAN",
                   path: url,
                 })
               }
@@ -232,7 +235,7 @@ const ClientListPage: React.FC = () => {
           </div>
         );
       },
-      size: 80,
+      size: 120,
     },
     {
       id: "action",
@@ -244,11 +247,11 @@ const ClientListPage: React.FC = () => {
       cell: ({ row }: any) => {
         const { id, client_name } = row.original;
         const url = preserveQueryParams(
-          `/member-list/${encodeURIComponent(client_name)}/parameters`,
+          `/member-list/${encodeURIComponent(client_name || 'NA')}/parameters`,
           searchParams,
           {
             clientId: id.toString(),
-            clientName: client_name,
+            clientName: client_name || "NAN",
           }
         );
         return (
@@ -325,16 +328,49 @@ const ClientListPage: React.FC = () => {
       }, 500),
     []
   );
+  useEffect(() => {
+    const paramsFromUrl = {
+      page: parseInt(searchParams.get("page") || "1", 10),
+      pageSize: parseInt(
+        searchParams.get("pageSize") || itemsPerPage.toString(),
+        10
+      ),
+      search: searchParams.get("search") || "",
+      sort: searchParams.get("sort") || "",
+      clientType: searchParams.get("clientType") || "All",
+    };
+    setSearch(searchParams.get('search') || '')
+
+    setQueryParams((prev) => {
+      // Only update if something actually changed
+      const changed = Object.entries(paramsFromUrl).some(
+        ([key, value]) =>
+          String(prev[key as keyof typeof prev]) !== String(value)
+      );
+      return changed ? { ...prev, ...paramsFromUrl } : prev;
+    });
+  }, [searchParams]);
+
+  // Sync state → URL whenever queryParams changes
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams();
+    Object.entries(queryParams).forEach(([key, value]) => {
+      if (value !== "" && value !== null && value !== undefined) {
+        newSearchParams.set(key, String(value));
+      }
+    });
+    setSearchParams(newSearchParams, { replace: true });
+  }, [queryParams, setSearchParams]);
   const sortFn = useCallback((dir: SortingState) => {
     const sort = dir[0];
 
     const dirLabel = sort ? (sort.desc ? "desc" : "asc") : null;
 
     setQueryParams((prev) => {
-      if (prev.sortDir === dirLabel) {
+      if (prev.sort === dirLabel) {
         return prev;
       }
-      return { ...prev, sort:  dir[0]?.id?  `${dir[0]?.id}:${dirLabel}` :""};
+      return { ...prev, sort: dir[0]?.id ? `${dir[0]?.id}:${dirLabel}` : "" };
     });
   }, []);
   return (
@@ -345,9 +381,9 @@ const ClientListPage: React.FC = () => {
           onChange={(event) => {
             if (event) {
               // setSelectedScale(event);
-              // const scaleParam = new URLSearchParams(searchParams.toString());
-              // scaleParam.set('scale', event);
-              // setSearchParams(scaleParam);
+              const scaleParam = new URLSearchParams(searchParams.toString());
+              scaleParam.set("type", event);
+              setSearchParams(scaleParam);
               setQueryParams((prev) => ({ ...prev, clientType: event }));
             }
           }}
@@ -378,8 +414,11 @@ const ClientListPage: React.FC = () => {
           </ComboboxOptions>
         </Combobox>
         <SearchComponent
+          value={search}
           placeholder={`${t.buttons.search}...`}
-          onSearch={(value) => debouncedSearch(value || "")}
+          onSearch={(value) => {
+            setSearch(value || '')
+            debouncedSearch(value || "")}}
         />
       </div>
       <Table

@@ -91,6 +91,7 @@ export const ParameterForm = ({
     }
   };
 
+  console.log(disableParamEditing , !isPrimary)
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="form-container">
@@ -118,7 +119,7 @@ export const ParameterForm = ({
             <div className="outer-label">
               <div className="options-label">
                 <h4>{t.heading.options}</h4>
-                {!disableParamEditing || !isPrimary && (
+                {(!disableParamEditing && !isPrimary) && (
                   <span
                     className="add-option-button"
                     onClick={() =>

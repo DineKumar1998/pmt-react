@@ -3,9 +3,9 @@ import Button from "@/views/components/button";
 
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { createRMValidator, editRMValidator } from "@/validations/rmValidator";
-import { toast } from 'react-toastify'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { createRM, getRMById, editRM, sendNewPassword } from '@/apis/rm';
+import { toast } from "react-toastify";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createRM, getRMById, editRM, sendNewPassword } from "@/apis/rm";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
 import { BackButton } from "@/views/components/BackButton";
@@ -18,12 +18,12 @@ const AddUserForm = () => {
   const t = translations[selectedLang];
 
   const [searchParams] = useSearchParams();
-  const rmId = searchParams.get("rmId")
+  const rmId = searchParams.get("rmId");
 
   const isEditMode = !!rmId;
   const navigate = useNavigate();
 
-  const [isOpen, setOpen] = useState(false)
+  const [isOpen, setOpen] = useState(false);
 
   const [formData, setFormData] = React.useState({
     rmId: "",
@@ -33,7 +33,7 @@ const AddUserForm = () => {
     country_code: "+91",
     phone: "",
     password: "",
-    user_type: "RM"
+    user_type: "RM",
   });
 
   type FormErrors = {
@@ -48,7 +48,6 @@ const AddUserForm = () => {
 
   const [errors, setErrors] = React.useState<FormErrors>({});
 
-
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -56,13 +55,13 @@ const AddUserForm = () => {
   };
 
   // const handleGeneratePassword = () => {
-  //   //OTP will be sent to the RM's email for confirmation. 
+  //   //OTP will be sent to the RM's email for confirmation.
   //   //Only after OTP validation, admin can set the password
   // };
 
   const handleResetPassword = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleSave = () => {
     const parsed = createRMValidator.safeParse(formData);
@@ -71,60 +70,61 @@ const AddUserForm = () => {
       setErrors(fieldErrors as any);
       return;
     }
-    createRmMutate(parsed.data)
+    createRmMutate(parsed.data);
   };
 
   const handleEdit = () => {
     const { password, ...editData } = formData;
-    const parsed = editRMValidator.safeParse(password === "" ? editData : formData);
+    const parsed = editRMValidator.safeParse(
+      password === "" ? editData : formData
+    );
     if (!parsed.success) {
       const fieldErrors = parsed.error.flatten().fieldErrors;
       setErrors(fieldErrors as any);
       return;
     }
-    editRmMutate(parsed.data)
+    editRmMutate(parsed.data);
   };
 
   const { mutate: createRmMutate } = useMutation({
     mutationFn: (body: any) => createRM(body),
     onSuccess: (data) => {
-      toast.success(data?.message)
+      toast.success(data?.message);
       navigate(-1);
     },
     onError: (error: any) => {
       const message = error?.message;
 
-      console.error("createRM error =", message)
-      toast.error(message)
+      console.error("createRM error =", message);
+      toast.error(message);
     },
-  })
+  });
 
   const { mutate: editRmMutate } = useMutation({
     mutationFn: (body: any) => editRM(rmId || "", body),
     onSuccess: (data) => {
-      toast.success(data?.message)
+      toast.success(data?.message);
       navigate(-1);
     },
     onError: (error: any) => {
       const message =
         error?.response?.data?.message ||
         error?.message ||
-        "Something went wrong."
-      console.error("createRM error =", message)
-      toast.error(message)
+        "Something went wrong.";
+      console.error("createRM error =", message);
+      toast.error(message);
     },
-  })
+  });
 
   const { data: rmData } = useQuery({
-    queryKey: ['rmData', rmId, selectedLang],
-    queryFn: () =>
-      getRMById(rmId || "", selectedLang),
+    queryKey: ["rmData", rmId, selectedLang],
+    queryFn: () => getRMById(rmId || "", selectedLang),
     enabled: isEditMode,
   });
 
   const { mutateAsync: sendNewPasswordHandler } = useMutation({
-    mutationFn: () => sendNewPassword(+(rmId ?? ""))
-  })
+    mutationFn: () => sendNewPassword(+(rmId ?? "")),
+  });
 
   useEffect(() => {
     if (rmData) {
@@ -142,10 +142,13 @@ const AddUserForm = () => {
 
   return (
     <div className="add-rm-form">
-      <h2 className="d-flex"> <BackButton /> {isEditMode ? t.routes.editUser : t.routes.addUser}</h2>
+      <h2 className="d-flex">
+        {" "}
+        <BackButton /> {isEditMode ? t.routes.editUser : t.routes.addUser}
+      </h2>
 
       <form>
-        {isEditMode ?
+        {isEditMode ? (
           <div>
             <label className="label">RM ID</label>
             <input
@@ -155,7 +158,8 @@ const AddUserForm = () => {
               className="input-field"
               disabled
             />
-          </div> : null}
+          </div>
+        ) : null}
         <div>
           <label className="label">{t.formLabel.firstName}*</label>
           <input
@@ -166,7 +170,9 @@ const AddUserForm = () => {
             className="input-field"
             placeholder={t.text.enterFirstName}
           />
-          {errors.first_name && <p className="form-error">{errors.first_name}</p>}
+          {errors.first_name && (
+            <p className="form-error">{errors.first_name}</p>
+          )}
         </div>
         <div>
           <label className="label">{t.formLabel.lastName}</label>
@@ -228,9 +234,13 @@ const AddUserForm = () => {
           {errors.phone && <p className="form-error">{errors.phone}</p>}
         </div>
 
-        {!(isEditMode) ?
+        {!isEditMode ? (
           <div>
-            <label className="label">{isEditMode ? `${t.formLabel.resetPassword}` : `${t.formLabel.password}*`}</label>
+            <label className="label">
+              {isEditMode
+                ? `${t.formLabel.resetPassword}`
+                : `${t.formLabel.password}*`}
+            </label>
             <input
               type="password"
               name="password"
@@ -240,18 +250,24 @@ const AddUserForm = () => {
               placeholder={t.text.enterPassword}
             />
             {errors.password && <p className="form-error">{errors.password}</p>}
-          </div> : null}
+          </div>
+        ) : null}
       </form>
 
       <div className="actions">
-        {isEditMode ?
+        {isEditMode ? (
           <Button
             className="generate-password"
             onClick={handleResetPassword}
             text="Generate Password"
-          /> : null}
+          />
+        ) : null}
         <div className="save-cancel-btn">
-          <Button text={t.buttons.save} type="submit" onClick={isEditMode ? handleEdit : handleSave} />
+          <Button
+            text={t.buttons.save}
+            type="submit"
+            onClick={isEditMode ? handleEdit : handleSave}
+          />
         </div>
       </div>
 
@@ -260,9 +276,14 @@ const AddUserForm = () => {
         confirmLabel={`Confirm`}
         onClose={() => setOpen(false)}
         onConfirm={async () => {
-          await sendNewPasswordHandler();
+          const data = await sendNewPasswordHandler();
           setOpen(false);
-          toast.success('New password has been sent to the email address')
+          data
+            ? toast.success(
+                data?.message ||
+                  "New password has been sent to the email address"
+              )
+            : toast.error("Failed to send new password");
         }}
         title="Confirm Password Reset"
         description="Are you sure you want to proceed? A new password will be generated and sent to the Relationship Manager's email address. They will be required to use this new password to log in."

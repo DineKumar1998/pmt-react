@@ -30,6 +30,9 @@ const RecentClient: React.FC = () => {
           <UserIcon /> {t.table.name}
         </>
       ),
+       cell: ({ row }: any) => {
+        const {  name } = row.original;
+        return name || "NA"}
     },
     {
       accessorKey: "industry_name",

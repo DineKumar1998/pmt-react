@@ -102,7 +102,7 @@ const ClientProjects: React.FC = () => {
                 const { name, id } = info.row.original;
                 return (
                     <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
-                        <NavLink onClick={() => addBreadcrumb({ label: name, path: `/relationship-managers/${encodeURIComponent(rmName)}/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?clientId=${memberId}&projectId=${id}` })}
+                        <NavLink onClick={() => addBreadcrumb({ label: name || "NA", path: `/relationship-managers/${encodeURIComponent(rmName)}/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?clientId=${memberId}&projectId=${id}` })}
                             to={`/relationship-managers/${encodeURIComponent(rmName)}/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?clientId=${memberId}&projectId=${id}`}>
                             <MciIndexIcon
                                 width={20}

@@ -27,7 +27,7 @@ const RecentRM: React.FC = () => {
   const columns: ColumnDef<RM>[] = [
     {
       accessorKey: "name",
-      enableSorting:false,
+      enableSorting: false,
       header: () => (
         <>
           <UserIcon /> {t.table.name}
@@ -35,20 +35,27 @@ const RecentRM: React.FC = () => {
       ),
       cell: ({ row }: any) => {
         const { id, name } = row.original;
-        return (
+        return name ? (
           <NavLink
             to={`/relationship-managers/edit-rm/${id}`}
-            onClick={() => addBreadcrumb({ path: `/relationship-managers/edit-rm/${id}`, label: name })}
+            onClick={() =>
+              addBreadcrumb({
+                path: `/relationship-managers/edit-rm/${id}`,
+                label: name || "NA",
+              })
+            }
             className={"text-underline"}
           >
             {name}
           </NavLink>
+        ) : (
+          "NA"
         );
       },
     },
     {
       accessorKey: "last_login",
-      enableSorting:false,
+      enableSorting: false,
       header: () => (
         <>
           <ClockIcon /> {t.table.lastLogin}
@@ -57,7 +64,7 @@ const RecentRM: React.FC = () => {
     },
     {
       accessorKey: "clients_assigned_count",
-      enableSorting:false,
+      enableSorting: false,
       header: () => (
         <>
           <UserGroupIcon />{" "}
@@ -68,13 +75,22 @@ const RecentRM: React.FC = () => {
         const { id, clients_assigned_count, name } = row.original;
         return (
           <div className="text-center">
-            <NavLink
-              to={`/relationship-managers/rm?rmId=${id}&rmName=${name}`}
-              className={"text-underline "}
-              onClick={() => addBreadcrumb({ path: `/relationship-managers/rm?rmId=${id}&rmName=${name}`, label: name })}
-            >
-              {clients_assigned_count}
-            </NavLink>
+            {name ? (
+              <NavLink
+                to={`/relationship-managers/${name}?rmId=${id}`}
+                className={"text-underline "}
+                onClick={() =>
+                  addBreadcrumb({
+                    path: `/relationship-managers/${name || 'NA'}?rmId=${id}`,
+                    label: name || "NA",
+                  })
+                }
+              >
+                {clients_assigned_count}
+              </NavLink>
+            ) : (
+              clients_assigned_count
+            )}
           </div>
         );
       },

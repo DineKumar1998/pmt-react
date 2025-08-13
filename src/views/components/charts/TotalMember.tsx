@@ -63,7 +63,7 @@ export default function TotalMemberChart({ membersData }: TotalMemberProps) {
   const openClientListPage = () => {
     navigate(`/member-list`)
     addBreadcrumb({
-      label: "Member List",
+      label: "Company List",
       path: "/member-list"
     })
   }

@@ -100,7 +100,7 @@ const ClientProjects: React.FC = () => {
           <div style={{ display: "flex", justifyContent: "center", width: "50%" }}>
             <NavLink to={`/members-list/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?projectId=${id}`}
               onClick={() => {
-                addBreadcrumb({label: name, path: `/members-list/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?projectId=${id}`})
+                addBreadcrumb({label: name || "NA", path: `/members-list/${encodeURIComponent(memberName)}/${encodeURIComponent(name)}?projectId=${id}`})
               }}
             >
               <MciIndexIcon

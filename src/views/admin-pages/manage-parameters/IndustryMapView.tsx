@@ -30,7 +30,6 @@ const IndustryMapView = () => {
 
     const parameterName = searchParams.get("parameterName") || "";
 
-    console.log(searchParams)
 
     // 1. Initialize React Hook Form
     const {

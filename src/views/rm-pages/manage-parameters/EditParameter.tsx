@@ -191,7 +191,7 @@ const EditParameter = () => {
 
 
     return (
-        <div className="add-parameter-form">
+        <div className="edit-parameter-form">
 
             <div className="parent-section">
                 <section className="left-section" ref={leftRef}>

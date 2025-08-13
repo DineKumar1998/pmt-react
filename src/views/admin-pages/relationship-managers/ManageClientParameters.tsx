@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Button from "@/views/components/button";
 import { PlusIcon, DownloadIcon } from "@/views/components/icons";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -19,6 +18,7 @@ import { toast } from "react-toastify";
 import "./ManageClientParameters.scss";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
 import { breadcrumbMapping } from "@/utils/breadcrumbs";
+import { BackButton } from "@/views/components/BackButton";
 
 const ClientParameters: React.FC = () => {
   const { selectedLang } = useLang();
@@ -120,9 +120,9 @@ const ClientParameters: React.FC = () => {
     setSearchParams(newParams, { replace: true });
   };
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
+  // const handleBackClick = () => {
+  //   navigate(-1);
+  // };
 
   const handleEditParameter = (param: any) => {
     addBreadcrumb({
@@ -169,7 +169,7 @@ const ClientParameters: React.FC = () => {
   });
   useEffect(() => {
     if (!isSelectedLoading && selectedData) {
-      const ids = selectedData.map((i:any) => i.selected_option_id);
+      const ids = selectedData.map((i: any) => +i.selected_option_id);
       console.log("Initializing form with selected options:", ids);
       setSelectedIds(ids);
     }
@@ -206,9 +206,68 @@ const ClientParameters: React.FC = () => {
       toast.error(message);
     },
   });
-
+  console.log('lo')
   return (
     <div className="manage-parameters-page">
+      <div className="manage-parameters-page__header">
+      <div className="d-flex">
+        <BackButton title="Back" />
+        <h4>{t.heading.parameters}</h4>
+      </div>
+      <div className="actions">
+        {showClientParameterView ? (
+          <>
+            <div className="parameter-dropdown-container" ref={dropdownRef}>
+              <button
+                className="parameter-dropdown-button"
+                onClick={() =>
+                  setOpenParameterSearchDropdown(!openParameterSearchDropdown)
+                }
+              >
+                <p>
+                  {parameterSearchList.find((option) => option.isSelected)
+                    ?.name || ""}
+                </p>
+                <DownArrow width={20} height={20} />
+              </button>
+              {openParameterSearchDropdown && (
+                <div className="dropdown-view">
+                  {parameterSearchList
+                    .filter((option) => !option.isSelected)
+                    .map((option, index) => (
+                      <button
+                        key={index}
+                        className="parameter-dropdown-button option-button"
+                        onClick={() => {
+                          setParameterSearchList((prev) =>
+                            prev.map((opt) => ({
+                              ...opt,
+                              isSelected: opt.id === option.id,
+                            }))
+                          );
+                          setQueryParams((prev) => ({
+                            ...prev,
+                            page: 1,
+                            status: option.value,
+                          }));
+                          setOpenParameterSearchDropdown(false);
+                        }}
+                      >
+                        <p>{option.name}</p>
+                      </button>
+                    ))}
+                </div>
+              )}
+            </div>
+          </>
+        ) : null}
+      </div>
+      </div>
+      {/* <Button
+                text={t.buttons.back}
+                icon={<BackArrow />}
+                onClick={handleBackClick}
+              /> */}
       {/* Two tabs - Primary, Secondary */}
       <div className="tabs">
         <section className="tab-list">
@@ -228,54 +287,6 @@ const ClientParameters: React.FC = () => {
         <div className="actions">
           {showClientParameterView ? (
             <>
-              <Button
-                text={t.buttons.back}
-                icon={<BackArrow />}
-                onClick={handleBackClick}
-              />
-              <div className="parameter-dropdown-container" ref={dropdownRef}>
-                <button
-                  className="parameter-dropdown-button"
-                  onClick={() =>
-                    setOpenParameterSearchDropdown(!openParameterSearchDropdown)
-                  }
-                >
-                  <p>
-                    {parameterSearchList.find((option) => option.isSelected)
-                      ?.name || ""}
-                  </p>
-                  <DownArrow width={20} height={20} />
-                </button>
-                {openParameterSearchDropdown && (
-                  <div className="dropdown-view">
-                    {parameterSearchList
-                      .filter((option) => !option.isSelected)
-                      .map((option, index) => (
-                        <button
-                          key={index}
-                          className="parameter-dropdown-button option-button"
-                          onClick={() => {
-                            setParameterSearchList((prev) =>
-                              prev.map((opt) => ({
-                                ...opt,
-                                isSelected: opt.id === option.id,
-                              }))
-                            );
-                            setQueryParams((prev) => ({
-                              ...prev,
-                              page: 1,
-                              status: option.value,
-                            }));
-                            setOpenParameterSearchDropdown(false);
-                          }}
-                        >
-                          <p>{option.name}</p>
-                        </button>
-                      ))}
-                  </div>
-                )}
-              </div>
-
               <button onClick={handleExportParameter} className="export-button">
                 <DownloadIcon />
               </button>

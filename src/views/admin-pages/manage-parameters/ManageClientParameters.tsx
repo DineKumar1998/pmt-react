@@ -175,7 +175,6 @@ const ClientParameters: React.FC = () => {
             },
         });
 
-
     return (
         <div className="manage-parameters-page">
 

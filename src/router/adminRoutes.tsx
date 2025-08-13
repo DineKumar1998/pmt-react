@@ -32,7 +32,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/relationship-managers/add",
-    component: lazy(() => import("../views/admin-pages/relationship-managers/AddRmForm")),
+    component: lazy(
+      () => import("../views/admin-pages/relationship-managers/AddRmForm")
+    ),
     layout: "default",
     permission: "rm:create",
     group: "Children",
@@ -40,7 +42,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/relationship-managers/edit",
-    component: lazy(() => import("../views/admin-pages/relationship-managers/AddRmForm")),
+    component: lazy(
+      () => import("../views/admin-pages/relationship-managers/AddRmForm")
+    ),
     layout: "default",
     permission: "rm:update",
     group: "Children",
@@ -48,7 +52,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/relationship-managers/member-edit",
-    component: lazy(() => import("../views/admin-pages/member-list/EditClient")),
+    component: lazy(
+      () => import("../views/admin-pages/member-list/EditClient")
+    ),
     layout: "default",
     permission: "rm:update",
     group: "Children",
@@ -56,7 +62,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/relationship-managers/:rmName",
-    component: lazy(() => import("../views/admin-pages/relationship-managers/RmClientsPage")),
+    component: lazy(
+      () => import("../views/admin-pages/relationship-managers/RmClientsPage")
+    ),
     layout: "default",
     permission: "rm:read",
     group: "Children",
@@ -64,7 +72,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/relationship-managers/:rmName/:memberName",
-    component: lazy(() => import("../views/admin-pages/relationship-managers/ClientProjects")),
+    component: lazy(
+      () => import("../views/admin-pages/relationship-managers/ClientProjects")
+    ),
     layout: "default",
     permission: "rm:read",
     group: "Children",
@@ -72,7 +82,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/relationship-managers/:rmName/:memberName/:projectName",
-    component: lazy(() => import("../views/admin-pages/member-list/ProjectMCI")),
+    component: lazy(
+      () => import("../views/admin-pages/member-list/ProjectMCI")
+    ),
     layout: "default",
     permission: "rm:read",
     group: "Children",
@@ -80,19 +92,27 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/relationship-managers/:rmName/:memberName/parameters",
-    component: lazy(() => import("../views/admin-pages/relationship-managers/ManageClientParameters")),
+    component: lazy(
+      () =>
+        import(
+          "../views/admin-pages/relationship-managers/ManageClientParameters"
+        )
+    ),
     layout: "default",
     permission: "rm:read",
     group: "Children",
-    label: "Manage Member Parameters",
+    label: "Manage Company Parameters",
   },
   {
     path: "/relationship-managers/:rmName/:memberName/parameters/:paramId",
-    component: lazy(() => import("../views/admin-pages/relationship-managers/EditClientParameter")),
+    component: lazy(
+      () =>
+        import("../views/admin-pages/relationship-managers/EditClientParameter")
+    ),
     layout: "default",
     permission: "rm:read",
     group: "Children",
-    label: "Manage Member Parameters",
+    label: "Manage Company Parameters",
   },
 
   // *****************  Memeber List  ***************** /
@@ -103,12 +123,14 @@ export const adminRoutes: RouteType[] = [
     layout: "default",
     permission: "client:read",
     group: "Main",
-    label: "Member List",
+    label: "Company List",
     icon: lazy(() => import("../views/components/icons/ClientList")),
   },
   {
     path: "/member-list/edit",
-    component: lazy(() => import("../views/admin-pages/member-list/EditClient")),
+    component: lazy(
+      () => import("../views/admin-pages/member-list/EditClient")
+    ),
     layout: "default",
     permission: "client:update",
     group: "Children",
@@ -116,7 +138,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/member-list/:memberName",
-    component: lazy(() => import("../views/admin-pages/member-list/ClientProjects")),
+    component: lazy(
+      () => import("../views/admin-pages/member-list/ClientProjects")
+    ),
     layout: "default",
     permission: "client:read",
     group: "Children",
@@ -124,7 +148,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/member-list/:memberName/:projectName",
-    component: lazy(() => import("../views/admin-pages/member-list/ProjectMCI")),
+    component: lazy(
+      () => import("../views/admin-pages/member-list/ProjectMCI")
+    ),
     layout: "default",
     permission: "client:read",
     group: "Children",
@@ -132,7 +158,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/member-list/:memberName/parameters",
-    component: lazy(() => import("../views/admin-pages/member-list/ManageClientParameters")),
+    component: lazy(
+      () => import("../views/admin-pages/member-list/ManageClientParameters")
+    ),
     layout: "default",
     permission: "client:read",
     group: "Children",
@@ -140,7 +168,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/member-list/:memberName/parameters/:paramId",
-    component: lazy(() => import("../views/admin-pages/member-list/EditClientParameter")),
+    component: lazy(
+      () => import("../views/admin-pages/member-list/EditClientParameter")
+    ),
     layout: "default",
     permission: "client:read",
     group: "Children",
@@ -157,9 +187,12 @@ export const adminRoutes: RouteType[] = [
     label: "Manage Parameters",
     icon: lazy(() => import("../views/components/icons/ManageParameters")),
   },
-   {
+  {
     path: "/manage-parameters/:editParamId",
-    component: lazy(() => import("../views/admin-pages/manage-parameters/parameter/EditParameter")),
+    component: lazy(
+      () =>
+        import("../views/admin-pages/manage-parameters/parameter/EditParameter")
+    ),
     layout: "default",
     permission: "parameter:update",
     group: "Children",
@@ -167,7 +200,10 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/manage-parameters/client",
-    component: lazy(() => import("../views/admin-pages/manage-parameters/ManageClientParameters")),
+    component: lazy(
+      () =>
+        import("../views/admin-pages/manage-parameters/ManageClientParameters")
+    ),
     layout: "default",
     permission: "parameter:read",
     group: "Children",
@@ -175,7 +211,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/manage-parameters/client/edit-parameter/:editParamId",
-    component: lazy(() => import("../views/admin-pages/manage-parameters/EditClientParameter")),
+    component: lazy(
+      () => import("../views/admin-pages/manage-parameters/EditClientParameter")
+    ),
     layout: "default",
     permission: "parameter:update",
     group: "Children",
@@ -183,7 +221,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/manage-parameters/:parameterId/industry-map",
-    component: lazy(() => import("../views/admin-pages/manage-parameters/IndustryMapView")),
+    component: lazy(
+      () => import("../views/admin-pages/manage-parameters/IndustryMapView")
+    ),
     layout: "default",
     permission: "parameter:update",
     group: "Children",
@@ -191,7 +231,10 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/manage-parameters/add-parameter",
-    component: lazy(() => import("../views/admin-pages/manage-parameters/parameter/AddParameter")),
+    component: lazy(
+      () =>
+        import("../views/admin-pages/manage-parameters/parameter/AddParameter")
+    ),
     layout: "default",
     permission: "parameter:create",
     group: "Children",
@@ -209,7 +252,9 @@ export const adminRoutes: RouteType[] = [
   },
   {
     path: "/manage-weightage/:industryName",
-    component: lazy(() => import("../views/admin-pages/manage-weightage/Parameter")),
+    component: lazy(
+      () => import("../views/admin-pages/manage-weightage/Parameter")
+    ),
     layout: "default",
     permission: "manage-industry-weightage:page",
     group: "Children",

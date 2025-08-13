@@ -1,17 +1,6 @@
 @use "../../../styles/variables" as *;
 
 .manage-parameters-page {
-    .industry-name-view {
-        display: inline-block;
-        padding: 0.5rem;
-        background-color: $white;
-        color: $primary;
-        font-size: 16px;
-        font-weight: 500;
-        border: 1px solid $border-color-light;
-    }
-
-
     .tabs {
         display: flex;
         align-items: center;
@@ -506,64 +495,70 @@
 }
 
 
-.industry-mapping-view {
-    background-color: $white;
-    border-radius: 1.5rem;
-    padding: 2rem;
-    color: $primary;
+// .industry-mapping-view {
+//     background-color: $white;
+//     border-radius: 1.5rem;
+//     padding: 2rem;
+//     color: $primary;
 
-    h3 {
-        span {
-            font-weight: 700;
-        }
+//     h3 {
+//         span {
+//             font-weight: 700;
+//         }
 
-        font-weight: 300;
-    }
+//         font-weight: 300;
+//     }
 
-    .industry-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 16px 24px;
-        margin: 1rem 0;
-    }
+//     .industry-grid {
+//         display: grid;
+//         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+//         gap: 16px 24px;
+//         margin: 1rem 0;
+//     }
 
-    .industry-checkbox {
-        display: flex;
-        align-items: center;
-        min-width: 0;
-        white-space: nowrap;
-        padding: 4px 0;
-        cursor: pointer;
+//     .industry-checkbox {
+//         display: flex;
+//         align-items: center;
+//         min-width: 0;
+//         white-space: nowrap;
+//         padding: 4px 0;
+//         cursor: pointer;
 
-        label {
-            cursor: inherit;
-        }
+//         label {
+//             cursor: inherit;
+//         }
 
-        input[type="checkbox"] {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 17px;
-            height: 17px;
-            border: 1px solid $primary;
-            border-radius: 4px;
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
-            margin-right: 8px;
-        }
+//         input[type="checkbox"] {
+//             appearance: none;
+//             -webkit-appearance: none;
+//             width: 17px;
+//             height: 17px;
+//             border: 1px solid $primary;
+//             border-radius: 4px;
+//             display: inline-block;
+//             position: relative;
+//             cursor: pointer;
+//             margin-right: 8px;
+//         }
 
-        input[type="checkbox"]::before {
-            content: "\2713";
-            color: $success;
-            position: absolute;
-            left: 0;
-            top: calc(100% - 1.5rem);
-            font-size: 25px;
-            display: none;
-        }
+//         input[type="checkbox"]::before {
+//             content: "\2713";
+//             color: $success;
+//             position: absolute;
+//             left: 0;
+//             top: calc(100% - 1.5rem);
+//             font-size: 25px;
+//             display: none;
+//         }
 
-        input[type="checkbox"]:checked::before {
-            display: block;
-        }
-    }
+//         input[type="checkbox"]:checked::before {
+//             display: block;
+//         }
+//     }
+// }
+
+.manage-parameters-page .combobox-container .input-field {
+    border-color: white;
+    padding: 0.75rem;
+    box-shadow: 0px 0px 14px 0px rgba(104, 120, 141, 0.1411764706);
 }

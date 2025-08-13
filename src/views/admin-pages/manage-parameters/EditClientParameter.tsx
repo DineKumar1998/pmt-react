@@ -253,7 +253,7 @@ const EditParameter = () => {
                                 <Button
                                     text={t.buttons.save}
                                     type="submit"
-                                    disabled={isPrimary}
+                                    // disabled={isPrimary}
                                     onClick={() => null}
                                 />
                             </div>

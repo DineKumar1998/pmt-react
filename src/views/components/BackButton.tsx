@@ -1,6 +1,5 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BackArrow from "./icons/BackArrow";
-import { preserveQueryParams } from "@/utils/queryParams";
 
 import "./components.scss";
 
@@ -8,19 +7,19 @@ type Props = {
     title?: string;
     backHandler?: () => void;
     backUrl?: string;
+    replace?: boolean;
 }
 
 export const BackButton = (props: Props) => {
-    const { title, backHandler, backUrl } = props;
+    const { title, backHandler, backUrl, replace = true } = props;
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
     
     const handler = () => {
         if (backHandler) {
             backHandler();
         } else if (backUrl) {
-            const url = preserveQueryParams(backUrl, searchParams);
-            navigate(url);
+            console.log(backUrl, replace)
+            navigate(backUrl);
         } else {
             navigate(-1);
         }

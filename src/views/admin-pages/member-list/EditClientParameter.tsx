@@ -7,7 +7,10 @@ import {
 } from "react-router-dom";
 import Button from "@/views/components/button";
 import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import { getClientSelectedParameters, getParameterById } from "@/apis/parameter";
+import {
+  getClientSelectedParameters,
+  getParameterById,
+} from "@/apis/parameter";
 import { getClientParameterList } from "@/apis/parameter";
 import { selectParameterOption } from "@/apis/parameter";
 import { toast } from "react-toastify";
@@ -53,8 +56,10 @@ const EditParameter = () => {
   const itemRefs = useRef<{ [key: number]: HTMLLIElement | null }>({});
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const clientId = (location.state?.clientId || searchParams.get("clientId")) ?? null;
-  const clientName = location.state?.clientName ?? "";
+  const clientId =
+    (location.state?.clientId || searchParams.get("clientId")) ?? null;
+  const clientName =
+    location.state?.clientName ?? location.pathname.split("/")?.[2] ?? "";
   const isPrimary = location.state?.isPrimary ?? false;
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -66,28 +71,36 @@ const EditParameter = () => {
   });
 
   // Fetch selected parameters for client
-  const { data: selectedData, isLoading: isSelectedLoading, refetch } = useQuery<SelectedOption[]>({
-    queryKey: ["selectedParams", paramId, clientId],
+  const {
+    data: selectedData,
+    isLoading: isSelectedLoading,
+    refetch,
+  } = useQuery<SelectedOption[]>({
+    queryKey: ["selectedParams", paramId, clientId, isEditMode],
     queryFn: () => getClientSelectedParameters(clientId!, { paramId }),
-    enabled: (isEditMode && !!paramId && !!clientId),
+    enabled: isEditMode && !!paramId && !!clientId,
   });
 
-  const { register, handleSubmit, reset, getValues, setValue, watch } = useForm<{
-    selectedOptions: number[];
-  }>({
-    defaultValues: {
-      selectedOptions: [],
-    },
-  });
+  const { register, handleSubmit, reset, getValues, setValue, watch } =
+    useForm<{
+      selectedOptions: number[];
+    }>({
+      defaultValues: {
+        selectedOptions: [],
+      },
+    });
+  console.log(clientName, "clientName", location.pathname.split("/")[2]);
 
   // Initialize form with selected options
   useEffect(() => {
-    if (!isSelectedLoading && selectedData && selectedData.length > 0 && isInitialLoad) {
-      const ids = selectedData.map((i) => i.selected_option_id);
+    console.log("calleding");
+    if (!isSelectedLoading && selectedData && isInitialLoad) {
+      const ids = selectedData.map((i) => +i.selected_option_id);
       console.log("Initializing form with selected options:", ids);
-      reset({
-        selectedOptions: ids,
-      });
+      // reset({
+      //   selectedOptions: ids,
+      // });
+      setValue("selectedOptions", ids, { shouldValidate: true });
       setIsInitialLoad(false);
     }
   }, [selectedData, isSelectedLoading, reset, isInitialLoad]);
@@ -115,7 +128,8 @@ const EditParameter = () => {
     enabled: isEditMode,
   });
 
-  const parameterList = paramList?.pages.flatMap((page: any) => page.data) || [];
+  const parameterList =
+    paramList?.pages.flatMap((page: any) => page.data) || [];
   const selectedIndex = parameterList.findIndex(
     (param: ParameterListItem) => param.id === Number(paramId)
   );
@@ -128,7 +142,9 @@ const EditParameter = () => {
     if (!paramId || hasScrolledRef.current) return;
 
     const tryScrollToItem = async () => {
-      const exists = parameterList.some((param: ParameterListItem) => param.id === Number(paramId));
+      const exists = parameterList.some(
+        (param: ParameterListItem) => param.id === Number(paramId)
+      );
 
       if (exists && itemRefs.current[Number(paramId)]) {
         itemRefs.current[Number(paramId)]?.scrollIntoView({
@@ -170,9 +186,14 @@ const EditParameter = () => {
   const handleNavigateParam = (direction: "prev" | "next") => {
     if (selectedIndex === -1) return;
 
-    const newIndex = direction === "prev" ? selectedIndex - 1 : selectedIndex + 1;
+    const newIndex =
+      direction === "prev" ? selectedIndex - 1 : selectedIndex + 1;
 
-    if (newIndex >= parameterList.length && hasNextPage && !isFetchingNextPage) {
+    if (
+      newIndex >= parameterList.length &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
       fetchNextPage();
       return;
     }
@@ -180,17 +201,15 @@ const EditParameter = () => {
     if (newIndex < 0 || newIndex >= parameterList.length) return;
 
     const nextParam = parameterList[newIndex];
-    navigate(
-      `/manage-parameters/client/edit-parameter/${nextParam.id}?clientName=${clientName}`,
-      {
-        state: {
-          clientId: clientId,
-          clientName: clientName,
-          isPrimary: isPrimary,
-        },
-        replace: true,
-      }
-    );
+    console.log(`/member-list/${clientName}/parameters/${nextParam.id}`, "cd");
+    navigate(`/member-list/${clientName}/parameters/${nextParam.id}`, {
+      state: {
+        clientId: clientId,
+        clientName: clientName,
+        isPrimary: isPrimary,
+      },
+      replace: true,
+    });
 
     itemRefs.current[nextParam.id]?.scrollIntoView({
       behavior: "smooth",
@@ -199,18 +218,19 @@ const EditParameter = () => {
   };
 
   // Mutation for saving parameter options
-  const { mutate: selectParameterOptionMutate, isPending: isSaving } = useMutation({
-    mutationFn: (body: any) => selectParameterOption(body),
-    onSuccess: (data) => {
-      refetch()
-      toast.success(data?.message || "Parameter successfully updated");
-    },
-    onError: (error: any) => {
-      const message = error?.message || "Failed to update parameter";
-      console.error("selectParameterOption error =", message);
-      toast.error(message);
-    },
-  });
+  const { mutate: selectParameterOptionMutate, isPending: isSaving } =
+    useMutation({
+      mutationFn: (body: any) => selectParameterOption(body),
+      onSuccess: (data) => {
+        refetch();
+        toast.success(data?.message || "Parameter successfully updated");
+      },
+      onError: (error: any) => {
+        const message = error?.message || "Failed to update parameter";
+        console.error("selectParameterOption error =", message);
+        toast.error(message);
+      },
+    });
 
   // Form submission handler
   const onSubmit = (data: { selectedOptions: number[] }) => {
@@ -230,7 +250,7 @@ const EditParameter = () => {
   console.log("Current form values:", formValues);
 
   if (isParamLoading || isSelectedLoading || isParamListLoading) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   return (
@@ -240,51 +260,64 @@ const EditParameter = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="outer-container">
             <div className="form-container">
               <h2>{`${paramData?.id}. ${paramData?.question}`}</h2>
-              
+
               {!paramData?.options?.length ? (
                 <div className="empty-state">No options found.</div>
               ) : (
-                paramData?.options?.map((option: ParameterOption, index: number) => (
-                  <div
-                    key={option.id}
-                    className={`parameter-option ${
-                      isPrimary ? "" : " is-editable"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      id={`ch-${index}`}
-                      {...register("selectedOptions")}
-                      value={option.id}
-                      checked={getValues("selectedOptions")?.includes(option.id)}
-                      onChange={(e) => {
-                        const currentValues = getValues("selectedOptions") || [];
-                        if (e.target.checked) {
-                          setValue("selectedOptions", [...currentValues, option.id]);
-                        } else {
-                          setValue(
-                            "selectedOptions",
-                            currentValues.filter((id) => id !== option.id)
-                          );
-                        }
-                      }}
-                      disabled={isPrimary}
-                      className="custom-checkbox-input"
-                    />
-
-                    <label
-                      htmlFor={`ch-${index}`}
-                      className={`custom-checkbox-label`}
+                paramData?.options?.map(
+                  (option: ParameterOption, index: number) => (
+                    <div
+                      key={option.id}
+                      className={`parameter-option ${
+                        isPrimary ? "" : " is-editable"
+                      }`}
                     >
-                      <span className="option-text">
-                        <span className="option-letter">
-                          {String.fromCharCode(65 + index)}.
-                        </span>{" "}
-                        {option.option_text}
-                      </span>
-                    </label>
-                  </div>
-                ))
+                      <input
+                        type="checkbox"
+                        id={`ch-${index}`}
+                        {...register("selectedOptions")}
+                        value={option.id}
+                        checked={getValues("selectedOptions").map((i:any)=>parseInt(i))?.includes(
+                          option.id
+                        )}
+                        onChange={(e) => {
+                          const currentValues = (
+                            (getValues("selectedOptions") || [])?.map((i:any)=>parseInt(i))
+                          )?.map((i: any) => parseInt(i));
+                          if (e.target.checked) {
+                            setValue(
+                              "selectedOptions",
+                              [...currentValues, option.id],
+                              { shouldValidate: true }
+                            );
+                          } else {
+                            setValue(
+                              "selectedOptions",
+                              currentValues.filter((id) => id !== option.id),
+                              {
+                                shouldValidate: true,
+                              }
+                            );
+                          }
+                        }}
+                        // disabled={isPrimary}
+                        className="custom-checkbox-input"
+                      />
+
+                      <label
+                        htmlFor={`ch-${index}`}
+                        className={`custom-checkbox-label`}
+                      >
+                        <span className="option-text">
+                          <span className="option-letter">
+                            {String.fromCharCode(65 + index)}.
+                          </span>{" "}
+                          {option.option_text}
+                        </span>
+                      </label>
+                    </div>
+                  )
+                )
               )}
             </div>
 
@@ -321,10 +354,11 @@ const EditParameter = () => {
                   type="button"
                 />
                 <Button
-                onClick={()=>{}}
+                  onClick={() => {}}
                   text={isSaving ? t.buttons.saving : t.buttons.save}
                   type="submit"
-                  disabled={isPrimary || isSaving}
+                  // disabled={isPrimary || isSaving}
+                  disabled={ isSaving}
                 />
               </div>
             </div>
@@ -342,7 +376,7 @@ const EditParameter = () => {
                   }}
                   onClick={() => {
                     navigate(
-                      `/manage-parameters/client/edit-parameter/${parameter.id}?clientName=${clientName}`,
+                      `/member-list/${clientName}/parameters/${parameter.id}`,
                       {
                         state: {
                           clientId: clientId,

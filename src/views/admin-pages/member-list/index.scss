@@ -10,7 +10,6 @@
         .combobox-container .input-field {
             border-color: white;
             padding: 0.75rem;
-            border-radius: 1.5rem;
             box-shadow: 0px 0px 14px 0px rgba(104, 120, 141, 0.1411764706);
         }
     }
@@ -177,6 +176,7 @@
         .mci-grid-item {
             display: flex;
             justify-content: space-between;
+            flex-direction: column;
 
             border: 1px solid #ddd; // Example border
             border-radius: 8px; // Rounded corners

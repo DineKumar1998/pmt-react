@@ -48,7 +48,7 @@ export const rmPortalRoutes: RouteType[] = [
     layout: "default",
     permission: "client:read",
     group: "Main",
-    label: "Member List",
+    label: "Company List",
     icon: ClientListIcon,
   },
   {

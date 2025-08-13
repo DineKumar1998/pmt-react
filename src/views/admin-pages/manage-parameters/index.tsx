@@ -54,9 +54,12 @@ const ManageParametersPage: React.FC = () => {
     },
   ];
 
-  const itemsPerPage = 10;
   const [expandedIds, setExpandedIds] = useState<number[]>([]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams({
+    page: "1",
+    pageSize: "10",
+    tab: "primary",
+  });
   const industryId = searchParams.get("industryId");
   const industryName = searchParams.get("industryName");
   const selectedTab = searchParams.get("tab");
@@ -69,22 +72,30 @@ const ManageParametersPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const [queryParams, setQueryParams] = useState({
-    page: 1,
-    pageSize: itemsPerPage,
+    page: parseInt(searchParams.get("page") || "1", 10),
+    pageSize: parseInt(searchParams.get("pageSize") || "10", 10),
     isPrimary: activeTab === "primary",
     industry_id: industryId ?? 0,
   });
 
   const [selectedScale, setSelectedScale] = useState(scale || "Startup");
 
+  // useEffect(() => {
+  //   setQueryParams((prev) => ({
+  //     ...prev,
+  //     page: 1,
+  //     isPrimary: activeTab === "primary",
+  //   }));
+  //   setExpandedIds([]); // Collapse all when switching tabs
+  // }, [activeTab]);
+
   useEffect(() => {
-    setQueryParams((prev) => ({
-      ...prev,
-      page: 1,
-      isPrimary: activeTab === "primary",
-    }));
-    setExpandedIds([]); // Collapse all when switching tabs
-  }, [activeTab]);
+    setSearchParams({
+      page: queryParams.page.toString(),
+      pageSize: queryParams.pageSize.toString(),
+      tab: activeTab,
+    });
+  }, [queryParams.page, queryParams.pageSize]);
 
   const navigate = useNavigate();
 
@@ -92,9 +103,17 @@ const ManageParametersPage: React.FC = () => {
     setActiveTab(key);
 
     // Update the URL search parameters
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("tab", key);
-    setSearchParams(newParams, { replace: true });
+    setSearchParams({
+      page: "1",
+      pageSize: "10",
+      tab: key,
+    });
+    setQueryParams((prev) => ({
+      ...prev,
+      page: 1,
+      isPrimary: key === "primary",
+      pageSize: 10,
+    }));
   };
 
   const handleBackClick = () => {
@@ -110,10 +129,10 @@ const ManageParametersPage: React.FC = () => {
   };
 
   const handleEditParameter = (paramId: number) => {
-    navigate(`/manage-parameters/${paramId}`);
+    navigate(`/manage-parameters/${paramId}?isPrimary=${queryParams.isPrimary}`);
     addBreadcrumb({
       label: "Edit",
-      path: `/manage-parameters/${paramId}`,
+      path: `/manage-parameters/${paramId}?isPrimary=${queryParams.isPrimary}`,
     });
   };
 
@@ -359,16 +378,15 @@ const ManageParametersPage: React.FC = () => {
                         {param.id}. {param.question}
                       </p>
                       {/* {activeTab === "secondary" && !showIndustryWeightage && ( */}
-                        <span
-                          className="edit-icon"
-                          onClick={(event) => {
-                            console.log("cliekc");
-                            event.stopPropagation();
-                            handleEditParameter(param.id);
-                          }}
-                        >
-                          <EditIcon />
-                        </span>
+                      <span
+                        className="edit-icon"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleEditParameter(param.id);
+                        }}
+                      >
+                        <EditIcon />
+                      </span>
                       {/* )} */}
                     </div>
                     <div className="parameter-action">
@@ -389,8 +407,8 @@ const ManageParametersPage: React.FC = () => {
                               required: "Weightage is required",
                               valueAsNumber: true,
                               min: {
-                                value: 0,
-                                message: "Weightage must be at least 0",
+                                value: -1,
+                                message: "Weightage must be at least -1",
                               },
                               max: {
                                 value: 100,
@@ -446,7 +464,7 @@ const ManageParametersPage: React.FC = () => {
       </section>
 
       {/* Pagination Controls */}
-      {parameterList?.totalCount > itemsPerPage && (
+      {parameterList?.totalCount > 10 && (
         <div className="pagination-container">
           <div className="pagination">
             <button

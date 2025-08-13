@@ -1,7 +1,13 @@
 import UserIcon from "@/views/components/icons/table/User";
 import SearchComponent from "@/views/components/Search";
 import Table from "@/views/components/table";
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import { useLang } from "@/context/LangContext";
@@ -25,6 +31,13 @@ import "./index.scss";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
 // import { breadcrumbMapping } from "@/utils/breadcrumbs";
 import { debounce } from "@/utils/methods";
+// import {
+//   Combobox,
+//   ComboboxButton,
+//   ComboboxInput,
+//   ComboboxOption,
+//   ComboboxOptions,
+// } from "@headlessui/react";
 
 type Client = {
   id: number;
@@ -54,12 +67,11 @@ const RmClientsPage: React.FC = () => {
     pageSize: itemsPerPage,
     rmId: rmId ?? "",
     search: "",
-    sortDir:''
+    sortDir: "",
   });
   const navigate = useNavigate();
   const [openRmSearchDropdown, setOpenRmSearchDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
 
   useEffect(() => {
     setQueryParams((prev) => ({
@@ -110,7 +122,7 @@ const RmClientsPage: React.FC = () => {
           // to={`/relationship-managers/member-edit?memberId=${id}`}
           // className="text-underline"
           >
-            {client_name}
+            {client_name || 'NA'}
           </span>
         );
       },
@@ -152,15 +164,15 @@ const RmClientsPage: React.FC = () => {
             <NavLink
               onClick={() =>
                 addBreadcrumb({
-                  label: client_name,
+                  label: client_name || "NA",
                   path: `/relationship-managers/${encodeURIComponent(
                     rmName
-                  )}/${encodeURIComponent(client_name)}?memberId=${id}`,
+                  )}/${encodeURIComponent(client_name ? client_name : 'NA' )}?memberId=${id}`,
                 })
               }
               to={`/relationship-managers/${encodeURIComponent(
                 rmName
-              )}/${encodeURIComponent(client_name)}?memberId=${id}`}
+              )}/${encodeURIComponent(client_name ? client_name : 'NA')}?memberId=${id}`}
               className="text-underline"
             >
               {project_count}
@@ -183,22 +195,22 @@ const RmClientsPage: React.FC = () => {
           <NavLink
             onClick={() =>
               addBreadcrumb({
-                label: client_name,
+                label: client_name || 'NA',
                 path: `/relationship-managers/${encodeURIComponent(
                   rmName
                 )}/${encodeURIComponent(
-                  client_name
+                  client_name ? client_name : 'NA'
                 )}/parameters?clientId=${id}&clientName=${encodeURIComponent(
-                  client_name
+                  client_name ? client_name : 'NA'
                 )}`,
               })
             }
             to={`/relationship-managers/${encodeURIComponent(
               rmName
             )}/${encodeURIComponent(
-              client_name
+             client_name ? client_name : 'NA'
             )}/parameters?clientId=${id}&clientName=${encodeURIComponent(
-              client_name
+             client_name ? client_name : 'NA'
             )}`}
             style={{ display: "flex", justifyContent: "center", width: "50%" }}
           >
@@ -276,7 +288,7 @@ const RmClientsPage: React.FC = () => {
       if (prev.sortDir === dirLabel) {
         return prev;
       }
-      return { ...prev, sort:  dir[0]?.id?  `${dir[0]?.id}:${dirLabel}` :"" };
+      return { ...prev, sort: dir[0]?.id ? `${dir[0]?.id}:${dirLabel}` : "" };
     });
   }, []);
 
@@ -293,6 +305,58 @@ const RmClientsPage: React.FC = () => {
             placeholder={`${t.buttons.search}...`}
             onSearch={(value) => debouncedSearch(value || "")}
           />
+          {/* <Combobox
+            value={rmName}
+            onKeyDown={(e) => {
+              console.log(e, "r");
+            }}
+            onChange={(event) => {
+              if (event) {
+                console.log(event);
+                //  navigate(
+                //             `/relationship-managers/rm?rmId=${event}&rmName=${name}`,
+                //             {
+                //               replace: true,
+                //             }
+                //           );
+              }
+            }}
+            as="div"
+            className="combobox-container"
+          >
+            <ComboboxButton
+              className="combobox-button"
+              style={{ width: "200px" }}
+            >
+              <ComboboxInput
+                className="input-field"
+                aria-label="Member"
+                placeholder="Select a member"
+              />
+              <DownArrow height={16} width={16} />
+            </ComboboxButton>
+
+            <ComboboxOptions anchor="bottom" className="combobox-options">
+              {rmNamesList
+                ?.filter((rm: any) => {
+                  return rm.id !== parseInt(rmId ?? "0");
+                })
+                .map((rm: any, index: number) => {
+                  const name = `${rm.first_name} ${(
+                    rm.last_name ?? ""
+                  ).trim()}`.trim();
+                  return (
+                    <ComboboxOption
+                      key={index}
+                      value={name}
+                      className="combobox-option"
+                    >
+                      {name}
+                    </ComboboxOption>
+                  );
+                })}
+            </ComboboxOptions>
+          </Combobox> */}
           <div className="parameter-dropdown-container" ref={dropdownRef}>
             <button
               className="parameter-dropdown-button"
@@ -338,7 +402,7 @@ const RmClientsPage: React.FC = () => {
         </section>
       </div>
       <Table
-      onSortChange={sortFn}
+        onSortChange={sortFn}
         columns={columns}
         data={updatedClientList}
         itemsPerPage={itemsPerPage}

@@ -1,5 +1,5 @@
 // components/layout/index.tsx
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import Header from "./Header";
 import { LangProvider } from "@/context/LangContext";
@@ -10,39 +10,33 @@ import Footer from "./Footer";
 
 import "./layout.scss";
 
+const MainContent = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <main className="main-container">
+      <Header />
+      <Wrapper>
+        <div className="main-content">{children}</div>
+      </Wrapper>
+      <Footer />
+    </main>
+  );
+};
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  // const Layout: React.FC<LayoutProps> = ({ children, route }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = useCallback(() => {
     setIsSidebarOpen((prev) => !prev);
-  };
+  }, []);
 
   return (
     <LangProvider>
-      <div className="main-layout">
-        {/* Overlay for Mobile */}
-        {isSidebarOpen && <div onClick={toggleSidebar} aria-hidden="true" />}
+      <div className={`main-layout ${isSidebarOpen ? "" : "sb-expand"}`}>
+        {/* This component will re-render because its props change */}
+        <LayoutSidebar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
 
-        {/* Main Layout */}
-        {/* Sidebar */}
-
-        <LayoutSidebar />
-
-        {/* Main Content */}
-        <main className="main-container">
-          {/* Header */}
-          {/* <Header breakcrumbPath={route} /> */}
-          <Header />
-
-          <Wrapper>
-            <div className="main-content">{children}</div>
-          </Wrapper>
-
-          <Footer />
-        </main>
-
-        {/* Footer */}
+        {/* 2. Use the memoized component here. It will not re-render on toggle. */}
+        <MainContent>{children}</MainContent>
       </div>
     </LangProvider>
   );

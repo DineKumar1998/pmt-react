@@ -16,6 +16,11 @@ export const getParameterList = async (params: any) => {
     })
     return response.data
 }
+export const getParameterWeightages = async (industryId: number,scale:string) => {
+    const response = await api.get(`/parameter/weightages?industryId=${industryId}&scale=${scale}`, {
+    })
+    return response.data
+}
 
 export const getParameterQuestions = async (params: any) => {
     const response = await api.get('/parameter/questions', {
