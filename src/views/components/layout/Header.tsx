@@ -52,7 +52,6 @@ const Header = () => {
   //       segmentParams.set(key, value);
   //     }
 
-  //     console.log(segmentParams.toString())
 
   //     paths.push({
   //       path: accumulatedPath + (segmentParams.toString().length > 0 && i === pathSegments.length - 1 ? `?${segmentParams.toString()}` : ""),
@@ -63,7 +62,6 @@ const Header = () => {
   //   return paths;
   // }, [path]);
 
-  // console.log(breadcrumbPaths)
 
   // Format the date and time for IST (current date: May 24, 2025, 05:27 PM IST)
   const formattedDate = currentDateTime.toLocaleDateString("en-US", {

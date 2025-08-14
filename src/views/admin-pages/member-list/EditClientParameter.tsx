@@ -81,7 +81,7 @@ const EditParameter = () => {
     enabled: isEditMode && !!paramId && !!clientId,
   });
 
-  const { register, handleSubmit, reset, getValues, setValue, watch } =
+  const { register, handleSubmit, reset, getValues, setValue } =
     useForm<{
       selectedOptions: number[];
     }>({
@@ -89,14 +89,11 @@ const EditParameter = () => {
         selectedOptions: [],
       },
     });
-  console.log(clientName, "clientName", location.pathname.split("/")[2]);
 
   // Initialize form with selected options
   useEffect(() => {
-    console.log("calleding");
     if (!isSelectedLoading && selectedData && isInitialLoad) {
       const ids = selectedData.map((i) => +i.selected_option_id);
-      console.log("Initializing form with selected options:", ids);
       // reset({
       //   selectedOptions: ids,
       // });
@@ -201,7 +198,6 @@ const EditParameter = () => {
     if (newIndex < 0 || newIndex >= parameterList.length) return;
 
     const nextParam = parameterList[newIndex];
-    console.log(`/member-list/${clientName}/parameters/${nextParam.id}`, "cd");
     navigate(`/member-list/${clientName}/parameters/${nextParam.id}`, {
       state: {
         clientId: clientId,
@@ -245,10 +241,6 @@ const EditParameter = () => {
     selectParameterOptionMutate(formattedData);
   };
 
-  // Watch form values for debugging
-  const formValues = watch();
-  console.log("Current form values:", formValues);
-
   if (isParamLoading || isSelectedLoading || isParamListLoading) {
     return <Loader />;
   }
@@ -281,7 +273,6 @@ const EditParameter = () => {
                           option.id
                         )}
                         onChange={(e) => {
-                          console.log("df");
                           const currentValues = (
                             (getValues("selectedOptions") || [])?.map((i:any)=>parseInt(i))
                           )?.map((i: any) => parseInt(i));

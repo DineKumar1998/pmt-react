@@ -82,7 +82,7 @@ const EditParameter = () => {
     enabled: isEditMode && !!paramId && !!clientId,
   });
 
-  const { register, handleSubmit, reset, getValues, setValue, watch } =
+  const { register, handleSubmit, reset, getValues, setValue } =
     useForm<{
       selectedOptions: number[];
     }>({
@@ -95,7 +95,6 @@ const EditParameter = () => {
   useEffect(() => {
     if (!isSelectedLoading && selectedData && isInitialLoad) {
       const ids = selectedData.map((i) => +i.selected_option_id);
-      console.log("Initializing form with selected options:", ids);
       reset({
         selectedOptions: ids,
       });
@@ -244,10 +243,6 @@ const EditParameter = () => {
 
     selectParameterOptionMutate(formattedData);
   };
-
-  // Watch form values for debugging
-  const formValues = watch();
-  console.log("Current form values:", formValues);
 
   if (isParamLoading || isSelectedLoading || isParamListLoading) {
     return <Loader />;

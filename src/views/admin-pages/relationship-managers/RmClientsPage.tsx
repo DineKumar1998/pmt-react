@@ -308,11 +308,9 @@ const RmClientsPage: React.FC = () => {
           {/* <Combobox
             value={rmName}
             onKeyDown={(e) => {
-              console.log(e, "r");
             }}
             onChange={(event) => {
               if (event) {
-                console.log(event);
                 //  navigate(
                 //             `/relationship-managers/rm?rmId=${event}&rmName=${name}`,
                 //             {

@@ -134,8 +134,7 @@ const ManageParametersPage: React.FC = () => {
   //   return ((queryParams.page - 1) * itemsPerPage) + (index + 1)
   // }
 
-  const onSubmit = (data: any) => {
-    console.log("Submitted weightages:", data.parameters);
+  const onSubmit = () => {
   };
 
   const onError = (errors: any) => {

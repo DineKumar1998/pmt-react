@@ -131,12 +131,10 @@ export const BreadcrumbProvider = ({
 //   useEffect(() => {
 //     const cleanSearch = stripQueryParams(location.search, ["tab"]);
 //     const currentPath = location.pathname + location.search;
-//     console.log(currentPath,'cr',breadcrumbs)
     
 
 //     // Auto-generate breadcrumbs based on URL
 //     const segments = location.pathname.split("/").filter(Boolean);
-//     console.log(segments,'segments')
 //     let pathAccumulator = "";
 //     const generated: BreadcrumbItem[] = segments.map((segment) => {
 //       pathAccumulator += `/${segment}`;
@@ -147,7 +145,6 @@ export const BreadcrumbProvider = ({
 //         label: normalizeLabel(decodedSegment), // Capitalize
 //       };
 //     });
-// console.log(generated,'genrated')
 //     setBreadcrumbs(
 //       ensureDashboardIncluded([DASHBOARD_BREADCRUMB, ...generated])
 //     );

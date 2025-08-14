@@ -3,27 +3,24 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Doughnut } from "react-chartjs-2";
 import { useLang } from "@/context/LangContext";
 import { translations } from "@/utils/translations";
-import { useQuery } from '@tanstack/react-query';
-import { getTop5RM } from "@/apis/rm"
+import { useQuery } from "@tanstack/react-query";
+import { getTop5RM } from "@/apis/rm";
 import RedirectForward from "../icons/RedirectForward";
 import { useNavigate } from "react-router-dom";
 import { useBreadcrumbs } from "@/context/Breadcrumb";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-
 export default function RelationshipManagersChart() {
   const { selectedLang } = useLang();
   const t = translations[selectedLang];
   const listLimit = 5;
   const navigate = useNavigate();
-  const {addBreadcrumb} = useBreadcrumbs()
-
+  const { addBreadcrumb } = useBreadcrumbs();
 
   const { data: rmList } = useQuery({
-    queryKey: ['rmList', selectedLang],
-    queryFn: () =>
-      getTop5RM({ limit: listLimit, language: selectedLang }),
+    queryKey: ["rmList", selectedLang],
+    queryFn: () => getTop5RM({ limit: listLimit, language: selectedLang }),
   });
 
   let rmNamesList: string[] = [];
@@ -36,14 +33,11 @@ export default function RelationshipManagersChart() {
       }: {
         first_name: string;
         last_name?: string | null;
-      }) => (`${first_name} ${(last_name ?? '').trim()}`.trim())
+      }) => `${first_name} ${(last_name ?? "").trim()}`.trim()
     );
     rmDataList = rmList.map(
-      ({
+      ({ clients_assigned_count }: { clients_assigned_count: number }) =>
         clients_assigned_count
-      }: {
-        clients_assigned_count: number;
-      }) => (clients_assigned_count)
     );
   }
 
@@ -52,7 +46,13 @@ export default function RelationshipManagersChart() {
     datasets: [
       {
         data: rmDataList,
-        backgroundColor: ["#C4F1F9", "#FBB6CE", "#FED7AA", "#C6F6D5", "#BEE3F8"],
+        backgroundColor: [
+          "#C4F1F9",
+          "#FBB6CE",
+          "#FED7AA",
+          "#C6F6D5",
+          "#BEE3F8",
+        ],
         borderWidth: 0,
         cutout: "65%", // For doughnut hole size
       },
@@ -95,13 +95,12 @@ export default function RelationshipManagersChart() {
   };
 
   const openRmPage = () => {
-    navigate(`/relationship-managers`)
+    navigate(`/relationship-managers`);
     addBreadcrumb({
       label: "Relationship Managers",
       path: `/relationship-managers`,
     });
-
-  }
+  };
 
   return (
     <div className="card relationship-managers-chart">

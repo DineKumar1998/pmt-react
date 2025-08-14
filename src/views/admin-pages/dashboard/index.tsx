@@ -20,7 +20,7 @@ import "./dashboard.scss";
 
 const Dashboard = () => {
   const { selectedLang } = useLang();
-  
+
   const { data: dashboardStats } = useQuery({
     queryKey: ["dashboardStats", selectedLang],
     queryFn: () => getDashboardStats({ language: selectedLang }),

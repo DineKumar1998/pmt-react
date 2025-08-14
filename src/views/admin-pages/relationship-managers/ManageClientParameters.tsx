@@ -170,7 +170,6 @@ const ClientParameters: React.FC = () => {
   useEffect(() => {
     if (!isSelectedLoading && selectedData) {
       const ids = selectedData.map((i: any) => +i.selected_option_id);
-      console.log("Initializing form with selected options:", ids);
       setSelectedIds(ids);
     }
   }, [selectedData, isSelectedLoading]);
