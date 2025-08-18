@@ -8,6 +8,11 @@ export const adminRoutes: RouteType[] = [
     layout: "auth",
   },
   {
+    path: "/forgot-password",
+    component: lazy(() => import("../views/admin-pages/forgot-password")),
+    layout: "auth",
+  },
+  {
     path: "/404",
     component: lazy(() => import("../views/admin-pages/not-found")),
     layout: "auth",

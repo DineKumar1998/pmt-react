@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { type Control, Controller, type FieldErrors, type FieldValues } from "react-hook-form";
 
 interface FormFieldProps {
@@ -43,6 +44,8 @@ const TextBox: React.FC<FormFieldProps> = ({
     const control: Control<FieldValues> =
         controlProp as unknown as Control<FieldValues>;
 
+    const [show, setShow] = useState<string | null>(null)
+
     const classNames = (
         ...args: (
             | string
@@ -67,52 +70,67 @@ const TextBox: React.FC<FormFieldProps> = ({
     };
 
     const renderInput = (field: any) => (
-        <input
-            type={type}
-            onChange={(e) => {
-                if (type === "file") {
-                    const file = e.target.files
-                        ? e.target.files.length > 1
-                            ? e.target.files
-                            : e.target.files[0]
-                        : null;
-                    handleChange && handleChange(file);
-                } else {
-                    field.onChange(e || "");
-                    handleChange && handleChange(e);
+        <>
+            <input
+                type={show ? show : type}
+                onChange={(e) => {
+                    if (type === "file") {
+                        const file = e.target.files
+                            ? e.target.files.length > 1
+                                ? e.target.files
+                                : e.target.files[0]
+                            : null;
+                        handleChange && handleChange(file);
+                    } else {
+                        field.onChange(e || "");
+                        handleChange && handleChange(e);
+                    }
+                }}
+                className={
+                    classNames({ "is-invalid": (!!errors[name] || !!customError) }, "form-input ") +
+                    (className ? ` ${className}` : "")
                 }
-            }}
-            className={
-                classNames({ "is-invalid": (!!errors[name] || !!customError) }, "form-input ") +
-                (className ? ` ${className}` : "")
+                disabled={disabled}
+                placeholder={
+                    placeholder || (label ? `Enter your ${label?.toLocaleLowerCase()}` : "")
+                }
+                min={type === "number" ? 0 : undefined}
+                ref={field.ref}
+                onBlur={field.onBlur}
+                value={type === "file" ? undefined : field.value || ""}
+                step={type === "number" ? 1 : undefined}
+                style={{ width: "100%" }}
+                {...rest}
+                id={name}
+            />
+
+            {type === "password" && <> <button type="button" className="password-toggle" onClick={() => {
+                if (show === "password") {
+                    setShow("text");
+                } else {
+                    setShow("password");
+                }
+            }}>
+                { show === "password" ? 'Show' : 'Hide'}
+            </button> </>
             }
-            disabled={disabled}
-            placeholder={
-                placeholder || (label ? `Enter your ${label?.toLocaleLowerCase()}` : "")
-            }
-            min={type === "number" ? 0 : undefined}
-            ref={field.ref}
-            onBlur={field.onBlur}
-            value={type === "file" ? undefined : field.value || ""}
-            step={type === "number" ? 1 : undefined}
-            style={{ width: "100%" }}
-            {...rest}
-            id={name}
-        />
+        </>
     );
 
     return (
         <div className={`form-field ${margin} ${width} ${size} ${flexDirection}`}>
-            {errors && control ? (
-                <Controller
-                    control={control}
-                    name={name}
-                    render={({ field }) => renderInput(field)}
+            <div className="form-input-container">
+                {errors && control ? (
+                    <Controller
+                        control={control}
+                        name={name}
+                        render={({ field }) => renderInput(field)}
 
-                />
-            ) : (
-                renderInput({ onChange: handleChange, value })
-            )}
+                    />
+                ) : (
+                    renderInput({ onChange: handleChange, value })
+                )}
+            </div>
 
             {showErrorMessage &&
                 errors[name] &&

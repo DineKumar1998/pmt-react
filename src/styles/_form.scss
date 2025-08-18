@@ -46,9 +46,34 @@
 
 .form-field {
     width: 100%;
+
 }
+
+.form-input-container {
+    position: relative;
+
+    button.password-toggle {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        right: 0.7rem;
+        transform: translateY(-50%);
+
+        background: transparent;
+        border: 1px solid #68788d29;
+
+        color: $primary;
+        font-size: 0.8rem;
+        background-color: #68788d16;
+        border-radius: 0.5rem;
+        padding: 0.2rem 0.3rem;
+    }
+}
+
+
 .border-danger {
     outline-color: $danger !important;
+
     &::placeholder {
         color: $danger;
     }

@@ -19,8 +19,8 @@ export const passwordValidation = z
 export const otpValidation = z
     .string({
         required_error: "OTP is required",
-    }).min(1, {
-        message: "OTP is required",
+    }).min(5, {
+        message: "Enter Valid OTP",
     })
 
 export const captchaValidation = z
@@ -40,4 +40,27 @@ export const dynamicLoginSchema = (isOtpStep: boolean) => {
         });
 };
 
+export const forgotPasswordSchema = (step: "email" | "password") => {
+    if (step === "email") {
+        return z.object({
+            email: emailValidation,
+            otp: z.string(),
+            password: z.string(),
+            confirmPassword: z.string()
+        });
+    }
+
+    return z.object({
+        email: emailValidation,
+        otp: otpValidation,
+        password: passwordValidation,
+        confirmPassword: z.string({ required_error: "Please confirm your password" })
+    }).refine(
+        (data) => data.password === data.confirmPassword,
+        {
+            message: "Passwords do not match",
+            path: ["confirmPassword"],
+        }
+    );
+};
 

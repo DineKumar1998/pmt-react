@@ -18,3 +18,11 @@ export const validateUser = async () => {
   const response = await api.get('/auth/validate')
   return response.data
 }
+export const forgotPassword = async (email: string) => {
+  const response = await api.get(`/auth/forgot-password?email=${email}`)
+  return response.data
+}
+export const resetPassword = async (data: any) => {
+  const response = await api.post("/auth/reset-password", data);
+  return response.data;
+};
