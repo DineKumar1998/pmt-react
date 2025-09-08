@@ -69,7 +69,7 @@ const Login = () => {
       }
 
       login(
-        data.authToken,
+        // data.authToken,
         data.user?.id,
         data.user?.first_name,
         data.user?.last_name,

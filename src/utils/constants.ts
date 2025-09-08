@@ -5,7 +5,8 @@ export const ASSETS_FOLDERS = {
 }
 
 export const AUTH = {
-    TOKEN_KEY: "token",
+    TOKEN_KEY: "authToken",
+    USER_KEY:"userInfo",
     USER_ID: "SIOd",
     PROFILE_IMG: "s2ssdfs",
     USER_NAME: "Spdf",

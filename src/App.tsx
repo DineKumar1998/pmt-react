@@ -9,6 +9,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { CookiesProvider } from "react-cookie";
 import { BreadcrumbProvider } from "./context/Breadcrumb";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { LangProvider } from "./context/LangContext";
 const queryClient = new QueryClient({
   // defaultOptions: {
   //   queries: {
@@ -26,6 +27,7 @@ const App = memo(function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <CookiesProvider>
+      <LangProvider>
         <AuthProvider>
           <BrowserRouter>
             <BreadcrumbProvider>
@@ -34,6 +36,7 @@ const App = memo(function App() {
             </BreadcrumbProvider>
           </BrowserRouter>
         </AuthProvider>
+      </LangProvider>
       </CookiesProvider>
     </QueryClientProvider>
   );

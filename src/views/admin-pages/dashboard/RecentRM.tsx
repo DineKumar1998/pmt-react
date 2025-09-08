@@ -61,7 +61,7 @@ const columns = (t: any, addBreadcrumb: any): ColumnDef<RM>[] => [
     enableSorting: false,
     header: () => (
       <>
-        <UserGroupIcon />{" "}
+        <UserGroupIcon  style={{minWidth:'18px'}}/>{" "}
         <span className="title">{t.table.memberAssigned}</span>
       </>
     ),

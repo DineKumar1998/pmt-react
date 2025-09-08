@@ -79,7 +79,10 @@ export default function RelationshipManagersChart({ record }: any) {
         display: false,
       },
       datalabels: {
-        clip: false,
+        display: (context: any) => {
+          // Only display labels for segments with data > 0
+          return context.dataset.data[context.dataIndex] > 0;
+        },
         color: "#000",
         anchor: "end",
         align: "end",
@@ -96,7 +99,8 @@ export default function RelationshipManagersChart({ record }: any) {
     },
   };
 
-  return <div className="card rm-relationship-managers-chart ">
+  return (
+    <div className="card rm-relationship-managers-chart">
       <div className="content">
         <p style={{ lineHeight: 0.8 }}>{t.text.totalClients} </p>
         <p>{record?.total}</p>
@@ -108,7 +112,6 @@ export default function RelationshipManagersChart({ record }: any) {
           plugins={[ChartDataLabels, centerTextPlugin]} 
         />
       </div>
-     
     </div>
-  
+  );
 }

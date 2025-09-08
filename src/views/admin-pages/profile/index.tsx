@@ -60,6 +60,8 @@ const ProfilePage = () => {
     onSuccess: (data) => {
       toast.success(data?.message);
       queryClient.invalidateQueries({ queryKey: ["validate-user"] });
+      setIsPasswordEditable(false)
+      
     },
     onError: (error: any) => {
       const message =
@@ -96,8 +98,9 @@ const ProfilePage = () => {
   const { data: userData } = useQuery({
     queryKey: ["rmData", user.user_id, selectedLang],
     queryFn: () => getRMById(user.user_id || "", selectedLang),
+    enabled:!!user.user_id
   });
-
+console.log(user,'user')
   useEffect(() => {
     if (userData) {
       reset({
@@ -119,6 +122,7 @@ const ProfilePage = () => {
   const handleChangePasswordClick = () => {
     setIsPasswordEditable(true);
   };
+  console.log(userData,'userdata')
 
   return (
     <div className="profile-form">

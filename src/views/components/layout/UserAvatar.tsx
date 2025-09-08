@@ -51,12 +51,11 @@ const AvatarDropdown = () => {
       toast.error(message);
     },
   });
- 
 
   const renderrAvatar = () => {
     if (
       user.profile_img &&
-      /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(user.profile_img)
+      /\.(jpg|jpeg|png|gif|webp|svg|avif)$/i.test(user.profile_img)
     ) {
       return (
         <img
@@ -65,8 +64,10 @@ const AvatarDropdown = () => {
         />
       );
     }
+else{
 
-    return <img src={Avatar} alt="User Avatar" />;
+  return <img src={Avatar} alt="User Avatar" />;
+}
   };
 
   return (

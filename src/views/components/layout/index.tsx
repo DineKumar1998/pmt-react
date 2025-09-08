@@ -2,7 +2,6 @@
 import React, { useCallback, useState } from "react";
 
 import Header from "./Header";
-import { LangProvider } from "@/context/LangContext";
 import type { LayoutProps } from "@/types/routes";
 import LayoutSidebar from "./SideBarComponent";
 import Wrapper from "../wrapper";
@@ -30,7 +29,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, []);
 
   return (
-    <LangProvider>
       <div className={`main-layout ${isSidebarOpen ? "" : "sb-expand"}`}>
         {/* This component will re-render because its props change */}
         <LayoutSidebar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
@@ -38,7 +36,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {/* 2. Use the memoized component here. It will not re-render on toggle. */}
         <MainContent>{children}</MainContent>
       </div>
-    </LangProvider>
   );
 };
 
