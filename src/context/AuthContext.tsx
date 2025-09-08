@@ -62,10 +62,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       user_type: "",
     });
 
-    setCookie(AUTH.TOKEN_KEY, "", {
-      path: "/",
-      expires: new Date(Date.now() - 24 * 60 * 60 * 1000),
-    });
+    // setCookie(AUTH.TOKEN_KEY, "", {
+    //   path: "/",
+    //   expires: new Date(Date.now() - 24 * 60 * 60 * 1000),
+    // });
     setCookie(AUTH.USER_KEY, "", {
       path: "/",
       expires: new Date(Date.now() - 24 * 60 * 60 * 1000),
