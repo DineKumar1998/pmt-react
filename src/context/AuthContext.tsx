@@ -1,14 +1,15 @@
 import { validateUser } from "@/apis/auth";
+import { AUTH } from "@/utils/constants";
 import { useQuery } from "@tanstack/react-query";
 import React, { createContext, useEffect, useState } from "react";
-import { useLang } from "./LangContext";
 import { useCookies } from "react-cookie";
+import { useLang } from "./LangContext";
 
 const AuthContext = createContext<any>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const {selectedLang} = useLang()
-    const [cookie]  = useCookies()
+  const { selectedLang } = useLang();
+  const [cookie, setCookie] = useCookies();
 
   const [user, setUser] = useState({
     // token: cookie?.[AUTH.TOKEN_KEY],
@@ -27,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     firstName: string,
     lastName: string,
     profileImg: string,
-    userType: string
+    userType: string,
   ) => {
     const name = firstName + " " + lastName;
     setUser({
@@ -60,14 +61,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       profile_img: "",
       user_type: "",
     });
-    // setCookie(AUTH.TOKEN_KEY, "", {
-    //   path: "/",
-    //   expires: new Date(Date.now() - 24 * 60 * 60 * 1000),
-    // });
-    // setCookie(AUTH.USER_KEY, "", {
-    //   path: "/",
-    //   expires: new Date(Date.now() - 24 * 60 * 60 * 1000),
-    // });
+
+    setCookie(AUTH.TOKEN_KEY, "", {
+      path: "/",
+      expires: new Date(Date.now() - 24 * 60 * 60 * 1000),
+    });
+    setCookie(AUTH.USER_KEY, "", {
+      path: "/",
+      expires: new Date(Date.now() - 24 * 60 * 60 * 1000),
+    });
   };
 
   const isLoggedIn = () => {
@@ -83,11 +85,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   //   enabled:isLoggedIn(),
   //   retry:false
   // });
-  const { data, isLoading,isFetching ,error } = useQuery({
-    queryKey: ["validate-user",selectedLang],
+  const { data, isLoading, isFetching, error } = useQuery({
+    queryKey: ["validate-user", selectedLang],
     queryFn: () => validateUser(selectedLang),
-    enabled:isLoggedIn(),
-    retry:false
+    enabled: isLoggedIn(),
+    retry: false,
   });
 
   useEffect(() => {
@@ -95,7 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser((prev) => {
         return {
           ...prev,
-          user_id:data.userInfo.id,
+          user_id: data.userInfo.id,
           user_name: data.userInfo.first_name + " " + data.userInfo.last_name,
           profile_img: data.userInfo.profile_img,
           user_type: data.userInfo.user_type,
@@ -108,7 +110,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // else{
     //   logout()
     // }
-  }, [data,error, isLoading]);
+  }, [data, error, isLoading]);
 
   return (
     <AuthContext.Provider
@@ -117,7 +119,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         login,
         logout,
         isLoggedIn,
-        isLoading:isFetching
+        isLoading: isFetching,
       }}
     >
       {children}

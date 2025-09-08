@@ -1,206 +1,207 @@
 @use "../../../styles/variables" as *;
 
 .dashboard-page {
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
 
-    .card {
-      box-sizing: border-box;
-      border-radius: 1.5rem;
-      background-color: $white;
-      width: 100%;
-      padding: 1.5rem 1.5rem 0 1.5rem;
-      height: 234px;
-
-      overflow: hidden;
-
-      &.illustration {
-        background: linear-gradient(135deg, #68788d 25.5%, #becad7 100%);
-        position: relative;
-        width: 100%;
-        padding: 1.5rem 0rem 0 1.5rem;
-
-        display: flex;
-        justify-content: space-between;
-
-        .person-icon {
-
-          width: 230px;
-
-          img {
-            width: 240px;
-            height: 210px;
-            margin-bottom: -0.5rem;
-            object-fit: cover;
-            object-position: center;
-          }
-        }
-
-        .content {
-          z-index: 2;
-          width: 170px;
-          color: $white;
-
-          p:first-child {
-            font-size: 14px;
-          }
-
-          h2 {
-            hyphens: auto;
+        .card {
+            box-sizing: border-box;
+            border-radius: 1.5rem;
+            background-color: $white;
+            width: 100%;
+            padding: 1.5rem 1.5rem 0 1.5rem;
+            height: 234px;
 
             overflow: hidden;
 
-            display: -webkit-box;
-            line-clamp: 2;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-          }
+            &.illustration {
+                background: linear-gradient(135deg, #68788d 25.5%, #becad7 100%);
+                position: relative;
+                width: 100%;
+                padding: 1.5rem 0rem 0 1.5rem;
 
-          p:last-child {
-            line-height: 1.5;
-            font-size: 12px;
-            width: 150px;
-          }
+                display: flex;
+                justify-content: space-between;
+
+                .person-icon {
+                    width: 230px;
+
+                    img {
+                        width: 240px;
+                        height: 210px;
+                        margin-bottom: -0.5rem;
+                        object-fit: cover;
+                        object-position: center;
+                    }
+                }
+
+                .content {
+                    z-index: 2;
+                    width: 170px;
+                    color: $white;
+
+                    p:first-child {
+                        font-size: 14px;
+                    }
+
+                    h2 {
+                        hyphens: auto;
+
+                        overflow: hidden;
+
+                        display: -webkit-box;
+                        line-clamp: 2;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                    }
+
+                    p:last-child {
+                        line-height: 1.5;
+                        font-size: 12px;
+                        width: 150px;
+                    }
+                }
+            }
         }
-      }
+
+        .card.relationship-managers-chart {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            padding: 1.5rem;
+
+            .chart {
+                position: absolute;
+                width: 100%;
+                height: 240px;
+
+                bottom: 0;
+                right: -3rem;
+            }
+        }
+
+        .card.total-members-chart {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1.5rem;
+            position: relative;
+
+            .dots {
+                h3 {
+                    margin-left: 1rem;
+                }
+
+                .client-dot:before,
+                .partner-dot:before {
+                    content: "";
+                    display: inline-block;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    margin-right: 0.5rem;
+                    flex-shrink: 0;
+                }
+
+                .client-dot:before {
+                    background-color: #d3e1f3;
+                }
+
+                .partner-dot:before {
+                    background-color: #a8b9cf;
+                }
+            }
+
+            .chart {
+                height: 180px;
+            }
+        }
     }
 
-    .card.relationship-managers-chart {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      padding: 1.5rem;
+    .completion-status-chart {
+        background-color: $white;
+        margin-block: 1.5rem;
+        padding: 1.5rem;
+        border-radius: 1.5rem;
+        box-sizing: border-box;
+        overflow-x: hidden;
 
-      .chart {
+        max-width: calc(100vw - 324px);
+
+        .chart {
+            max-width: 90%;
+            width: 100%;
+            height: 350px;
+        }
+
+        .chart-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .custom-legend {
+            display: flex;
+            flex-direction: column;
+            font-size: 16px;
+        }
+
+        .total-parameters-view {
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+
+            strong {
+                font-size: 1.5rem;
+            }
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: start;
+            margin-bottom: 1rem;
+            text-wrap: nowrap;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.6rem;
+        }
+
+        .legend-label {
+            margin-top: -0.5rem;
+        }
+
+        .legend-label strong {
+            font-weight: bold;
+            font-size: 18px;
+            margin-left: 0.1rem;
+        }
+    }
+
+    .recent-activity {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+        gap: 1.5rem;
+
+        .relationship-manager-page,
+        .recent-added-clients-page {
+            .section-title {
+                margin-bottom: 1rem;
+            }
+        }
+    }
+
+    .redirect-icon {
+        cursor: pointer;
         position: absolute;
-        width: 100%;
-        height: 240px;
-
-        bottom: 0;
-        right: -3rem;
-      }
+        color: black;
     }
-
-
-    .card.total-members-chart {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 1.5rem;
-      position: relative;
-
-      .dots {
-        h3 {
-          margin-left: 1rem;
-        }
-
-        .client-dot:before,
-        .partner-dot:before {
-          content: "";
-          display: inline-block;
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          margin-right: 0.5rem;
-          flex-shrink: 0;
-        }
-
-        .client-dot:before {
-          background-color: #d3e1f3;
-        }
-
-        .partner-dot:before {
-          background-color: #a8b9cf;
-        }
-
-      }
-
-
-      .chart {
-        height: 180px;
-      }
-    }
-  }
-
-  .completion-status-chart {
-    background-color: $white;
-    margin-block: 1.5rem;
-    padding: 1.5rem;
-    border-radius: 1.5rem;
-
-    .chart {
-      width: 100%;
-      height: 350px;
-    }
-
-    .chart-container {
-      display: flex;
-      align-items: flex-start;
-      gap: 2rem;
-      position: relative;
-    }
-
-    .custom-legend {
-      display: flex;
-      flex-direction: column;
-      font-size: 16px;
-    }
-
-    .total-parameters-view {
-      margin-top: 0.5rem;
-      margin-bottom: 1.5rem;
-
-      strong {
-        font-size: 1.5rem;
-      }
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: start;
-      margin-bottom: 1rem;
-      text-wrap: nowrap;
-    }
-
-    .legend-color {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      margin-right: 0.6rem;
-    }
-
-    .legend-label {
-      margin-top: -0.5rem;
-    }
-
-    .legend-label strong {
-      font-weight: bold;
-      font-size: 18px;
-      margin-left: 0.1rem;
-    }
-  }
-
-  .recent-activity {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-
-    gap: 1.5rem;
-
-    .relationship-manager-page,
-    .recent-added-clients-page {
-      .section-title {
-        margin-bottom: 1rem;
-      }
-    }
-  }
-
-  .redirect-icon {
-    cursor: pointer;
-    position: absolute;
-    color: black;
-  }
 }

@@ -76,7 +76,6 @@
 
             h1 {
                 font-size: 2rem;
-
             }
         }
 
@@ -131,6 +130,7 @@
     }
 
     .main-container {
+        overflow-x: hidden;
         display: grid;
         grid-template-rows: auto 1fr 2rem;
         grid-template-areas: "header" "main" "footer_area";
@@ -409,7 +409,7 @@
             padding-block: 1.5rem;
             background-color: inherit;
             border-radius: 0.5rem;
-
+            overflow-x: hidden;
             overflow-y: auto;
         }
 
