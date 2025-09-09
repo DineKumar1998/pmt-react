@@ -1,14 +1,14 @@
 import "@styles/index.scss";
 
+import { memo } from "react";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./router";
-import { memo } from "react";
 
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./context/AuthContext";
-import { CookiesProvider } from "react-cookie";
-import { BreadcrumbProvider } from "./context/Breadcrumb";
+// import { CookiesProvider } from "react-cookie";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BreadcrumbProvider } from "./context/Breadcrumb";
 import { LangProvider } from "./context/LangContext";
 const queryClient = new QueryClient({
   // defaultOptions: {
@@ -26,7 +26,7 @@ const queryClient = new QueryClient({
 const App = memo(function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <CookiesProvider>
+      {/* <CookiesProvider> */}
       <LangProvider>
         <AuthProvider>
           <BrowserRouter>
@@ -37,7 +37,7 @@ const App = memo(function App() {
           </BrowserRouter>
         </AuthProvider>
       </LangProvider>
-      </CookiesProvider>
+      {/* </CookiesProvider> */}
     </QueryClientProvider>
   );
 });
