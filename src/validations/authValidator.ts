@@ -1,28 +1,16 @@
-import { z } from "zod";
+import z from "zod";
 
-export const emailValidation = z
-  .string({
-    required_error: "Email is required",
-  })
-  .email({
-    message: "Invalid email",
-  });
+export const emailValidation = z.string().email({
+  message: "Invalid email",
+});
 
-export const passwordValidation = z
-  .string({
-    required_error: "Password is required",
-  })
-  .min(6, {
-    message: "Password must be at least 6 characters",
-  });
+export const passwordValidation = z.string().min(6, {
+  message: "Password must be at least 6 characters",
+});
 
-export const otpValidation = z
-  .string({
-    required_error: "OTP is required",
-  })
-  .min(5, {
-    message: "Enter Valid OTP",
-  });
+export const otpValidation = z.string().min(5, {
+  message: "Enter Valid OTP",
+});
 
 export const captchaValidation = z.string().min(1, { message: "CAPTCHA verification is required" });
 
@@ -53,7 +41,7 @@ export const forgotPasswordSchema = (step: "email" | "password") => {
       email: emailValidation,
       otp: otpValidation,
       password: passwordValidation,
-      confirmPassword: z.string({ required_error: "Please confirm your password" }),
+      confirmPassword: z.string(),
     })
     .refine((data: any) => data.password === data.confirmPassword, {
       message: "Passwords do not match",
