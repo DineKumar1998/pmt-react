@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://pmt-api.whdev.in/api",
+        target: "https://pmt-api.whdev.in",
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, "/api/v1"),
       },
