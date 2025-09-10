@@ -1,9 +1,8 @@
-import { AUTH } from "@/utils/constants";
+// import { AUTH } from "@/utils/constants";
 import axios, { AxiosError } from "axios";
-// import { Cookies } from "react-cookie";
 // const API_URL = import.meta.env.VITE_API_BASE_URL;
-
-// const cookies = new Cookies()
+//
+console.log("VITE", import.meta.env);
 
 const api = axios.create({
   baseURL: "https://pmt-api.whdev.in/api",
@@ -15,24 +14,24 @@ const api = axios.create({
 
 api.interceptors.response.use(
   (response) => {
-
-    return response
+    return response;
   },
   (error) => {
     if (axios.isAxiosError(error)) {
       const axiosError = error as AxiosError;
 
       if (axiosError.status === 403) {
-        localStorage.removeItem(AUTH.TOKEN_KEY);
+        // localStorage.removeItem(AUTH.TOKEN_KEY);
         window.location.href = "/login";
       }
 
       const status = axiosError.response?.status;
-      const data = axiosError.response?.data as { message: string };
+      const data = axiosError.response?.data as { message: string; error: string };
 
       return Promise.reject({
-        status, message: data.message ?? "Something went wrong!"
-      })
+        status,
+        message: data.message ?? data.error ?? "Something went wrong!",
+      });
     } else {
       console.error("An unknown error occurred:", error);
       throw new Error("An unknown error occurred");
