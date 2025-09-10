@@ -4,6 +4,8 @@ import axios, { AxiosError } from "axios";
 //
 console.log("import.meta.env.VITE_API_BASE_URL", import.meta.env.VITE_API_BASE_URL);
 
+console.log("import.meta.env", import.meta.env);
+
 const api = axios.create({
   baseURL: "https://pmt-api.whdev.in/api",
   withCredentials: true,
